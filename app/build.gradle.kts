@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "es.edmilson.dream_app"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "es.edmilson.dream_app"
