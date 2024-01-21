@@ -1,12 +1,15 @@
 package es.edmilson.dream_app
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
     lateinit var bottomNavView: BottomNavigationView
+    lateinit var fab: FloatingActionButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +36,17 @@ class MainActivity : AppCompatActivity() {
                 else->false
             }
         }
+        fab = findViewById(R.id.fab)
+        fab.setOnClickListener {
+            val intent = Intent(this,DreamForm::class.java)
+            startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //  actualizar cosas
+        //  switch para ver en que fragment estamos
     }
 
     fun cambiaFragment(fragment: Fragment){
