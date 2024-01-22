@@ -1,8 +1,9 @@
 package es.edmilson.dream_app
 
+import java.io.Serializable
 import java.time.LocalDate
 
-class Dream(titulo: String, texto: String, fecha: LocalDate) {
+class Dream(titulo: String, texto: String, fecha: LocalDate): Serializable {
     var id: Long = 0L
     var titulo: String = ""
     var texto: String = ""

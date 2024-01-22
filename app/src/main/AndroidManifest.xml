@@ -11,10 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Dream_app">
         <activity
-            android:name=".DreamForm"
+            android:name=".activities.DreamForm"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
