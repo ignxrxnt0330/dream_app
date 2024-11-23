@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:dream_app/config/router/app_router.dart';
 import 'package:dream_app/config/theme/app_theme.dart';
 
 Future main() async {
-  runApp(const ProviderScope(
-    child: MainApp(),
-  ));
+  runApp(
+    const MainApp(),
+  );
 }
 
 class MainApp extends StatelessWidget {

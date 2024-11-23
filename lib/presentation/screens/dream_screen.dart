@@ -47,6 +47,8 @@ class DreamScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            //TODO: get view callback and validate ¿?
+            //TODO: cubit with index => validate 
             //TODO: arrowUp on last index
             if (swiperController.index == slides.length - 1) {
               //TODO: save dream
