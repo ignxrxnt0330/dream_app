@@ -13,7 +13,7 @@ class Dream {
   Id id = Isar.autoIncrement; // isar Id
   final String? title;
   final String description;
-  final DateTime date;
+  final DateTime? date;
   final List<String>? tags; //TODO: tag class from db tags ¿?
   final List<String>? names;
   final int? rating; //TODO: validate in constructor ¿?
@@ -27,9 +27,9 @@ class Dream {
   final bool isFav;
 
   Dream({
-    required this.title,
-    required this.description,
-    required this.date,
+    this.title = "",
+    this.description = "",
+    this.date,
     this.tags,
     this.names,
     this.quality,
@@ -40,17 +40,31 @@ class Dream {
     this.lucidness = 0,
   });
 
-  // from json with all fields
-  Dream.fromJson(Map<String, dynamic> json)
-      : title = json['title'],
-        description = json['description'],
-        date = json['date'],
-        tags = json['tags'],
-        names = json['names'],
-        rating = json['rating'],
-        lucidness = json['lucidness'],
-        quality = json['quality'],
-        type = json['type'],
-        mood = json['mood'],
-        isFav = json['isFav'];
+  Dream copyWith({
+    final String? title,
+    final String? description,
+    final DateTime? date,
+    final List<String>? tags,
+    final List<String>? names,
+    final int? rating,
+    final int? lucidness,
+    final SleepQuality? quality,
+    final DreamType? type,
+    final DreamMood? mood,
+    final bool? isFav,
+  }) {
+    return Dream(
+      title: title ?? this.title,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      tags: tags ?? this.tags,
+      names: names ?? this.names,
+      rating: rating ?? this.rating,
+      lucidness: lucidness ?? this.lucidness,
+      quality: quality ?? this.quality,
+      type: type ?? this.type,
+      mood: mood ?? this.mood,
+      isFav: isFav ?? this.isFav,
+    );
+  }
 }

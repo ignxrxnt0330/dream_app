@@ -26,29 +26,33 @@ class DreamScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('new dream'),
         ),
-        body: Expanded(
-          child: Swiper(
-            controller: swiperController,
-            viewportFraction: 1,
-            loop: false,
-            scale: 1,
-            autoplay: false,
-            pagination: SwiperPagination(
-                margin: const EdgeInsets.only(top: 0),
-                builder: RectSwiperPaginationBuilder(
-                  color: colors.primary,
-                  activeColor: colors.secondary,
-                  activeSize: const Size(20, 10),
-                  size: const Size(10, 10),
-                )),
-            itemCount: slides.length,
-            itemBuilder: (context, index) => slides[index],
-          ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Swiper(
+                controller: swiperController,
+                viewportFraction: 1,
+                loop: false,
+                scale: 1,
+                autoplay: false,
+                pagination: SwiperPagination(
+                    margin: const EdgeInsets.only(top: 0),
+                    builder: RectSwiperPaginationBuilder(
+                      color: colors.primary,
+                      activeColor: colors.secondary,
+                      activeSize: const Size(20, 10),
+                      size: const Size(10, 10),
+                    )),
+                itemCount: slides.length,
+                itemBuilder: (context, index) => slides[index],
+              ),
+            ),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             //TODO: get view callback and validate ¿?
-            //TODO: cubit with index => validate 
+            //TODO: cubit with index => validate
             //TODO: arrowUp on last index
             if (swiperController.index == slides.length - 1) {
               //TODO: save dream
