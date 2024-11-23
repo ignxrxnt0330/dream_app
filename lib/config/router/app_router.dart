@@ -12,12 +12,19 @@ final appRouter = GoRouter(
         return HomeScreen(index: index);
       },
       // add other routes so they are its children and they can arrow back to it
-      routes: const [
-      ],
+      routes: const [],
+    ),
+    GoRoute(
+      path: "/dream/:dream_id",
+      name: DreamScreen.name,
+      builder: (context, state) {
+        final dreamId = int.parse(state.pathParameters['dreamId'] ?? "0");
+        return DreamScreen(dreamId: dreamId);
+      },
     ),
     GoRoute(
       path: "/", // arg is always a string
-      redirect: (_, __) => "/home/0" ,
+      redirect: (_, __) => "/home/0",
     ),
   ],
 );

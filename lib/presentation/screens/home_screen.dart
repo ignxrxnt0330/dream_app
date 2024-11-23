@@ -1,6 +1,7 @@
-import 'package:dream_app/presentation/widets/shared/custom_navigation_bar.dart';
+import 'package:dream_app/presentation/widgets/shared/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_app/presentation/views/views.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   static const name = 'HomeScreen';
@@ -11,8 +12,9 @@ class HomeScreen extends StatelessWidget {
   final routes = const <Widget>[
     HomeView(),
     CalendarView(),
-    StatsView(),
     SearchView(),
+    StatsView(),
+    ConfigView(),
   ];
 
   @override
@@ -20,11 +22,24 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('dream_app'),
+        actions: [
+          //TODO:
+          IconButton(
+            icon: const Icon(Icons.question_mark_outlined),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: IndexedStack(
         // keeps state
         index: index,
         children: routes,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.push("/dream/0");
+        },
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: CustomBottomNavigation(
         selectedIndex: index,
