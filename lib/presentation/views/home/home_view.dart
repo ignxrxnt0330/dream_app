@@ -30,17 +30,16 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final dreamsState = context.watch<DreamHomeBloc>().state;
 
-    return Center(
-      child: ListView.builder(
-          itemCount: dreamsState.dreams.length,
-          controller: scrollController,
-          itemBuilder: (context, index) {
-            final dream = dreamsState.dreams[index];
-            return ListTile(
-              title: Text('item ${dream.title}'),
-              onTap: () {},
-            );
-          }),
+    return ListView.builder(
+      itemCount: dreamsState.dreams.length,
+      controller: scrollController,
+      itemBuilder: (context, index) {
+        final dream = dreamsState.dreams[index];
+        return ListTile(
+          title: Text('item ${dream.title}'),
+          onTap: () {},
+        );
+      },
     );
   }
 }

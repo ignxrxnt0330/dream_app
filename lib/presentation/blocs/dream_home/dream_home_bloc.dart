@@ -10,9 +10,7 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
   final datasource = IsarDatasource();
 
   DreamHomeBloc() : super(DreamHomeState(dreams: List.empty(growable: true))) {
-    on<DreamHomeEvent>((event, emit) {
-      on<FetchDreams>(_fetchMoreDreams);
-    });
+    on<FetchDreams>(_fetchMoreDreams);
     print(state);
   }
 
@@ -21,7 +19,6 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     emit(state.copyWith(isLoading: true));
 
     final dreams = await datasource.loadDreams();
-    print("dreams: " + dreams.toString());
     if (dreams.isEmpty) {
       emit(state.copyWith(
         isLoading: false,
