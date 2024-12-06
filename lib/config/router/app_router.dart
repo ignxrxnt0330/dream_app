@@ -21,7 +21,7 @@ final appRouter = GoRouter(
       routes: const [],
     ),
     GoRoute(
-      path: "/dream/:dream_id",
+      path: "/dream/:dreamId",
       name: DreamScreen.name,
       builder: (context, state) {
         final dreamId = int.parse(state.pathParameters['dreamId'] ?? "0");

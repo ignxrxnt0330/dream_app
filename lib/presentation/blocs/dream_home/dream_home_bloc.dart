@@ -27,7 +27,6 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
       ));
       return;
     }
-    print(dreams);
     emit(state.copyWith(
       isLoading: false,
       endReached: false,

@@ -19,3 +19,9 @@ class FieldChanged extends DreamFormEvent {
 
   const FieldChanged(this.dream);
 }
+
+class FetchDream extends DreamFormEvent {
+  final int dreamId;
+
+  const FetchDream(this.dreamId);
+}

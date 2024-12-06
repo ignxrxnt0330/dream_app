@@ -24,6 +24,9 @@ class _DreamScreenState extends State<DreamScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.dreamId != 0) {
+      context.read<DreamFormBloc>().add(FetchDream(widget.dreamId!));
+    }
 
     slides = const <Widget>[
       DreamFormView(),
@@ -42,7 +45,7 @@ class _DreamScreenState extends State<DreamScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('new dream'),
+          title: Text(widget.dreamId == 0 ? 'new dream' : 'edit dream'),
         ),
         body: Form(
           key: formKey,
