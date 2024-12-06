@@ -71,20 +71,21 @@ class _DreamScreenState extends State<DreamScreen> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (!formKey.currentState!.validate()) return;
-            if (swiperController.index == slides.length - 1) {
-              //TODO: save dream  onPressed: () {
-
-              context.pop();
-              return;
-            }
-            swiperController.next(animation: true);
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          if (!formKey.currentState!.validate()) return;
+          if (context.read<DreamFormBloc>().state.currentIndex == slides.length - 1) {
+            //TODO: save
+            context.pop();
+            return;
+          }
+          swiperController.next(animation: true);
+        }, child: BlocBuilder<DreamFormBloc, DreamFormState>(
+          builder: (context, state) {
+            return Icon(
+              state.currentIndex >= (slides.length - 1) ? Icons.arrow_upward : Icons.arrow_forward,
+            );
           },
-          //TODO: arrowUp on last index
-          child: const Icon(Icons.arrow_forward),
-        ),
+        )),
       ),
     );
   }

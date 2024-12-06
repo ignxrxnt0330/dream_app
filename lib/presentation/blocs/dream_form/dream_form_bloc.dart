@@ -10,7 +10,7 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
   DreamFormBloc() : super(const DreamFormState()) {
     on<DreamSubmitted>(_onDreamSubmitted);
     on<IndexChanged>(_onIndexChanged);
-    // on<CheckValid>(_onCheckValid);
+    on<FieldChanged>(_onFieldChanged);
   }
 
   void _onDreamSubmitted(DreamSubmitted event, Emitter<DreamFormState> emit) {
@@ -22,22 +22,11 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
     emit(state.copyWith(currentIndex: event.index));
   }
 
-  // bool _onCheckValid(IndexChanged event, Emitter<DreamFormState> emit) {
-  //   switch (event.index) {
-  //     case 0:
-  //       return state.dream?.title != null && state.dream?.description != null;
-  //     case 1:
-  //       return state.dream?.quality != null;
-  //     case 2:
-  //       return state.dream?.mood != null;
-  //     case 3:
-  //       return state.dream?.type != null;
-  //     case 4:
-  //       return state.dream?.rating != null;
-  //     case 5:
-  //       return state.dream?.lucidness != null;
-  //     default:
-  //       return false;
-  //   }
-  // }
+  void _onFieldChanged(FieldChanged event, Emitter<DreamFormState> emit) {
+    if (state.dream == null) {
+      emit(state.copyWith(dream: Dream()));
+    }
+    emit(state.copyWith(dream: event.dream));
+    print(state.dream);
+  }
 }

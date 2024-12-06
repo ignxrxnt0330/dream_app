@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
-class SleepQualityView extends StatelessWidget {
+class SleepQualityView extends StatefulWidget {
   static const name = 'sleep_quality_view';
   const SleepQualityView({super.key});
 
+  @override
+  State<SleepQualityView> createState() => _SleepQualityViewState();
+}
+
+class _SleepQualityViewState extends State<SleepQualityView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

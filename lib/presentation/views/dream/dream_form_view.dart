@@ -1,29 +1,46 @@
+import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DreamFormView extends StatelessWidget {
+class DreamFormView extends StatefulWidget {
   static const name = 'dream_form_view';
   const DreamFormView({super.key});
+
+  @override
+  State<DreamFormView> createState() => _DreamFormViewState();
+}
+
+class _DreamFormViewState extends State<DreamFormView> {
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+
+  void save() {
+    //FIXME:
+    Dream dream = context.read<DreamFormBloc>().state.dream ?? Dream(title: titleController.text, description: descriptionController.text);
+    context.read<DreamFormBloc>().add(FieldChanged(dream));
+  }
 
   @override
   Widget build(BuildContext context) {
     //TODO: fav / unfav
     //TODO: tags
-    return const Column(
+    return Column(
       children: [
-        _DateTimeRow(),
-        SizedBox(height: 20),
-        _TitleRow(),
-        SizedBox(height: 20),
-        _DescriptionRow(),
+        const _DateTimeRow(),
+        const SizedBox(height: 20),
+        _TitleRow(titleController),
+        const SizedBox(height: 20),
+        _DescriptionRow(descriptionController, save),
       ],
     );
   }
 }
 
 class _DescriptionRow extends StatelessWidget {
-  const _DescriptionRow();
+  final TextEditingController controller;
+  final Function save;
+  const _DescriptionRow(this.controller, this.save);
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +58,18 @@ class _DescriptionRow extends StatelessWidget {
           if (value == null || value.isEmpty) {
             return "empty";
           }
+          save();
           return null;
         },
+        controller: controller,
       ),
     );
   }
 }
 
 class _TitleRow extends StatelessWidget {
-  const _TitleRow();
+  final TextEditingController controller;
+  const _TitleRow(this.controller);
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +88,7 @@ class _TitleRow extends StatelessWidget {
           }
           return null;
         },
+        controller: controller,
       ),
     );
   }
