@@ -40,8 +40,7 @@ const DreamSchema = CollectionSchema(
     r'mood': PropertySchema(
       id: 4,
       name: r'mood',
-      type: IsarType.string,
-      enumMap: _DreammoodEnumValueMap,
+      type: IsarType.long,
     ),
     r'names': PropertySchema(
       id: 5,
@@ -51,8 +50,7 @@ const DreamSchema = CollectionSchema(
     r'quality': PropertySchema(
       id: 6,
       name: r'quality',
-      type: IsarType.string,
-      enumMap: _DreamqualityEnumValueMap,
+      type: IsarType.long,
     ),
     r'rating': PropertySchema(
       id: 7,
@@ -72,8 +70,7 @@ const DreamSchema = CollectionSchema(
     r'type': PropertySchema(
       id: 10,
       name: r'type',
-      type: IsarType.string,
-      enumMap: _DreamtypeEnumValueMap,
+      type: IsarType.long,
     )
   },
   estimateSize: _dreamEstimateSize,
@@ -98,12 +95,6 @@ int _dreamEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.description.length * 3;
   {
-    final value = object.mood;
-    if (value != null) {
-      bytesCount += 3 + value.name.length * 3;
-    }
-  }
-  {
     final list = object.names;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -113,12 +104,6 @@ int _dreamEstimateSize(
           bytesCount += value.length * 3;
         }
       }
-    }
-  }
-  {
-    final value = object.quality;
-    if (value != null) {
-      bytesCount += 3 + value.name.length * 3;
     }
   }
   {
@@ -139,12 +124,6 @@ int _dreamEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  {
-    final value = object.type;
-    if (value != null) {
-      bytesCount += 3 + value.name.length * 3;
-    }
-  }
   return bytesCount;
 }
 
@@ -158,13 +137,13 @@ void _dreamSerialize(
   writer.writeString(offsets[1], object.description);
   writer.writeBool(offsets[2], object.isFav);
   writer.writeLong(offsets[3], object.lucidness);
-  writer.writeString(offsets[4], object.mood?.name);
+  writer.writeLong(offsets[4], object.mood);
   writer.writeStringList(offsets[5], object.names);
-  writer.writeString(offsets[6], object.quality?.name);
+  writer.writeLong(offsets[6], object.quality);
   writer.writeLong(offsets[7], object.rating);
   writer.writeStringList(offsets[8], object.tags);
   writer.writeString(offsets[9], object.title);
-  writer.writeString(offsets[10], object.type?.name);
+  writer.writeLong(offsets[10], object.type);
 }
 
 Dream _dreamDeserialize(
@@ -174,17 +153,17 @@ Dream _dreamDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Dream(
-    date: reader.readDateTime(offsets[0]),
-    description: reader.readString(offsets[1]),
+    date: reader.readDateTimeOrNull(offsets[0]),
+    description: reader.readStringOrNull(offsets[1]) ?? "",
     isFav: reader.readBoolOrNull(offsets[2]) ?? false,
     lucidness: reader.readLongOrNull(offsets[3]),
-    mood: _DreammoodValueEnumMap[reader.readStringOrNull(offsets[4])],
+    mood: reader.readLongOrNull(offsets[4]),
     names: reader.readStringList(offsets[5]),
-    quality: _DreamqualityValueEnumMap[reader.readStringOrNull(offsets[6])],
+    quality: reader.readLongOrNull(offsets[6]),
     rating: reader.readLongOrNull(offsets[7]),
     tags: reader.readStringList(offsets[8]),
     title: reader.readStringOrNull(offsets[9]),
-    type: _DreamtypeValueEnumMap[reader.readStringOrNull(offsets[10])],
+    type: reader.readLongOrNull(offsets[10]),
   );
   object.id = id;
   return object;
@@ -198,19 +177,19 @@ P _dreamDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? "") as P;
     case 2:
       return (reader.readBoolOrNull(offset) ?? false) as P;
     case 3:
       return (reader.readLongOrNull(offset)) as P;
     case 4:
-      return (_DreammoodValueEnumMap[reader.readStringOrNull(offset)]) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 5:
       return (reader.readStringList(offset)) as P;
     case 6:
-      return (_DreamqualityValueEnumMap[reader.readStringOrNull(offset)]) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 7:
       return (reader.readLongOrNull(offset)) as P;
     case 8:
@@ -218,48 +197,11 @@ P _dreamDeserializeProp<P>(
     case 9:
       return (reader.readStringOrNull(offset)) as P;
     case 10:
-      return (_DreamtypeValueEnumMap[reader.readStringOrNull(offset)]) as P;
+      return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
-
-const _DreammoodEnumValueMap = {
-  r'happy': r'happy',
-  r'sad': r'sad',
-  r'angry': r'angry',
-  r'scared': r'scared',
-  r'surprised': r'surprised',
-  r'disgusted': r'disgusted',
-  r'neutral': r'neutral',
-};
-const _DreammoodValueEnumMap = {
-  r'happy': DreamMood.happy,
-  r'sad': DreamMood.sad,
-  r'angry': DreamMood.angry,
-  r'scared': DreamMood.scared,
-  r'surprised': DreamMood.surprised,
-  r'disgusted': DreamMood.disgusted,
-  r'neutral': DreamMood.neutral,
-};
-const _DreamqualityEnumValueMap = {
-  r'bad': r'bad',
-  r'good': r'good',
-  r'excellent': r'excellent',
-};
-const _DreamqualityValueEnumMap = {
-  r'bad': SleepQuality.bad,
-  r'good': SleepQuality.good,
-  r'excellent': SleepQuality.excellent,
-};
-const _DreamtypeEnumValueMap = {
-  r'dream': r'dream',
-  r'nightmare': r'nightmare',
-};
-const _DreamtypeValueEnumMap = {
-  r'dream': DreamType.dream,
-  r'nightmare': DreamType.nightmare,
-};
 
 Id _dreamGetId(Dream object) {
   return object.id;
@@ -349,8 +291,24 @@ extension DreamQueryWhere on QueryBuilder<Dream, Dream, QWhereClause> {
 }
 
 extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> dateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'date',
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> dateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'date',
+      ));
+    });
+  }
+
   QueryBuilder<Dream, Dream, QAfterFilterCondition> dateEqualTo(
-      DateTime value) {
+      DateTime? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'date',
@@ -360,7 +318,7 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> dateGreaterThan(
-    DateTime value, {
+    DateTime? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -373,7 +331,7 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> dateLessThan(
-    DateTime value, {
+    DateTime? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -386,8 +344,8 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> dateBetween(
-    DateTime lower,
-    DateTime upper, {
+    DateTime? lower,
+    DateTime? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -678,55 +636,46 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> moodEqualTo(
-    DreamMood? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> moodEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'mood',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> moodGreaterThan(
-    DreamMood? value, {
+    int? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'mood',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> moodLessThan(
-    DreamMood? value, {
+    int? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'mood',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> moodBetween(
-    DreamMood? lower,
-    DreamMood? upper, {
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -735,73 +684,6 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> moodStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'mood',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> moodEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'mood',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> moodContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'mood',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> moodMatches(String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'mood',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> moodIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'mood',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> moodIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'mood',
-        value: '',
       ));
     });
   }
@@ -1052,55 +934,46 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityEqualTo(
-    SleepQuality? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'quality',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityGreaterThan(
-    SleepQuality? value, {
+    int? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'quality',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityLessThan(
-    SleepQuality? value, {
+    int? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'quality',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityBetween(
-    SleepQuality? lower,
-    SleepQuality? upper, {
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1109,75 +982,6 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'quality',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'quality',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'quality',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'quality',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'quality',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> qualityIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'quality',
-        value: '',
       ));
     });
   }
@@ -1640,55 +1444,46 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> typeEqualTo(
-    DreamType? value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> typeEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'type',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> typeGreaterThan(
-    DreamType? value, {
+    int? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'type',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> typeLessThan(
-    DreamType? value, {
+    int? value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'type',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> typeBetween(
-    DreamType? lower,
-    DreamType? upper, {
+    int? lower,
+    int? upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1697,73 +1492,6 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> typeStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'type',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> typeEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'type',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> typeContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'type',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> typeMatches(String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'type',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> typeIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'type',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> typeIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'type',
-        value: '',
       ));
     });
   }
@@ -2031,10 +1759,9 @@ extension DreamQueryWhereDistinct on QueryBuilder<Dream, Dream, QDistinct> {
     });
   }
 
-  QueryBuilder<Dream, Dream, QDistinct> distinctByMood(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Dream, Dream, QDistinct> distinctByMood() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'mood', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'mood');
     });
   }
 
@@ -2044,10 +1771,9 @@ extension DreamQueryWhereDistinct on QueryBuilder<Dream, Dream, QDistinct> {
     });
   }
 
-  QueryBuilder<Dream, Dream, QDistinct> distinctByQuality(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Dream, Dream, QDistinct> distinctByQuality() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'quality', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'quality');
     });
   }
 
@@ -2070,10 +1796,9 @@ extension DreamQueryWhereDistinct on QueryBuilder<Dream, Dream, QDistinct> {
     });
   }
 
-  QueryBuilder<Dream, Dream, QDistinct> distinctByType(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Dream, Dream, QDistinct> distinctByType() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'type', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'type');
     });
   }
 }
@@ -2085,7 +1810,7 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Dream, DateTime, QQueryOperations> dateProperty() {
+  QueryBuilder<Dream, DateTime?, QQueryOperations> dateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'date');
     });
@@ -2109,7 +1834,7 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Dream, DreamMood?, QQueryOperations> moodProperty() {
+  QueryBuilder<Dream, int?, QQueryOperations> moodProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'mood');
     });
@@ -2121,7 +1846,7 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Dream, SleepQuality?, QQueryOperations> qualityProperty() {
+  QueryBuilder<Dream, int?, QQueryOperations> qualityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'quality');
     });
@@ -2145,7 +1870,7 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Dream, DreamType?, QQueryOperations> typeProperty() {
+  QueryBuilder<Dream, int?, QQueryOperations> typeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'type');
     });

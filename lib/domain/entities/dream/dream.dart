@@ -2,12 +2,6 @@ import 'package:isar/isar.dart';
 
 part 'dream.g.dart';
 
-enum SleepQuality {veryBad, bad, meh, good, nice, excellent, perfect }
-
-enum DreamType { dream, nightmare }
-
-enum DreamMood { happy, sad, angry, scared, surprised, disgusted, neutral }
-
 @collection
 class Dream {
   Id id = Isar.autoIncrement; // isar Id
@@ -18,12 +12,9 @@ class Dream {
   final List<String>? names;
   final int? rating; //TODO: validate in constructor ¿?
   final int? lucidness;
-  @Enumerated(EnumType.name)
-  final SleepQuality? quality;
-  @Enumerated(EnumType.name)
-  final DreamType? type;
-  @Enumerated(EnumType.name)
-  final DreamMood? mood;
+  final int? quality;
+  final int? type;
+  final int? mood;
   final bool isFav;
 
   Dream({
@@ -48,9 +39,9 @@ class Dream {
     final List<String>? names,
     final int? rating,
     final int? lucidness,
-    final SleepQuality? quality,
-    final DreamType? type,
-    final DreamMood? mood,
+    final int? quality,
+    final int? type,
+    final int? mood,
     final bool? isFav,
   }) {
     return Dream(
@@ -66,5 +57,10 @@ class Dream {
       mood: mood ?? this.mood,
       isFav: isFav ?? this.isFav,
     );
+  }
+
+  @override
+  String toString() {
+    return 'Dream{title: $title, description: $description, date: $date, tags: $tags, names: $names, rating: $rating, lucidness: $lucidness, quality: $quality, type: $type, mood: $mood, isFav: $isFav}';
   }
 }
