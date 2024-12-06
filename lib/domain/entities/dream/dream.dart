@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 
 part 'dream.g.dart';
 
-enum SleepQuality { bad, good, excellent }
+enum SleepQuality {veryBad, bad, meh, good, nice, excellent, perfect }
 
 enum DreamType { dream, nightmare }
 

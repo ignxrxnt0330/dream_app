@@ -4,3 +4,8 @@ export 'home/search_view.dart';
 export 'home/stats_view.dart';
 export 'home/config_view.dart';
 export 'dream/dream_form_view.dart';
+export 'dream/dream_lucidness_view.dart';
+export 'dream/dream_rating_view.dart';
+export 'dream/dream_type_view.dart';
+export 'dream/dream_mood_view.dart';
+export 'dream/sleep_quality_view.dart';

@@ -1,4 +1,6 @@
+import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/screens/screens.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(
@@ -19,7 +21,10 @@ final appRouter = GoRouter(
       name: DreamScreen.name,
       builder: (context, state) {
         final dreamId = int.parse(state.pathParameters['dreamId'] ?? "0");
-        return DreamScreen(dreamId: dreamId);
+        return BlocProvider(
+          create: (context) => DreamFormBloc(),
+          child: DreamScreen(dreamId: dreamId),
+        );
       },
     ),
     GoRoute(

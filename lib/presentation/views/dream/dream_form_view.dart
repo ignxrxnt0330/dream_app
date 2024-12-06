@@ -1,4 +1,6 @@
+import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DreamFormView extends StatelessWidget {
   static const name = 'dream_form_view';
@@ -6,16 +8,16 @@ class DreamFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Form(
-      child: Column(
-        children: [
-          _DateTimeRow(),
-          SizedBox(height: 20),
-          _TitleRow(),
-          SizedBox(height: 20),
-          _DescriptionRow(),
-        ],
-      ),
+    //TODO: fav / unfav
+    //TODO: tags
+    return const Column(
+      children: [
+        _DateTimeRow(),
+        SizedBox(height: 20),
+        _TitleRow(),
+        SizedBox(height: 20),
+        _DescriptionRow(),
+      ],
     );
   }
 }
@@ -26,16 +28,21 @@ class _DescriptionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Container(
-        child: TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Description',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Description',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          maxLines: 5,
         ),
+        maxLines: 5,
+        validator: (value) {
+          if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
+          if (value == null || value.isEmpty) {
+            return "empty";
+          }
+          return null;
+        },
       ),
     );
   }
@@ -54,6 +61,13 @@ class _TitleRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
+        validator: (value) {
+          if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
+          if (value == null || value.isEmpty) {
+            return "empty";
+          }
+          return null;
+        },
       ),
     );
   }
@@ -75,6 +89,13 @@ class _DateTimeRow extends StatelessWidget {
                 ),
                 labelText: 'Date',
               ),
+
+              // validator: (value) {
+              //   if (value == null || value.isEmpty) {
+              //     return "empty";
+              //   }
+              //   return null;
+              // },
             ),
           ),
           const SizedBox(width: 16),
@@ -86,6 +107,13 @@ class _DateTimeRow extends StatelessWidget {
                 ),
                 labelText: 'Time',
               ),
+
+              // validator: (value) {
+              //   if (value == null || value.isEmpty) {
+              //     return "empty";
+              //   }
+              //   return null;
+              // },
             ),
           ),
         ],
