@@ -5,9 +5,7 @@ abstract class DreamFormEvent {
 }
 
 class DreamSubmitted extends DreamFormEvent {
-  final Dream dream;
-
-  const DreamSubmitted(this.dream);
+  const DreamSubmitted();
 }
 
 class IndexChanged extends DreamFormEvent {

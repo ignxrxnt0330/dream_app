@@ -74,7 +74,7 @@ class _DreamScreenState extends State<DreamScreen> {
         floatingActionButton: FloatingActionButton(onPressed: () {
           if (!formKey.currentState!.validate()) return;
           if (context.read<DreamFormBloc>().state.currentIndex == slides.length - 1) {
-            //TODO: save
+            context.read<DreamFormBloc>().add(const DreamSubmitted());
             context.pop();
             return;
           }

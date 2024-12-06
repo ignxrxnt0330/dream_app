@@ -1,9 +1,23 @@
 import 'package:dream_app/domain/datasource/local_storage_datasource.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 
 class IsarDatasource extends LocalStorageDatasource {
   late Future<Isar> db;
+
+  IsarDatasource() {
+    db = openDB();
+  }
+
+  Future<Isar> openDB() async {
+    final dir = await getApplicationDocumentsDirectory();
+
+    if (Isar.instanceNames.isEmpty) {
+      return Isar.open([DreamSchema], inspector: true, directory: dir.path);
+    }
+    return Future.value(Isar.getInstance());
+  }
 
   @override
   Future<void> deleteDream(int id) async {
