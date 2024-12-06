@@ -15,6 +15,17 @@ class _DreamFormViewState extends State<DreamFormView> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    //FIXME:
+    if (context.read<DreamFormBloc>().state.dream != null) {
+      // context.read<DreamFormBloc>().add(FieldChanged(context.read<DreamFormBloc>().state.dream!));
+      // titleController.text = context.read<DreamFormBloc>().state.dream!.title ?? "";
+      // descriptionController.text = context.read<DreamFormBloc>().state.dream!.description;
+    }
+  }
+
   void save() {
     //FIXME:
     Dream dream = context.read<DreamFormBloc>().state.dream ?? Dream(title: titleController.text, description: descriptionController.text);

@@ -4,7 +4,7 @@ part 'dream.g.dart';
 
 @collection
 class Dream {
-  Id id = Isar.autoIncrement; // isar Id
+  Id id; // isar Id
   final String? title;
   final String description;
   final DateTime? date;
@@ -18,6 +18,7 @@ class Dream {
   final bool isFav;
 
   Dream({
+    this.id = Isar.autoIncrement,
     this.title = "",
     this.description = "",
     this.date,
@@ -32,6 +33,7 @@ class Dream {
   });
 
   Dream copyWith({
+    final Id? id,
     final String? title,
     final String? description,
     final DateTime? date,
@@ -45,6 +47,7 @@ class Dream {
     final bool? isFav,
   }) {
     return Dream(
+      id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
       date: date ?? this.date,
@@ -61,6 +64,6 @@ class Dream {
 
   @override
   String toString() {
-    return 'Dream{title: $title, description: $description, date: $date, tags: $tags, names: $names, rating: $rating, lucidness: $lucidness, quality: $quality, type: $type, mood: $mood, isFav: $isFav}';
+    return 'Dream{id: $id, title: $title, description: $description, date: $date, tags: $tags, names: $names, rating: $rating, lucidness: $lucidness, quality: $quality, type: $type, mood: $mood, isFav: $isFav}';
   }
 }

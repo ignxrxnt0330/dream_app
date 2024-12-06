@@ -44,11 +44,12 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<void> toggleFavDream(int id) async {
+  Future<bool> toggleFavDream(int id) async {
     final isar = await db;
     final dream = await isar.dreams.filter().idEqualTo(id).findFirst();
-    if (dream == null) return;
+    if (dream == null) return false;
     saveDream(dream.copyWith(isFav: !dream.isFav));
+    return !dream.isFav;
   }
 
   @override

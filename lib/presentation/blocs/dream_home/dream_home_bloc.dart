@@ -2,6 +2,7 @@ import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 
 part 'dream_home_event.dart';
 part 'dream_home_state.dart';
@@ -11,7 +12,7 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
 
   DreamHomeBloc() : super(DreamHomeState(dreams: List.empty(growable: true))) {
     on<FetchDreams>(_fetchMoreDreams);
-    print(state);
+    on<ToggleFavDream>(_toggleFavDream);
   }
 
   void _fetchMoreDreams(FetchDreams event, Emitter<DreamHomeState> emit) async {
@@ -26,11 +27,22 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
       ));
       return;
     }
+    print(dreams);
     emit(state.copyWith(
       isLoading: false,
       endReached: false,
       offset: state.offset + 10,
       dreams: [...state.dreams, ...dreams],
+    ));
+  }
+
+  void _toggleFavDream(ToggleFavDream event, Emitter<DreamHomeState> emit) async {
+    final isFav = await datasource.toggleFavDream(event.dreamId);
+
+    List<Dream> dreams = state.dreams.map((dream) => dream.id == event.dreamId ? dream.copyWith(isFav: isFav) : dream).toList();
+
+    emit(state.copyWith(
+      dreams: dreams,
     ));
   }
 }

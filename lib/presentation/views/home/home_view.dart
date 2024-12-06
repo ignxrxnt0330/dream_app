@@ -1,6 +1,9 @@
+import 'package:dream_app/domain/entities/dream/dream.dart';
+import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeView extends StatefulWidget {
   static const name = 'home_view';
@@ -35,10 +38,46 @@ class _HomeViewState extends State<HomeView> {
       controller: scrollController,
       itemBuilder: (context, index) {
         final dream = dreamsState.dreams[index];
-        return ListTile(
-          title: Text('item ${dream.title}'),
-          onTap: () {},
-        );
+        return _DreamListTIle(dream: dream);
+      },
+    );
+  }
+}
+
+class _DreamListTIle extends StatelessWidget {
+  const _DreamListTIle({
+    required this.dream,
+  });
+
+  final Dream dream;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Row(children: [
+        Text('item ${dream.title}'),
+        IconButton(
+          icon: dream.isFav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+          onPressed: () {
+            context.read<DreamHomeBloc>().add(ToggleFavDream(dreamId: dream.id));
+          },
+        ),
+      ]),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(dream.date.toString() ?? "00-00-00 00:00"),
+          Text(
+            dream.description,
+            style: const TextStyle(
+              overflow: TextOverflow.ellipsis,
+            ),
+            maxLines: 2,
+          )
+        ],
+      ),
+      onTap: () {
+        context.push("/dream/${dream.id}");
       },
     );
   }
