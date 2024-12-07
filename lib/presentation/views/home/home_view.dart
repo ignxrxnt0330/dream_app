@@ -36,18 +36,23 @@ class _HomeViewState extends State<HomeView> {
     final dreamsState = context.watch<DreamHomeBloc>().state;
 
     return RefreshIndicator(
-      onRefresh: () async {
-        context.read<DreamHomeBloc>().add(const RefreshDreams());
-      },
-      child: ListView.builder(
-        controller: scrollController,
-        itemCount: dreamsState.dreams.length,
-        itemBuilder: (context, index) {
-          final dream = dreamsState.dreams[index];
-          return _DreamListTIle(dream: dream);
+        onRefresh: () async {
+          context.read<DreamHomeBloc>().add(const RefreshDreams());
         },
-      ),
-    );
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: ListView.builder(
+              controller: scrollController,
+              itemCount: dreamsState.dreams.length,
+              itemBuilder: (context, index) {
+                final dream = dreamsState.dreams[index];
+                return _DreamListTIle(dream: dream);
+              },
+            ),
+          ),
+        ));
   }
 }
 
@@ -63,6 +68,9 @@ class _DreamListTIle extends StatelessWidget {
     return ListTile(
       title: Row(children: [
         Text(dream.title ?? "asd"),
+        const SizedBox(width: 20),
+        Text(dream.formattedDate),
+        Expanded(child: Container()),
         IconButton(
           icon: dream.isFav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
           onPressed: () {
@@ -73,7 +81,6 @@ class _DreamListTIle extends StatelessWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(dream.formattedDate),
           Text(
             dream.description,
             style: const TextStyle(
@@ -83,6 +90,7 @@ class _DreamListTIle extends StatelessWidget {
           )
         ],
       ),
+      //TODO: remove on longPress => deleted = 1, move to separate screen
       onTap: () {
         context.push("/dream/${dream.id}");
       },
