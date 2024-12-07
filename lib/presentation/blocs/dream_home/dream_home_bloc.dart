@@ -13,13 +13,14 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
   DreamHomeBloc() : super(DreamHomeState(dreams: List.empty(growable: true))) {
     on<FetchDreams>(_fetchMoreDreams);
     on<ToggleFavDream>(_toggleFavDream);
+    on<RefreshDreams>(_refreshDreams);
   }
 
   void _fetchMoreDreams(FetchDreams event, Emitter<DreamHomeState> emit) async {
     if (state.isLoading || state.endReached) return;
     emit(state.copyWith(isLoading: true));
+    final dreams = await datasource.loadDreams(offset: state.offset);
 
-    final dreams = await datasource.loadDreams();
     if (dreams.isEmpty) {
       emit(state.copyWith(
         isLoading: false,
@@ -43,5 +44,15 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     emit(state.copyWith(
       dreams: dreams,
     ));
+  }
+
+  void _refreshDreams(RefreshDreams event, Emitter<DreamHomeState> emit) async {
+    emit(state.copyWith(
+      dreams: [],
+      offset: 0,
+      endReached: false,
+      isLoading: false,
+    ));
+    add(const FetchDreams(offset: 0, limit: 10));
   }
 }

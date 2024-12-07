@@ -55,14 +55,14 @@ class IsarDatasource extends LocalStorageDatasource {
   @override
   Future<List<Dream>> loadDreams({int limit = 10, int offset = 0}) async {
     final isar = await db;
-    final List<Dream> dreams = await isar.dreams.where().offset(offset).limit(limit).findAll();
+    final List<Dream> dreams = await isar.dreams.where().sortByDateDesc().offset(offset).limit(limit).findAll();
     return dreams;
   }
 
   @override
   Future<List<Dream?>> loadFavoriteDreams({int limit = 10, int offset = 0}) async {
     final isar = await db;
-    final List<Dream> dreams = await isar.dreams.where().filter().isFavEqualTo(true).offset(offset).limit(limit).findAll();
+    final List<Dream> dreams = await isar.dreams.where().filter().isFavEqualTo(true).sortByDateDesc().offset(offset).limit(limit).findAll();
     return dreams;
   }
 }

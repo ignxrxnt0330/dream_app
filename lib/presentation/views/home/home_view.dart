@@ -18,7 +18,9 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    context.read<DreamHomeBloc>().add(const FetchDreams(offset: 0, limit: 10));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DreamHomeBloc>().add(const FetchDreams(offset: 0, limit: 10));
+    });
 
     scrollController.addListener(() {
       //TODO: offset variable ¿?
@@ -33,13 +35,18 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final dreamsState = context.watch<DreamHomeBloc>().state;
 
-    return ListView.builder(
-      itemCount: dreamsState.dreams.length,
-      controller: scrollController,
-      itemBuilder: (context, index) {
-        final dream = dreamsState.dreams[index];
-        return _DreamListTIle(dream: dream);
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<DreamHomeBloc>().add(const RefreshDreams());
       },
+      child: ListView.builder(
+        controller: scrollController,
+        itemCount: dreamsState.dreams.length,
+        itemBuilder: (context, index) {
+          final dream = dreamsState.dreams[index];
+          return _DreamListTIle(dream: dream);
+        },
+      ),
     );
   }
 }
@@ -55,7 +62,7 @@ class _DreamListTIle extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Row(children: [
-        Text('item ${dream.title}'),
+        Text(dream.title ?? "asd"),
         IconButton(
           icon: dream.isFav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
           onPressed: () {
@@ -66,7 +73,7 @@ class _DreamListTIle extends StatelessWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(dream.date.toString() ?? "00-00-00 00:00"),
+          Text(dream.formattedDate),
           Text(
             dream.description,
             style: const TextStyle(

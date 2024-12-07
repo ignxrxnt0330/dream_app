@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:dream_app/config/router/app_router.dart';
 import 'package:dream_app/config/theme/app_theme.dart';
+import 'package:intl/intl_standalone.dart';
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //FIXME:
+  await findSystemLocale();
+
   runApp(
     const MainApp(),
   );

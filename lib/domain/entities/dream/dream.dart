@@ -62,6 +62,21 @@ class Dream {
     );
   }
 
+  // get year only if its not current, return d/m/y H:m
+  String get formattedDate {
+    final now = DateTime.now();
+    final year = date?.year;
+    final month = date?.month;
+    final day = date?.day;
+    final hour = date?.hour;
+    final minute = date?.minute;
+    if (year == now.year) {
+      return "$day/$month $hour:$minute";
+    } else {
+      return "$day/$month/$year $hour:$minute";
+    }
+  }
+
   @override
   String toString() {
     return 'Dream{id: $id, title: $title, description: $description, date: $date, tags: $tags, names: $names, rating: $rating, lucidness: $lucidness, quality: $quality, type: $type, mood: $mood, isFav: $isFav}';

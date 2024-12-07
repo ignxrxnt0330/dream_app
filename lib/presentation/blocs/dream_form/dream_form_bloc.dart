@@ -1,10 +1,7 @@
-import 'dart:ffi';
-
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar/isar.dart';
 
 part 'dream_form_event.dart';
 part 'dream_form_state.dart';

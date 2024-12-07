@@ -28,6 +28,8 @@ class _DreamScreenState extends State<DreamScreen> {
       context.read<DreamFormBloc>().add(FetchDream(widget.dreamId!));
     }
 
+    //FIXME: prevent swiping if not validated
+
     slides = const <Widget>[
       DreamFormView(),
       SleepQualityView(),
@@ -81,6 +83,7 @@ class _DreamScreenState extends State<DreamScreen> {
             context.pop();
             return;
           }
+          FocusManager.instance.primaryFocus?.unfocus();
           swiperController.next(animation: true);
         }, child: BlocBuilder<DreamFormBloc, DreamFormState>(
           builder: (context, state) {

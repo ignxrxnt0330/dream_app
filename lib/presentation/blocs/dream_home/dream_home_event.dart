@@ -15,3 +15,7 @@ class ToggleFavDream extends DreamHomeEvent {
 
   const ToggleFavDream({required this.dreamId});
 }
+
+class RefreshDreams extends DreamHomeEvent {
+  const RefreshDreams();
+}
