@@ -1,11 +1,7 @@
-import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
-import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:dream_app/presentation/screens/screens.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(
-  //FIXME: multipleProviderScope
 
   initialLocation: '/home/0',
   routes: [
@@ -14,10 +10,7 @@ final appRouter = GoRouter(
       name: HomeScreen.name,
       builder: (context, state) {
         final index = int.parse(state.pathParameters['page'] ?? "0");
-        return BlocProvider(
-          create: (context) => DreamHomeBloc(),
-          child: HomeScreen(index: index),
-        );
+        return HomeScreen(index: index);
       },
       // add other routes so they are its children and they can arrow back to it
       routes: const [],
@@ -27,10 +20,7 @@ final appRouter = GoRouter(
       name: DreamScreen.name,
       builder: (context, state) {
         final dreamId = int.parse(state.pathParameters['dreamId'] ?? "0");
-        return BlocProvider(
-          create: (context) => DreamFormBloc(),
-          child: DreamScreen(dreamId: dreamId),
-        );
+        return DreamScreen(dreamId: dreamId);
       },
     ),
     GoRoute(

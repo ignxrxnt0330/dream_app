@@ -66,10 +66,10 @@ class Dream {
   String get formattedDate {
     final now = DateTime.now();
     final year = date?.year;
-    final month = date?.month;
-    final day = date?.day;
-    final hour = date?.hour;
-    final minute = date?.minute;
+    final month = date?.month.toString().padLeft(2, '0');
+    final day = date?.day.toString().padLeft(2, '0');
+    final hour = date?.hour.toString().padLeft(2, '0');
+    final minute = date?.minute.toString().padLeft(2, '0');
     if (year == now.year) {
       return "$day/$month $hour:$minute";
     } else {

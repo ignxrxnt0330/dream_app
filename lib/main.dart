@@ -1,7 +1,10 @@
+import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
+import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dream_app/config/router/app_router.dart';
 import 'package:dream_app/config/theme/app_theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl_standalone.dart';
 
 Future main() async {
@@ -20,10 +23,20 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // no need to add home: because go_router knows the initial location
-    return MaterialApp.router(
-      routerConfig: appRouter,
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme().getTheme(),
-    );
+
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<DreamFormBloc>(
+            create: (context) => DreamFormBloc(),
+          ),
+          BlocProvider<DreamHomeBloc>(
+            create: (context) => DreamHomeBloc(),
+          ),
+        ],
+        child: MaterialApp.router(
+          routerConfig: appRouter,
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme().getTheme(),
+        ));
   }
 }

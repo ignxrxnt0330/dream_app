@@ -1,5 +1,6 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
+import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -81,6 +82,7 @@ class _DreamScreenState extends State<DreamScreen> {
           if (context.read<DreamFormBloc>().state.currentIndex == slides.length - 1) {
             context.read<DreamFormBloc>().add(const DreamSubmitted());
             context.pop();
+            context.read<DreamHomeBloc>().add(const RefreshDreams());
             return;
           }
           FocusManager.instance.primaryFocus?.unfocus();
