@@ -31,7 +31,8 @@ class _DreamFormViewState extends State<DreamFormView> {
 
   void save() {
     //FIXME:
-    Dream dream = context.read<DreamFormBloc>().state.dream ??
+    Dream dream = context.read<DreamFormBloc>().state.dream?.copyWith(title: titleController.text,
+          description: descriptionController.text,) ??
         Dream(
           title: titleController.text,
           description: descriptionController.text,
