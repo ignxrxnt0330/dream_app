@@ -6,9 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class DreamFormView extends StatefulWidget {
-  final Dream? dream;
   static const name = 'dream_form_view';
-  const DreamFormView({super.key, this.dream});
+  const DreamFormView({super.key});
 
   @override
   State<DreamFormView> createState() => _DreamFormViewState();
@@ -23,10 +22,10 @@ class _DreamFormViewState extends State<DreamFormView> {
   void initState() {
     super.initState();
     //FIXME:
-    if (widget.dream != null) {
-      print(widget.dream!);
-      titleController.text = widget.dream!.title ?? "";
-      descriptionController.text = widget.dream!.description;
+    Dream? dream = context.read<DreamFormBloc>().state.dream;
+    if (dream != null) {
+      titleController.text = dream.title ?? "";
+      descriptionController.text = dream.description;
     }
   }
 
@@ -116,8 +115,20 @@ class _TitleRow extends StatelessWidget {
   }
 }
 
-class _DateTimeRow extends StatelessWidget {
+class _DateTimeRow extends StatefulWidget {
   const _DateTimeRow();
+
+  @override
+  State<_DateTimeRow> createState() => _DateTimeRowState();
+}
+
+class _DateTimeRowState extends State<_DateTimeRow> {
+  late DateTime value;
+  @override
+  void initState() {
+    super.initState();
+    value = context.read<DreamFormBloc>().state.dream?.date ?? DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +142,7 @@ class _DateTimeRow extends StatelessWidget {
           labelText: 'Date',
         ),
         initialPickerDateTime: DateTime.now(),
-        initialValue: DateTime.now(),
+        initialValue: value,
         onChanged: (DateTime? value) {
           if (value == null) return;
           Dream dream = context.read<DreamFormBloc>().state.dream ?? Dream(date: value);
