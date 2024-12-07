@@ -12,13 +12,25 @@ class SleepQualityView extends StatefulWidget {
 }
 
 class _SleepQualityViewState extends State<SleepQualityView> {
+  int? quality;
+
+  @override
+  void initState() {
+    super.initState();
+    quality = context.read<DreamFormBloc>().state.dream?.quality;
+  }
+
+  void save() {
+    Dream dream = context.read<DreamFormBloc>().state.dream ?? Dream(quality: quality);
+    context.read<DreamFormBloc>().add(FieldChanged(dream));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
       child: Column(
         children: [
-          //FIXME: styling
           const Text('Sleep Quality'),
           const SizedBox(
             height: 20,
@@ -27,39 +39,109 @@ class _SleepQualityViewState extends State<SleepQualityView> {
             child: FormField(
               builder: (context) => ListView(
                 //TODO: animated builder
-                children: const [
-                  _CustomListTile(title: 'very bad', icon: Icons.thumb_down_sharp, value: 0),
-                  SizedBox(
+                children: [
+                  _CustomListTile(
+                    title: 'very bad',
+                    icon: Icons.thumb_down_sharp,
+                    value: 0,
+                    onTap: () {
+                      setState(() {
+                        quality = 0;
+                      });
+                    },
+                    selected: quality == 0,
+                  ),
+                  const SizedBox(
                     height: 20,
                   ),
-                  _CustomListTile(title: 'bad', icon: Icons.thumb_down_outlined, value: 1),
-                  SizedBox(
+                  _CustomListTile(
+                    title: 'bad',
+                    icon: Icons.thumb_down_outlined,
+                    value: 1,
+                    onTap: () {
+                      setState(() {
+                        quality = 1;
+                      });
+                    },
+                    selected: quality == 1,
+                  ),
+                  const SizedBox(
                     height: 20,
                   ),
-                  _CustomListTile(title: 'meh', icon: Icons.sentiment_neutral, value: 2),
-                  SizedBox(
+                  _CustomListTile(
+                    title: 'meh',
+                    icon: Icons.sentiment_neutral,
+                    value: 2,
+                    onTap: () {
+                      setState(() {
+                        quality = 2;
+                      });
+                    },
+                    selected: quality == 2,
+                  ),
+                  const SizedBox(
                     height: 20,
                   ),
-                  _CustomListTile(title: 'good', icon: Icons.thumb_up_outlined, value: 3),
-                  SizedBox(
+                  _CustomListTile(
+                    title: 'good',
+                    icon: Icons.thumb_up_outlined,
+                    value: 3,
+                    onTap: () {
+                      setState(() {
+                        quality = 3;
+                      });
+                    },
+                    selected: quality == 3,
+                  ),
+                  const SizedBox(
                     height: 20,
                   ),
-                  _CustomListTile(title: 'nice', icon: Icons.thumb_up_sharp, value: 4),
-                  SizedBox(
+                  _CustomListTile(
+                    title: 'nice',
+                    icon: Icons.thumb_up_sharp,
+                    value: 4,
+                    onTap: () {
+                      setState(() {
+                        quality = 4;
+                      });
+                    },
+                    selected: quality == 4,
+                  ),
+                  const SizedBox(
                     height: 20,
                   ),
-                  _CustomListTile(title: 'excellent', icon: Icons.sentiment_very_satisfied, value: 5),
-                  SizedBox(
+                  _CustomListTile(
+                    title: 'excellent',
+                    icon: Icons.sentiment_very_satisfied,
+                    value: 5,
+                    onTap: () {
+                      setState(() {
+                        quality = 5;
+                      });
+                    },
+                    selected: quality == 5,
+                  ),
+                  const SizedBox(
                     height: 20,
                   ),
-                  _CustomListTile(title: 'perfect', icon: Icons.star_rounded, value: 6),
+                  _CustomListTile(
+                    title: 'perfect',
+                    icon: Icons.star_rounded,
+                    value: 6,
+                    onTap: () {
+                      setState(() {
+                        quality = 6;
+                      });
+                    },
+                    selected: quality == 6,
+                  ),
                 ],
               ),
               validator: (_) {
-                if (context.read<DreamFormBloc>().state.dream?.quality == null) {
-                  print("no quality");
+                if (quality == null) {
                   return 'required';
                 }
+                save();
                 return null;
               },
             ),
@@ -74,7 +156,9 @@ class _CustomListTile extends StatefulWidget {
   final IconData icon;
   final String title;
   final int value;
-  const _CustomListTile({required this.icon, required this.title, required this.value});
+  final bool selected;
+  final VoidCallback onTap;
+  const _CustomListTile({required this.icon, required this.title, required this.value, required this.selected, required this.onTap});
 
   @override
   State<_CustomListTile> createState() => _CustomListTileState();
@@ -84,14 +168,10 @@ class _CustomListTileState extends State<_CustomListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      focusColor: context.read<DreamFormBloc>().state.dream?.quality == widget.value ? Colors.blue : Colors.transparent,
       leading: Icon(widget.icon),
       title: Text(widget.title),
-      onTap: () {
-        Dream dream = context.read<DreamFormBloc>().state.dream ?? Dream();
-        dream = dream.copyWith(quality: widget.value);
-        context.read<DreamFormBloc>().add(FieldChanged(dream));
-      },
+      tileColor: widget.selected ? Colors.grey.shade900 : Colors.transparent,
+      onTap: widget.onTap,
     );
   }
 }
