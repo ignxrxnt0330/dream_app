@@ -146,6 +146,7 @@ class _DateTimeRowState extends State<_DateTimeRow> {
         onChanged: (DateTime? value) {
           if (value == null) return;
           Dream dream = context.read<DreamFormBloc>().state.dream ?? Dream(date: value);
+          dream = dream.copyWith(date: value);
           context.read<DreamFormBloc>().add(FieldChanged(dream));
         },
         validator: (value) {
