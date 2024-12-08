@@ -82,7 +82,17 @@ class _DreamListTIle extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             maxLines: 2,
-          )
+          ),
+          if (dream.tags != null)
+            Wrap(
+              spacing: 5,
+              children: dream.tags!.map((tag) => Chip(label: Text(tag))).toList(),
+            ),
+          if (dream.names != null)
+            Wrap(
+              spacing: 5,
+              children: dream.names!.map((name) => Chip(label: Text(name))).toList(),
+            ),
         ],
       ),
       //TODO: remove on longPress => deleted = 1, move to separate screen
