@@ -25,3 +25,7 @@ class FetchDream extends DreamFormEvent {
 
   const FetchDream(this.dreamId);
 }
+
+class FormInit extends DreamFormEvent {
+  const FormInit();
+}

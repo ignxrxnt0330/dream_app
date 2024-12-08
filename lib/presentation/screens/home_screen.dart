@@ -1,6 +1,8 @@
+import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_app/presentation/views/views.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -37,6 +39,7 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          context.read<DreamFormBloc>().add(const FormInit());
           context.push("/dream/0");
         },
         child: const Icon(Icons.add),

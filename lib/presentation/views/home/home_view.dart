@@ -24,7 +24,6 @@ class _HomeViewState extends State<HomeView> {
 
     scrollController.addListener(() {
       //TODO: offset variable ¿?
-      //TODO: is not loading
       if (scrollController.position.pixels + 400 >= scrollController.position.maxScrollExtent) {
         context.read<DreamHomeBloc>().add(const FetchDreams(offset: 0, limit: 10));
       }
@@ -39,6 +38,7 @@ class _HomeViewState extends State<HomeView> {
         onRefresh: () async {
           context.read<DreamHomeBloc>().add(const RefreshDreams());
         },
+        strokeWidth: 3,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: SizedBox(

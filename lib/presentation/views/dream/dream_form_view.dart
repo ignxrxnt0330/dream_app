@@ -23,16 +23,16 @@ class _DreamFormViewState extends State<DreamFormView> {
     super.initState();
     //FIXME:
     Dream? dream = context.read<DreamFormBloc>().state.dream;
-    if (dream != null) {
-      titleController.text = dream.title ?? "";
-      descriptionController.text = dream.description;
-    }
+    titleController.text = dream?.title ?? "";
+    descriptionController.text = dream?.description ?? "";
   }
 
   void save() {
     //FIXME:
-    Dream dream = context.read<DreamFormBloc>().state.dream?.copyWith(title: titleController.text,
-          description: descriptionController.text,) ??
+    Dream dream = context.read<DreamFormBloc>().state.dream?.copyWith(
+              title: titleController.text,
+              description: descriptionController.text,
+            ) ??
         Dream(
           title: titleController.text,
           description: descriptionController.text,
