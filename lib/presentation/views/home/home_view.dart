@@ -40,6 +40,7 @@ class _HomeViewState extends State<HomeView> {
           context.read<DreamHomeBloc>().add(const RefreshDreams());
         },
         strokeWidth: 3,
+        //TODO: separator ¿?
         child: ListView.builder(
           controller: scrollController,
           itemCount: dreamsState.dreams.length,

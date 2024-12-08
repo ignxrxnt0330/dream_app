@@ -8,7 +8,7 @@ class Dream {
   final String? title;
   final String description;
   final DateTime? date;
-  final List<String>? tags; //TODO: tag class from db tags ¿?
+  List<String>? tags; //TODO: tag class from db tags ¿?
   List<String>? names;
   final int? rating; //TODO: validate in constructor ¿?
   final int? lucidness;
@@ -87,5 +87,39 @@ class Dream {
   @override
   String toString() {
     return 'Dream{id: $id, title: $title, description: $description, date: $date, tags: $tags, names: $names, rating: $rating, lucidness: $lucidness, quality: $quality, type: $type, mood: $mood, isFav: $isFav}';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'date': date,
+      'tags': tags,
+      'names': names,
+      'rating': rating,
+      'lucidness': lucidness,
+      'quality': quality,
+      'type': type,
+      'mood': mood,
+      'isFav': isFav,
+    };
+  }
+
+  factory Dream.fromJson(Map<String, dynamic> json) {
+    return Dream(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      date: json['date'],
+      tags: json['tags'],
+      names: json['names'],
+      rating: json['rating'],
+      lucidness: json['lucidness'],
+      quality: json['quality'],
+      type: json['type'],
+      mood: json['mood'],
+      isFav: json['isFav'],
+    );
   }
 }

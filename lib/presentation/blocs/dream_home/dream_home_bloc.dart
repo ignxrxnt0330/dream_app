@@ -14,6 +14,7 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     on<FetchDreams>(_fetchMoreDreams);
     on<ToggleFavDream>(_toggleFavDream);
     on<RefreshDreams>(_refreshDreams);
+    on<ExportDreams>(_exportDreams);
   }
 
   void _fetchMoreDreams(FetchDreams event, Emitter<DreamHomeState> emit) async {
@@ -54,5 +55,11 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
       isLoading: false,
     ));
     add(const FetchDreams(offset: 0, limit: 10));
+  }
+
+  void _exportDreams(ExportDreams event, Emitter<DreamHomeState> emit) async {
+    emit(state.copyWith(isLoading: true));
+    await datasource.exportDreams();
+    emit(state.copyWith(isLoading: false));
   }
 }

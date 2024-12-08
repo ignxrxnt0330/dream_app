@@ -73,7 +73,7 @@ class _DescriptionRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        maxLines: 5,
+        maxLines: 10,
         validator: (value) {
           if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
           if (value == null || value.isEmpty) {
@@ -103,6 +103,8 @@ class _TitleRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
+        maxLength: 40,
+        maxLines: 1,
         validator: (value) {
           // if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
           if (value == null || value.isEmpty) {
@@ -135,6 +137,7 @@ class _DateTimeRowState extends State<_DateTimeRow> {
   Widget build(BuildContext context) {
     return Material(
       child: DateTimeFormField(
+        //FIXME: custom data format
         dateFormat: DateFormat('dd-MM-yyyy HH:mm'),
         decoration: InputDecoration(
           border: OutlineInputBorder(

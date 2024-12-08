@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dream_app/domain/datasource/local_storage_datasource.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:isar/isar.dart';
@@ -66,5 +68,34 @@ class IsarDatasource extends LocalStorageDatasource {
     final isar = await db;
     final List<Dream> dreams = await isar.dreams.where().filter().isFavEqualTo(true).sortByDateDesc().offset(offset).limit(limit).findAll();
     return dreams;
+  }
+
+  @override
+  Future<List<Dream>> getAllDreams() async {
+    final isar = await db;
+    final List<Dream> dreams = await isar.dreams.where().findAll();
+    return dreams;
+  }
+
+  @override
+  Future<void> exportDreams() async {
+    try {
+      DateTime now = DateTime.now();
+      String data = "";
+      final List<Dream> dreams = await getAllDreams();
+      data = dreams.map((dream) => dream.toJson()).join("\n");
+
+      final downloadsDir = await getDownloadsDirectory();
+      if (downloadsDir != null) {
+        final filePath = "${downloadsDir.path}/dreams_${now.toIso8601String()}.txt";
+        final file = await File(filePath).create();
+        await file.writeAsString(data);
+        print("File saved at: $filePath");
+      } else {
+        print("Downloads directory not available");
+      }
+    } catch (e) {
+      print("Error saving file: $e");
+    }
   }
 }

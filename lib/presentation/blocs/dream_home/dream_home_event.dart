@@ -19,3 +19,11 @@ class ToggleFavDream extends DreamHomeEvent {
 class RefreshDreams extends DreamHomeEvent {
   const RefreshDreams();
 }
+
+class ExportDreams extends DreamHomeEvent {
+  const ExportDreams();
+}
+
+class ImportDreams extends DreamHomeEvent {
+  const ImportDreams();
+}

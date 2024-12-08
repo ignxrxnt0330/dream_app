@@ -7,4 +7,6 @@ abstract class LocalStorageDatasource {
   Future<Dream?> getDream(int id);
   Future<void> toggleFavDream(int id);
   Future<List<Dream?>> loadFavoriteDreams({int limit = 10, int offset = 0});
+  Future<List<Dream>> getAllDreams();
+  Future<void> exportDreams();
 }
