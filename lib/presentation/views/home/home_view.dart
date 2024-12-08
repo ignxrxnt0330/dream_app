@@ -34,24 +34,19 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final dreamsState = context.watch<DreamHomeBloc>().state;
 
+//FIXME: refresh doesnt work then there are not enough dreams
     return RefreshIndicator(
         onRefresh: () async {
           context.read<DreamHomeBloc>().add(const RefreshDreams());
         },
         strokeWidth: 3,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: dreamsState.dreams.length,
-              itemBuilder: (context, index) {
-                final dream = dreamsState.dreams[index];
-                return _DreamListTIle(dream: dream);
-              },
-            ),
-          ),
+        child: ListView.builder(
+          controller: scrollController,
+          itemCount: dreamsState.dreams.length,
+          itemBuilder: (context, index) {
+            final dream = dreamsState.dreams[index];
+            return _DreamListTIle(dream: dream);
+          },
         ));
   }
 }
