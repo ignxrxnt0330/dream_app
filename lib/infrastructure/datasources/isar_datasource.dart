@@ -40,6 +40,7 @@ class IsarDatasource extends LocalStorageDatasource {
   @override
   Future<int> saveDream(Dream dream) async {
     final isar = await db;
+    dream.initNames();
     final int id = isar.writeTxnSync(() => isar.dreams.putSync(dream));
     return id;
   }

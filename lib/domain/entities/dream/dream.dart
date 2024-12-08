@@ -9,7 +9,7 @@ class Dream {
   final String description;
   final DateTime? date;
   final List<String>? tags; //TODO: tag class from db tags ¿?
-  final List<String>? names;
+  List<String>? names;
   final int? rating; //TODO: validate in constructor ¿?
   final int? lucidness;
   final int? quality;
@@ -75,6 +75,13 @@ class Dream {
     } else {
       return "$day/$month/$year $hour:$minute";
     }
+  }
+
+  void initNames() {
+    const String excluded = ',.!?"()-';
+    final regex = RegExp('[$excluded]');
+
+    names = description.split(" ").where((element) => element.startsWith("@")).toList().map((e) => e.substring(1).toLowerCase().replaceAll(regex, "")).toList();
   }
 
   @override
