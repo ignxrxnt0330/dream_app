@@ -45,15 +45,17 @@ class _DreamFormViewState extends State<DreamFormView> {
   Widget build(BuildContext context) {
     //TODO: fav / unfav
     //TODO: tags
-    return Column(
-      children: [
-        const SizedBox(height: 10),
-        const _DateTimeRow(),
-        const SizedBox(height: 20),
-        _TitleRow(titleController),
-        const SizedBox(height: 20),
-        _DescriptionRow(descriptionController, save),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          const _DateTimeRow(),
+          const SizedBox(height: 20),
+          _TitleRow(titleController),
+          const SizedBox(height: 20),
+          _DescriptionRow(descriptionController, save),
+        ],
+      ),
     );
   }
 }
@@ -73,7 +75,8 @@ class _DescriptionRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        maxLines: 10,
+        maxLines: 20,
+        minLines: 5,
         validator: (value) {
           if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
           if (value == null || value.isEmpty) {
