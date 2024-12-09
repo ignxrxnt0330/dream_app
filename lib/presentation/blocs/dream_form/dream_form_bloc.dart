@@ -1,5 +1,6 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
+import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

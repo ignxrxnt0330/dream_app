@@ -87,7 +87,7 @@ class IsarDatasource extends LocalStorageDatasource {
 
       final downloadsDir = await getDownloadsDirectory();
       if (downloadsDir != null) {
-        final filePath = "${downloadsDir.path}/dreams_${now.toIso8601String()}.txt";
+        final filePath = "${downloadsDir.path}/dreams_${now.toIso8601String()}.json";
         final file = await File(filePath).create();
         await file.writeAsString(data);
         print("File saved at: $filePath");

@@ -27,3 +27,13 @@ class ExportDreams extends DreamHomeEvent {
 class ImportDreams extends DreamHomeEvent {
   const ImportDreams();
 }
+
+class AddDream extends DreamHomeEvent {
+  final Dream dream;
+  const AddDream({required this.dream});
+}
+
+class RemoveDream extends DreamHomeEvent {
+  final int dreamId;
+  const RemoveDream({required this.dreamId});
+}
