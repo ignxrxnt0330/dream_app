@@ -23,25 +23,25 @@ class CustomBottomNavigation extends StatelessWidget {
               Icons.home_outlined,
               color: Colors.white,
             ),
-            label: "Home"),
+            label: "home"),
         BottomNavigationBarItem(
             icon: Icon(
               Icons.calendar_month,
               color: Colors.white,
             ),
-            label: "Calendar"),
+            label: "calendar"),
         BottomNavigationBarItem(
             icon: Icon(
               Icons.search,
               color: Colors.white,
             ),
-            label: "Search"),
+            label: "search"),
         BottomNavigationBarItem(
             icon: Icon(
               Icons.auto_graph,
               color: Colors.white,
             ),
-            label: "Stats"),
+            label: "stats"),
         BottomNavigationBarItem(
             icon: Icon(
               Icons.settings,

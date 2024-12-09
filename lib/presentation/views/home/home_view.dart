@@ -100,6 +100,33 @@ class _DreamListTIle extends StatelessWidget {
       onTap: () {
         context.push("/dream/${dream.id}");
       },
+      onLongPress: () {
+        // show dialog
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(dream.title ?? "delete dream"),
+              content: const Text("do you really wanna delete this dream ¿?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    context.read<DreamHomeBloc>().add(RemoveDream(dreamId: dream.id));
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("ye"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("nah"),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
