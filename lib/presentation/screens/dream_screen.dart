@@ -82,8 +82,7 @@ class _DreamScreenState extends State<DreamScreen> {
           if (context.read<DreamFormBloc>().state.currentIndex == slides.length - 1) {
             context.read<DreamFormBloc>().add(const DreamSubmitted());
             context.pop();
-
-            context.read<DreamHomeBloc>().add(AddDream(dream: context.read<DreamFormBloc>().state.dream!));
+            context.read<DreamHomeBloc>().add(HandleDream(dream: context.read<DreamFormBloc>().state.dream!));
             return;
           }
           FocusManager.instance.primaryFocus?.unfocus();

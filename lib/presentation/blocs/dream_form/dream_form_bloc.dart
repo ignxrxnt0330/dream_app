@@ -1,6 +1,5 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
-import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,18 +29,14 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
       emit(state.copyWith(dream: Dream()));
     }
     emit(state.copyWith(dream: event.dream));
-    print(state.dream);
   }
 
   Future<void> _onFetchDream(FetchDream event, Emitter<DreamFormState> emit) async {
     Dream? dream = await IsarDatasource().getDream(event.dreamId);
     emit(state.copyWith(dream: dream, currentIndex: 0));
-    print(dream);
   }
 
   void _onFormInit(FormInit event, Emitter<DreamFormState> emit) {
     emit(const DreamFormState());
-    print("init");
-    print(state);
   }
 }

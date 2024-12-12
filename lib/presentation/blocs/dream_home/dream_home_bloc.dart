@@ -15,7 +15,7 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     on<ToggleFavDream>(_toggleFavDream);
     on<RefreshDreams>(_refreshDreams);
     on<ExportDreams>(_exportDreams);
-    on<AddDream>(_addDream);
+    on<HandleDream>(_handleDream);
     on<RemoveDream>(_removeDream);
   }
 
@@ -65,8 +65,14 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     emit(state.copyWith(isLoading: false));
   }
 
-  void _addDream(AddDream event, Emitter<DreamHomeState> emit) async {
-    emit(state.copyWith(dreams: [event.dream, ...state.dreams]));
+  void _handleDream(HandleDream event, Emitter<DreamHomeState> emit) async {
+    if (state.dreams.where((dream) => dream.id == event.dream.id).toList().isNotEmpty) {
+      // updating
+      final updatedDreams = state.dreams.map((dream) => dream.id == event.dream.id ? event.dream : dream).toList();
+      emit(state.copyWith(dreams: updatedDreams));
+    } else {
+      emit(state.copyWith(dreams: [event.dream, ...state.dreams]));
+    }
   }
 
   void _removeDream(RemoveDream event, Emitter<DreamHomeState> emit) async {

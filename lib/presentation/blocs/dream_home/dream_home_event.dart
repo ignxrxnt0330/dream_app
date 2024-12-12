@@ -28,9 +28,9 @@ class ImportDreams extends DreamHomeEvent {
   const ImportDreams();
 }
 
-class AddDream extends DreamHomeEvent {
+class HandleDream extends DreamHomeEvent {
   final Dream dream;
-  const AddDream({required this.dream});
+  const HandleDream({required this.dream});
 }
 
 class RemoveDream extends DreamHomeEvent {
