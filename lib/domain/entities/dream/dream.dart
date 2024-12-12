@@ -81,7 +81,7 @@ class Dream {
     const String excluded = ',.!?"()-';
     final regex = RegExp('[$excluded]');
 
-    names = description.split(" ").where((element) => element.startsWith("@")).toList().map((e) => e.substring(1).toLowerCase().replaceAll(regex, "")).toList();
+    names = description.split(" ").where((element) => element.startsWith("@")).toList().map((e) => e.substring(1).toLowerCase().replaceAll(regex, "")).toSet().toList();
   }
 
   @override
