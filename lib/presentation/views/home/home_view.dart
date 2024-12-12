@@ -111,16 +111,16 @@ class _DreamListTIle extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("nah"),
+                ),
+                TextButton(
+                  onPressed: () {
                     context.read<DreamHomeBloc>().add(RemoveDream(dreamId: dream.id));
                     Navigator.of(context).pop();
                   },
                   child: const Text("ye"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("nah"),
                 ),
               ],
             );
