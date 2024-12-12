@@ -98,4 +98,27 @@ class IsarDatasource extends LocalStorageDatasource {
       print("Error saving file: $e");
     }
   }
+
+  @override
+  Future<List<String>>? getAllNames() async {
+    final isar = await db;
+    final List<String> allNames = await isar.dreams.filter().namesIsNotNull().namesIsNotEmpty().findAll().then((dreams) {
+      return dreams.map((dream) => dream.names!).expand((element) => element).toSet().toList();
+    });
+    return allNames;
+  }
+
+  @override
+  Future<List<Dream>>? searchDreams(String query, {int limit = 10, int offset = 0, names = const [], newToOld = true}) async {
+    final isar = await db;
+    final List<Dream> dreams = await isar.dreams.where().filter().descriptionContains(query).or().namesElementContains(names).offset(offset).limit(limit).findAll();
+    return dreams;
+  }
+
+  @override
+  Future<int> searchDreamsResultCount(String query, {int limit = 10, int offset = 0, names = const []}) async {
+    final isar = await db;
+    final int dreamCount = await isar.dreams.where().filter().descriptionContains(query).or().namesElementContains(names).offset(offset).limit(limit).count();
+    return dreamCount;
+  }
 }
