@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 class AppTheme {
   ThemeData getTheme() => ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.purple,
-        // darkmode
-        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.purple,
+          brightness: Brightness.dark,
+          surface: Colors.black,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+        ),
       );
 }
