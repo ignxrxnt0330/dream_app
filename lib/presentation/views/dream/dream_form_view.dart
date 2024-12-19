@@ -17,6 +17,7 @@ class _DreamFormViewState extends State<DreamFormView> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final dateController = TextEditingController();
+  final descriptionFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -47,10 +48,44 @@ class _DreamFormViewState extends State<DreamFormView> {
           const SizedBox(height: 10),
           const _DateTimeRow(),
           const SizedBox(height: 20),
-          _TitleRow(titleController),
+          _TitleRow(titleController, descriptionFocusNode),
           const SizedBox(height: 20),
-          _DescriptionRow(descriptionController, save),
+          _DescriptionRow(descriptionController, save, descriptionFocusNode),
         ],
+      ),
+    );
+  }
+}
+
+//TODO: initialValue => nmalol, delete onTap
+class _TitleRow extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode nextFocusNode;
+  const _TitleRow(this.controller, this.nextFocusNode);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: 'Title',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        maxLength: 40,
+        maxLines: 1,
+        validator: (value) {
+          // if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
+          if (value == null || value.isEmpty) {
+            return "empty";
+          }
+          return null;
+        },
+        onFieldSubmitted: (_) {
+          FocusScope.of(context).requestFocus(nextFocusNode);
+        },
       ),
     );
   }
@@ -59,12 +94,15 @@ class _DreamFormViewState extends State<DreamFormView> {
 class _DescriptionRow extends StatelessWidget {
   final TextEditingController controller;
   final Function save;
-  const _DescriptionRow(this.controller, this.save);
+  final FocusNode descriptionFocusNode;
+  const _DescriptionRow(this.controller, this.save, this.descriptionFocusNode);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: TextFormField(
+        controller: controller,
+        focusNode: descriptionFocusNode,
         decoration: InputDecoration(
           labelText: 'Description',
           border: OutlineInputBorder(
@@ -81,37 +119,6 @@ class _DescriptionRow extends StatelessWidget {
           save();
           return null;
         },
-        controller: controller,
-      ),
-    );
-  }
-}
-
-//TODO: initialValue => nmalol, delete onTap
-class _TitleRow extends StatelessWidget {
-  final TextEditingController controller;
-  const _TitleRow(this.controller);
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: 'Title',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-        ),
-        maxLength: 40,
-        maxLines: 1,
-        validator: (value) {
-          // if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
-          if (value == null || value.isEmpty) {
-            return "empty";
-          }
-          return null;
-        },
-        controller: controller,
       ),
     );
   }
