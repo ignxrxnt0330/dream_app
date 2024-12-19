@@ -30,12 +30,12 @@ class CustomBottomNavigation extends StatelessWidget {
               color: Colors.white,
             ),
             label: "calendar"),
-        BottomNavigationBarItem(
-            icon: Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
-            label: "search"),
+        // BottomNavigationBarItem(
+        //     icon: Icon(
+        //       Icons.search,
+        //       color: Colors.white,
+        //     ),
+        //     label: "search"),
         BottomNavigationBarItem(
             icon: Icon(
               Icons.auto_graph,

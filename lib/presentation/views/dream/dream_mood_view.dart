@@ -18,11 +18,11 @@ class _DreamMoodViewState extends State<DreamMoodView> {
   @override
   void initState() {
     super.initState();
-    mood = context.read<DreamFormBloc>().state.dream?.mood;
+    mood = context.read<DreamFormBloc>().state.dream.mood;
   }
 
   void save() {
-    Dream dream = context.read<DreamFormBloc>().state.dream?.copyWith(mood: mood) ?? Dream(mood: mood);
+    Dream dream = context.read<DreamFormBloc>().state.dream.copyWith(mood: mood);
     context.read<DreamFormBloc>().add(FieldChanged(dream));
   }
 

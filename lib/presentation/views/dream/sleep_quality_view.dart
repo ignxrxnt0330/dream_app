@@ -18,11 +18,11 @@ class _SleepQualityViewState extends State<SleepQualityView> {
   @override
   void initState() {
     super.initState();
-    quality = context.read<DreamFormBloc>().state.dream?.quality;
+    quality = context.read<DreamFormBloc>().state.dream.quality;
   }
 
   void save() {
-    Dream dream = context.read<DreamFormBloc>().state.dream?.copyWith(quality: quality) ?? Dream(quality: quality);
+    Dream dream = context.read<DreamFormBloc>().state.dream.copyWith(quality: quality);
     context.read<DreamFormBloc>().add(FieldChanged(dream));
   }
 

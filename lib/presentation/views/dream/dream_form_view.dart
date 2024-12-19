@@ -22,18 +22,14 @@ class _DreamFormViewState extends State<DreamFormView> {
   void initState() {
     super.initState();
     //FIXME:
-    Dream? dream = context.read<DreamFormBloc>().state.dream;
-    titleController.text = dream?.title ?? "";
-    descriptionController.text = dream?.description ?? "";
+    Dream dream = context.read<DreamFormBloc>().state.dream;
+    titleController.text = dream.title ?? "";
+    descriptionController.text = dream.description;
   }
 
   void save() {
     //FIXME:
-    Dream dream = context.read<DreamFormBloc>().state.dream?.copyWith(
-              title: titleController.text,
-              description: descriptionController.text,
-            ) ??
-        Dream(
+    Dream dream = context.read<DreamFormBloc>().state.dream.copyWith(
           title: titleController.text,
           description: descriptionController.text,
           date: DateTime.now(),
@@ -133,7 +129,7 @@ class _DateTimeRowState extends State<_DateTimeRow> {
   @override
   void initState() {
     super.initState();
-    value = context.read<DreamFormBloc>().state.dream?.date ?? DateTime.now();
+    value = context.read<DreamFormBloc>().state.dream.date ?? DateTime.now();
   }
 
   @override
@@ -152,7 +148,7 @@ class _DateTimeRowState extends State<_DateTimeRow> {
         initialValue: value,
         onChanged: (DateTime? value) {
           if (value == null) return;
-          Dream dream = context.read<DreamFormBloc>().state.dream ?? Dream(date: value);
+          Dream dream = context.read<DreamFormBloc>().state.dream;
           dream = dream.copyWith(date: value);
           context.read<DreamFormBloc>().add(FieldChanged(dream));
         },

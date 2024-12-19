@@ -7,7 +7,7 @@ part 'dream_form_event.dart';
 part 'dream_form_state.dart';
 
 class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
-  DreamFormBloc() : super(const DreamFormState()) {
+  DreamFormBloc() : super(DreamFormState(dream: Dream())) {
     on<DreamSubmitted>(_onDreamSubmitted);
     on<IndexChanged>(_onIndexChanged);
     on<FieldChanged>(_onFieldChanged);
@@ -17,7 +17,7 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
 
   void _onDreamSubmitted(DreamSubmitted event, Emitter<DreamFormState> emit) async {
     // upload dream
-    await IsarDatasource().saveDream(state.dream!);
+    await IsarDatasource().saveDream(state.dream);
   }
 
   void _onIndexChanged(IndexChanged event, Emitter<DreamFormState> emit) {
@@ -25,9 +25,6 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
   }
 
   void _onFieldChanged(FieldChanged event, Emitter<DreamFormState> emit) {
-    if (state.dream == null) {
-      emit(state.copyWith(dream: Dream()));
-    }
     emit(state.copyWith(dream: event.dream));
   }
 
@@ -37,6 +34,7 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
   }
 
   void _onFormInit(FormInit event, Emitter<DreamFormState> emit) {
-    emit(const DreamFormState());
+    emit(DreamFormState(dream: Dream(quality: 3, mood: 2)));
+    print(state.dream);
   }
 }

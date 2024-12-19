@@ -1,5 +1,5 @@
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
-import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
+import 'package:dream_app/presentation/delegates/dream_search_delegate.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_app/presentation/views/views.dart';
@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   final routes = const <Widget>[
     HomeView(),
     CalendarView(),
-    SearchView(),
+    // SearchView(),
     StatsView(),
     ConfigView(),
   ];
@@ -27,9 +27,12 @@ class HomeScreen extends StatelessWidget {
         title: const Text('dream_app'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.sync),
+            icon: const Icon(Icons.search),
             onPressed: () {
-              context.read<DreamHomeBloc>().add(const ExportDreams());
+              showSearch(
+                context: context,
+                delegate: DreamSearchDelegate(),
+              );
             },
           ),
         ],
