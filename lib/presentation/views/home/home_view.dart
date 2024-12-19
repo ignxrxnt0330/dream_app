@@ -63,7 +63,12 @@ class _DreamListTIle extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Row(children: [
-        Text(dream.title ?? "asd"),
+        SizedBox(
+            width: 200,
+            child: Text(
+          dream.title ?? "asd",
+          overflow: TextOverflow.ellipsis,
+        )),
         const SizedBox(width: 20),
         Text(dream.formattedDate),
         Expanded(child: Container()),
