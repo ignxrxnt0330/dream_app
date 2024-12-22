@@ -111,7 +111,7 @@ class IsarDatasource extends LocalStorageDatasource {
   @override
   Future<List<Dream>>? searchDreams(String query, {int limit = 10, int offset = 0, names = const <String>[], newToOld = true}) async {
     final isar = await db;
-    final List<Dream> dreams = await isar.dreams.where().filter().descriptionContains(query, caseSensitive: false).offset(offset).limit(limit).findAll();
+    final List<Dream> dreams = await isar.dreams.where().filter().descriptionContains(query, caseSensitive: false).or().titleContains(query, caseSensitive: false).offset(offset).limit(limit).findAll();
     //FIXME: names regex ¿?
     return dreams;
   }
@@ -119,7 +119,7 @@ class IsarDatasource extends LocalStorageDatasource {
   @override
   Future<int> searchDreamsResultCount(String query, {names = const <String>[]}) async {
     final isar = await db;
-    final int dreamCount = await isar.dreams.where().filter().descriptionContains(query, caseSensitive: false).count();
+    final int dreamCount = await isar.dreams.where().filter().descriptionContains(query, caseSensitive: false).or().titleContains(query, caseSensitive: false).count();
     return dreamCount;
   }
 }
