@@ -1,4 +1,5 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
+import 'package:dream_app/domain/entities/stats/streak.dart';
 
 abstract class LocalStorageDatasource {
   Future<int> saveDream(Dream dream);
@@ -12,4 +13,9 @@ abstract class LocalStorageDatasource {
   Future<List<String>>? getAllNames();
   Future<List<Dream>>? searchDreams(String query, {int limit = 10, int offset = 0, names = const [], bool newToOld = true});
   Future<int> searchDreamsResultCount(String query, {names = const []});
+  Future<int> dreamCount();
+  Future<int> wordCount();
+  Future<int> charCount();
+  Future<Streak> currentStreak();
+  Future<Streak> longestStreak();
 }

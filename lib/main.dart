@@ -1,6 +1,7 @@
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_search/dream_search_bloc.dart';
+import 'package:dream_app/presentation/blocs/dream_stats/dream_stats_bloc.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dream_app/config/router/app_router.dart';
@@ -35,6 +36,9 @@ class MainApp extends StatelessWidget {
           ),
           BlocProvider<DreamSearchBloc>(
             create: (context) => DreamSearchBloc(),
+          ),
+          BlocProvider<DreamStatsBloc>(
+            create: (context) => DreamStatsBloc(),
           ),
         ],
         child: MaterialApp.router(
