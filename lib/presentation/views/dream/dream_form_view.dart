@@ -33,7 +33,7 @@ class _DreamFormViewState extends State<DreamFormView> {
     Dream dream = context.read<DreamFormBloc>().state.dream.copyWith(
           title: titleController.text,
           description: descriptionController.text,
-          date: DateTime.now(),
+          date: DateTime.parse(dateController.text),
         );
     context.read<DreamFormBloc>().add(FieldChanged(dream));
   }
@@ -46,7 +46,7 @@ class _DreamFormViewState extends State<DreamFormView> {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          const _DateTimeRow(),
+          _DateTimeRow(dateController),
           const SizedBox(height: 20),
           _TitleRow(titleController, descriptionFocusNode),
           const SizedBox(height: 20),
@@ -112,7 +112,7 @@ class _DescriptionRow extends StatelessWidget {
         maxLines: 20,
         minLines: 5,
         validator: (value) {
-          if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
+          // if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
           if (value == null || value.isEmpty) {
             return "empty";
           }
@@ -125,7 +125,8 @@ class _DescriptionRow extends StatelessWidget {
 }
 
 class _DateTimeRow extends StatefulWidget {
-  const _DateTimeRow();
+  final TextEditingController controller;
+  const _DateTimeRow(this.controller);
 
   @override
   State<_DateTimeRow> createState() => _DateTimeRowState();
@@ -155,9 +156,7 @@ class _DateTimeRowState extends State<_DateTimeRow> {
         initialValue: value,
         onChanged: (DateTime? value) {
           if (value == null) return;
-          Dream dream = context.read<DreamFormBloc>().state.dream;
-          dream = dream.copyWith(date: value);
-          context.read<DreamFormBloc>().add(FieldChanged(dream));
+          widget.controller.text = value.toIso8601String();
         },
         validator: (value) {
           // if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;

@@ -31,7 +31,7 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: DreamSearchDelegate(),
+                delegate: DreamSearchDelegate(context),
               );
             },
           ),

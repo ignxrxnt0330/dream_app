@@ -5,6 +5,8 @@ class DreamSearchState extends Equatable {
   final bool isLoading;
   final int count;
 
+  //TODO: states factory ¿?
+
   const DreamSearchState({this.dreams = const [], this.isLoading = false, this.count = 0});
 
   DreamSearchState copyWith({

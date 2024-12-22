@@ -12,10 +12,14 @@ class DreamSearchBloc extends Bloc<DreamSearchEvent, DreamSearchState> {
   }
 
   Future<void> _searchDreams(SearchDreams event, Emitter<DreamSearchState> emit) async {
-    emit(state.copyWith(isLoading: true));
-    final List<Dream> dreams = await IsarDatasource().searchDreams(event.query) ?? [];
-    final int count = await IsarDatasource().searchDreamsResultCount(event.query);
-    emit(state.copyWith(dreams: dreams, count: count, isLoading: false));
-    print('Dreams: $dreams');
+    try {
+      if (state.isLoading) return;
+      emit(state.copyWith(isLoading: true, dreams: [], count: 0));
+      final List<Dream> dreams = await IsarDatasource().searchDreams(event.query) ?? [];
+      final int count = await IsarDatasource().searchDreamsResultCount(event.query);
+      emit(state.copyWith(dreams: dreams, count: count, isLoading: false));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false));
+    }
   }
 }
