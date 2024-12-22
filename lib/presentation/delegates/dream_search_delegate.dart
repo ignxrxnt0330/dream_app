@@ -63,7 +63,7 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
               itemBuilder: (context, index) {
                 return CustomDreamListTile(dream: bloc.state.dreams[index]);
               },
-              itemCount: bloc.state.count))
+              itemCount: bloc.state.dreams.length))
     ]);
   }
 
@@ -90,7 +90,7 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
               itemBuilder: (context, index) {
                 return CustomDreamListTile(dream: bloc.state.dreams[index]);
               },
-              itemCount: bloc.state.count))
+              itemCount: bloc.state.dreams.length))
     ]);
   }
 }
