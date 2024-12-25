@@ -46,16 +46,16 @@ class _StatsViewState extends State<StatsView> {
                       direction: Axis.horizontal,
                       children: [
                         StatCard(title: "current streak", text: state.currentStreak.streak.toString()),
-                        StatCard(title: "start", text: state.currentStreak.streakStart.toString()),
-                        StatCard(title: "end", text: state.currentStreak.streakEnd.toString()),
+                        StatCard(title: "end", text: "${state.currentStreak.streakStart.day}/${state.currentStreak.streakStart.month}/${state.currentStreak.streakStart.year % 100}"),
+                        StatCard(title: "end", text: "${state.currentStreak.streakEnd.day}/${state.currentStreak.streakEnd.month}/${state.currentStreak.streakEnd.year % 100}"),
                       ],
                     ),
                     Flex(
                       direction: Axis.horizontal,
                       children: [
                         StatCard(title: "longest streak", text: state.longestStreak.streak.toString()),
-                        StatCard(title: "start", text: state.longestStreak.streakStart.toString()),
-                        StatCard(title: "end", text: state.longestStreak.streakEnd.toString()),
+                        StatCard(title: "end", text: "${state.longestStreak.streakStart.day}/${state.longestStreak.streakStart.month}/${state.longestStreak.streakStart.year % 100}"),
+                        StatCard(title: "end", text: "${state.longestStreak.streakEnd.day}/${state.longestStreak.streakEnd.month}/${state.longestStreak.streakEnd.year % 100}"),
                       ],
                     ),
                   ],
