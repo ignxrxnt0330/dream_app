@@ -29,11 +29,9 @@ class _DreamFormViewState extends State<DreamFormView> {
   }
 
   void save() {
-    //FIXME:
     Dream dream = context.read<DreamFormBloc>().state.dream.copyWith(
           title: titleController.text,
           description: descriptionController.text,
-          date: DateTime.parse(dateController.text),
         );
     context.read<DreamFormBloc>().add(FieldChanged(dream));
   }
@@ -46,7 +44,7 @@ class _DreamFormViewState extends State<DreamFormView> {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          _DateTimeRow(dateController),
+          const _DateTimeRow(),
           const SizedBox(height: 20),
           _TitleRow(titleController, descriptionFocusNode),
           const SizedBox(height: 20),
@@ -77,7 +75,6 @@ class _TitleRow extends StatelessWidget {
         maxLength: 40,
         maxLines: 1,
         validator: (value) {
-          // if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
           if (value == null || value.isEmpty) {
             return "empty";
           }
@@ -112,7 +109,6 @@ class _DescriptionRow extends StatelessWidget {
         maxLines: 20,
         minLines: 5,
         validator: (value) {
-          // if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
           if (value == null || value.isEmpty) {
             return "empty";
           }
@@ -125,8 +121,7 @@ class _DescriptionRow extends StatelessWidget {
 }
 
 class _DateTimeRow extends StatefulWidget {
-  final TextEditingController controller;
-  const _DateTimeRow(this.controller);
+  const _DateTimeRow();
 
   @override
   State<_DateTimeRow> createState() => _DateTimeRowState();
@@ -144,7 +139,6 @@ class _DateTimeRowState extends State<_DateTimeRow> {
   Widget build(BuildContext context) {
     return Material(
       child: DateTimeFormField(
-        //FIXME: custom data format
         dateFormat: DateFormat('dd-MM-yyyy HH:mm'),
         decoration: InputDecoration(
           border: OutlineInputBorder(
@@ -152,14 +146,15 @@ class _DateTimeRowState extends State<_DateTimeRow> {
           ),
           labelText: 'Date',
         ),
-        initialPickerDateTime: DateTime.now(),
+        initialPickerDateTime: value,
         initialValue: value,
         onChanged: (DateTime? value) {
           if (value == null) return;
-          widget.controller.text = value.toIso8601String();
+          Dream dream = context.read<DreamFormBloc>().state.dream;
+          dream = dream.copyWith(date: value);
+          context.read<DreamFormBloc>().add(FieldChanged(dream));
         },
         validator: (value) {
-          // if (context.read<DreamFormBloc>().state.currentIndex != 0) return null;
           if (value == null) {
             return "empty";
           }
