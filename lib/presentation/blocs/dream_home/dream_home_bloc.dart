@@ -73,6 +73,7 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     } else {
       emit(state.copyWith(dreams: [event.dream, ...state.dreams]));
     }
+    state.dreams.sort((a, b) => b.date!.compareTo(a.date!));
   }
 
   void _removeDream(RemoveDream event, Emitter<DreamHomeState> emit) async {
