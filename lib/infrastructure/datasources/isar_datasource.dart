@@ -143,9 +143,9 @@ class IsarDatasource extends LocalStorageDatasource {
     DateTime streakEnd = dates.last ?? DateTime.now();
     DateTime streakStart = dates.last ?? DateTime.now();
 
-    for (int i = dates.length - 1; i > 0; i--) {
+    for (int i = dates.length -1; i >= 0; i--) {
       final currentDate = dates[i];
-      final previousDate = dates[i - 1];
+      final previousDate = dates[i - 1 != -1 ? i - 1 : i];
       if (currentDate == null || previousDate == null) continue;
       if (currentDate.day == previousDate.day && currentDate.month == previousDate.month && currentDate.year == previousDate.year) continue;
 
@@ -153,9 +153,9 @@ class IsarDatasource extends LocalStorageDatasource {
 
       if (isNextDay) {
         streak++;
-        streakEnd = currentDate;
+        streakEnd = previousDate;
       } else {
-        streak = 0;
+        streak = 1;
         streakStart = previousDate;
       }
     }
@@ -174,9 +174,9 @@ class IsarDatasource extends LocalStorageDatasource {
 
     int longestStreak = 0;
 
-    for (int i = dates.length - 1; i > 0; i--) {
+    for (int i = dates.length -1; i >= 0; i--) {
       final currentDate = dates[i];
-      final previousDate = dates[i - 1];
+      final previousDate = dates[i - 1 != -1 ? i - 1 : i];
 
       if (currentDate == null || previousDate == null) continue;
       if (currentDate.day == previousDate.day && currentDate.month == previousDate.month && currentDate.year == previousDate.year) continue;
@@ -185,12 +185,12 @@ class IsarDatasource extends LocalStorageDatasource {
 
       if (isNextDay) {
         streak++;
-        streakEnd = currentDate;
+        streakEnd = previousDate;
       } else {
         if (streak > longestStreak) {
           longestStreak = streak;
         }
-        streak = 0;
+        streak = 1;
         streakStart = previousDate;
       }
     }
