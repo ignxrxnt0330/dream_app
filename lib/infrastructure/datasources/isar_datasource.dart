@@ -114,7 +114,7 @@ class IsarDatasource extends LocalStorageDatasource {
   @override
   Future<List<Dream>>? searchDreams(String query, {int limit = 10, int offset = 0, names = const <String>[], newToOld = true}) async {
     final isar = await db;
-    final List<Dream> dreams = await isar.dreams.where().filter().descriptionContains(query, caseSensitive: false).or().titleContains(query, caseSensitive: false).offset(offset).limit(limit).findAll();
+    final List<Dream> dreams = await isar.dreams.where().filter().descriptionContains(query, caseSensitive: false).or().titleContains(query, caseSensitive: false).sortByDateDesc().offset(offset).limit(limit).findAll();
     return dreams;
   }
 
@@ -147,12 +147,16 @@ class IsarDatasource extends LocalStorageDatasource {
       final currentDate = dates[i];
       final previousDate = dates[i - 1];
       if (currentDate == null || previousDate == null) continue;
+      if (currentDate.day == previousDate.day && currentDate.month == previousDate.month && currentDate.year == previousDate.year) continue;
 
-      if (currentDate != null && previousDate != null && currentDate.difference(previousDate).inDays == 1) {
+      final isNextDay = previousDate.day == currentDate.add(const Duration(days: 1)).day;
+
+      if (isNextDay) {
         streak++;
+        streakEnd = currentDate;
       } else {
+        streak = 0;
         streakStart = previousDate;
-        break;
       }
     }
     return Streak(streak: streak, streakStart: streakStart, streakEnd: streakEnd);
@@ -173,15 +177,21 @@ class IsarDatasource extends LocalStorageDatasource {
     for (int i = dates.length - 1; i > 0; i--) {
       final currentDate = dates[i];
       final previousDate = dates[i - 1];
-      if (currentDate == null || previousDate == null) continue;
 
-      if (currentDate.difference(previousDate).inDays == 1) {
+      if (currentDate == null || previousDate == null) continue;
+      if (currentDate.day == previousDate.day && currentDate.month == previousDate.month && currentDate.year == previousDate.year) continue;
+
+      final isNextDay = previousDate.day == currentDate.add(const Duration(days: 1)).day;
+
+      if (isNextDay) {
         streak++;
-      } else if (currentDate != null && previousDate != null && currentDate.difference(previousDate).inDays > 1) {
+        streakEnd = currentDate;
+      } else {
         if (streak > longestStreak) {
           longestStreak = streak;
-          streak = 1;
         }
+        streak = 0;
+        streakStart = previousDate;
       }
     }
 

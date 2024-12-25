@@ -20,37 +20,49 @@ class _StatsViewState extends State<StatsView> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<DreamStatsBloc>();
+    final bloc = context.watch<DreamStatsBloc>();
 
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            Flex(
-              direction: Axis.horizontal,
-              children: [
-                StatCard(title: "total dreams", text: bloc.state.dreamCount.toString()),
-                StatCard(title: "total words", text: bloc.state.wordCount.toString()),
-                StatCard(title: "total characters", text: bloc.state.charCount.toString()), //TODO: human readable
-              ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          bloc.add(const FetchStats());
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Center(
+            child: BlocBuilder<DreamStatsBloc, DreamStatsState>(
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    Flex(
+                      direction: Axis.horizontal,
+                      children: [
+                        StatCard(title: "total dreams", text: state.dreamCount.toString()),
+                        StatCard(title: "total words", text: state.wordCount.toString()),
+                        StatCard(title: "total characters", text: state.charCount.toString()), //TODO: human readable
+                      ],
+                    ),
+                    Flex(
+                      direction: Axis.horizontal,
+                      children: [
+                        StatCard(title: "current streak", text: state.currentStreak.streak.toString()),
+                        StatCard(title: "start", text: state.currentStreak.streakStart.toString()),
+                        StatCard(title: "end", text: state.currentStreak.streakEnd.toString()),
+                      ],
+                    ),
+                    Flex(
+                      direction: Axis.horizontal,
+                      children: [
+                        StatCard(title: "longest streak", text: state.longestStreak.streak.toString()),
+                        StatCard(title: "start", text: state.longestStreak.streakStart.toString()),
+                        StatCard(title: "end", text: state.longestStreak.streakEnd.toString()),
+                      ],
+                    ),
+                  ],
+                );
+              },
             ),
-            Flex(
-              direction: Axis.horizontal,
-              children: [
-                StatCard(title: "current streak", text: bloc.state.currentStreak.streak.toString()),
-                StatCard(title: "start", text: bloc.state.currentStreak.streakStart.toString()),
-                StatCard(title: "end", text: bloc.state.currentStreak.streakEnd.toString()),
-              ],
-            ),
-            Flex(
-              direction: Axis.horizontal,
-              children: [
-                StatCard(title: "longest streak", text: bloc.state.longestStreak.streak.toString()),
-                StatCard(title: "start", text: bloc.state.longestStreak.streakStart.toString()),
-                StatCard(title: "end", text: bloc.state.longestStreak.streakEnd.toString()),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );

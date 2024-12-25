@@ -15,20 +15,15 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
     final dreamCount = await IsarDatasource().dreamCount();
     final wordCount = await IsarDatasource().wordCount();
     final charCount = await IsarDatasource().charCount();
-    Streak? longestStreak, currentStreak;
-    try {
-      longestStreak = await IsarDatasource().longestStreak();
-      currentStreak = await IsarDatasource().currentStreak();
-    } catch (e) {
-      print(e);
-    }
+    final longestStreak = await IsarDatasource().longestStreak();
+    final currentStreak = await IsarDatasource().currentStreak();
 
     emit(state.copyWith(
       dreamCount: dreamCount,
       wordCount: wordCount,
       charCount: charCount,
-      currentStreak: currentStreak ?? Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()),
-      longestStreak: longestStreak ?? Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()),
+      currentStreak: currentStreak,
+      longestStreak: longestStreak,
     ));
   }
 }
