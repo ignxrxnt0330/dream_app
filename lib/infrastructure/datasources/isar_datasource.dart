@@ -88,9 +88,9 @@ class IsarDatasource extends LocalStorageDatasource {
       final List<Dream> dreams = await getAllDreams();
       data = dreams.map((dream) => dream.toJson()).join("\n");
 
-      final downloadsDir = await getDownloadsDirectory();
-      if (downloadsDir != null) {
-        final filePath = "${downloadsDir.path}/dreams_${now.toIso8601String()}.json";
+      final dir = await getDownloadsDirectory();
+      if (dir != null) {
+        final filePath = "${dir.path}/dreams_${now.toIso8601String()}.json";
         final file = await File(filePath).create();
         await file.writeAsString(data);
         print("File saved at: $filePath");
@@ -143,7 +143,7 @@ class IsarDatasource extends LocalStorageDatasource {
     DateTime streakEnd = dates.last ?? DateTime.now();
     DateTime streakStart = dates.last ?? DateTime.now();
 
-    for (int i = dates.length -1; i >= 0; i--) {
+    for (int i = dates.length - 1; i >= 0; i--) {
       final currentDate = dates[i];
       final previousDate = dates[i - 1 != -1 ? i - 1 : i];
       if (currentDate == null || previousDate == null) continue;
@@ -157,6 +157,7 @@ class IsarDatasource extends LocalStorageDatasource {
       } else {
         streak = 1;
         streakStart = previousDate;
+        streakEnd = previousDate;
       }
     }
     return Streak(streak: streak, streakStart: streakStart, streakEnd: streakEnd);
@@ -171,10 +172,12 @@ class IsarDatasource extends LocalStorageDatasource {
 
     DateTime streakEnd = dates.last ?? DateTime.now();
     DateTime streakStart = dates.last ?? DateTime.now();
+    late DateTime currStreakEnd;
+    late DateTime currStreakStart;
 
     int longestStreak = 0;
 
-    for (int i = dates.length -1; i >= 0; i--) {
+    for (int i = dates.length - 1; i >= 0; i--) {
       final currentDate = dates[i];
       final previousDate = dates[i - 1 != -1 ? i - 1 : i];
 
@@ -185,17 +188,19 @@ class IsarDatasource extends LocalStorageDatasource {
 
       if (isNextDay) {
         streak++;
-        streakEnd = previousDate;
+        currStreakEnd = previousDate;
       } else {
         if (streak > longestStreak) {
+          streakStart = currStreakStart;
+          streakEnd = currStreakEnd;
           longestStreak = streak;
         }
         streak = 1;
-        streakStart = previousDate;
+        currStreakStart = previousDate;
       }
     }
 
-    return Streak(streak: streak, streakStart: streakStart, streakEnd: streakEnd);
+    return Streak(streak: longestStreak, streakStart: streakStart, streakEnd: streakEnd);
   }
 
   @override

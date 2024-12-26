@@ -32,7 +32,6 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final dreamsState = context.watch<DreamHomeBloc>().state;
 
-//FIXME: refresh doesnt work then there are not enough dreams
     return RefreshIndicator(
         onRefresh: () async {
           context.read<DreamHomeBloc>().add(const RefreshDreams());
@@ -40,6 +39,7 @@ class _HomeViewState extends State<HomeView> {
         strokeWidth: 3,
         //TODO: separator ¿?
         child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: scrollController,
           itemCount: dreamsState.dreams.length,
           itemBuilder: (context, index) {
