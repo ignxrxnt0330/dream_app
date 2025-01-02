@@ -80,8 +80,8 @@ class Dream {
   void initNames() {
     const String excluded = ',.!?"()-';
     final regex = RegExp('[$excluded]');
-
-    names = description.split(" ").where((element) => element.startsWith("@")).toList().map((e) => e.substring(1).toLowerCase().replaceAll(regex, "")).toSet().toList();
+  
+    names = description.split(RegExp(r'[\s\n]')).where((element) => element.startsWith("@")).toList().map((e) => e.substring(1).toLowerCase().replaceAll(regex, "")).toSet().toList();
   }
 
   @override
