@@ -29,8 +29,6 @@ class _DreamScreenState extends State<DreamScreen> {
       context.read<DreamFormBloc>().add(FetchDream(widget.dreamId!));
     }
 
-    //FIXME: prevent swiping if not validated
-
     slides = const <Widget>[
       DreamFormView(),
       SleepQualityView(),
@@ -77,23 +75,34 @@ class _DreamScreenState extends State<DreamScreen> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(onPressed: () {
-          if (!formKey.currentState!.validate()) return;
-          if (context.read<DreamFormBloc>().state.currentIndex == slides.length - 1) {
-            context.read<DreamFormBloc>().add(const DreamSubmitted());
-            context.pop();
-            context.read<DreamHomeBloc>().add(HandleDream(dream: context.read<DreamFormBloc>().state.dream));
-            return;
-          }
-          FocusManager.instance.primaryFocus?.unfocus();
-          swiperController.next(animation: true);
-        }, child: BlocBuilder<DreamFormBloc, DreamFormState>(
-          builder: (context, state) {
-            return Icon(
-              state.currentIndex >= (slides.length - 1) ? Icons.arrow_upward : Icons.arrow_forward,
+        floatingActionButton: Builder(
+          builder: (context) {
+            final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+            return Visibility(
+              visible: !isKeyboardVisible,
+              child: FloatingActionButton(
+                onPressed: () {
+                  if (!formKey.currentState!.validate()) return;
+                  if (context.read<DreamFormBloc>().state.currentIndex == slides.length - 1) {
+                    context.read<DreamFormBloc>().add(const DreamSubmitted());
+                    context.pop();
+                    context.read<DreamHomeBloc>().add(HandleDream(dream: context.read<DreamFormBloc>().state.dream));
+                    return;
+                  }
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  swiperController.next(animation: true);
+                },
+                child: BlocBuilder<DreamFormBloc, DreamFormState>(
+                  builder: (context, state) {
+                    return Icon(
+                      state.currentIndex >= (slides.length - 1) ? Icons.arrow_upward : Icons.arrow_forward,
+                    );
+                  },
+                ),
+              ),
             );
           },
-        )),
+        ),
       ),
     );
   }
