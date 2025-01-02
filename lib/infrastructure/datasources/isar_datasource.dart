@@ -222,4 +222,24 @@ class IsarDatasource extends LocalStorageDatasource {
     final titleCount = titles.map((e) => e != null ? e.split(" ").where((e) => e != "").toList().length : 0).reduce((value, element) => value + element);
     return descCount + titleCount;
   }
+
+  @override
+  Future<List<DateTime>> allDates() async {
+    final isar = await db;
+    //TODO: next month
+    final dates = await isar.dreams.where(distinct: true).sortByDateDesc().dateProperty().findAll();
+    return dates.cast<DateTime>();
+  }
+
+  @override
+  Future<DateTime> firstDate() {
+    // TODO: implement firstDate
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DateTime> lastDate() {
+    // TODO: implement lastDate
+    throw UnimplementedError();
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:dream_app/presentation/blocs/dream_calendar/dream_calendar_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_search/dream_search_bloc.dart';
@@ -39,6 +40,9 @@ class MainApp extends StatelessWidget {
           ),
           BlocProvider<DreamStatsBloc>(
             create: (context) => DreamStatsBloc(),
+          ),
+          BlocProvider<DreamCalendarBloc>(
+            create: (context) => DreamCalendarBloc(),
           ),
         ],
         child: MaterialApp.router(

@@ -18,4 +18,7 @@ abstract class LocalStorageDatasource {
   Future<int> charCount();
   Future<Streak> currentStreak();
   Future<Streak> longestStreak();
+  Future<List<DateTime>> allDates();
+  Future<DateTime> firstDate();
+  Future<DateTime> lastDate();
 }
