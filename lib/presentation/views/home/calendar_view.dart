@@ -13,6 +13,8 @@ class CalendarView extends StatefulWidget {
 }
 
 class _CalendarViewState extends State<CalendarView> {
+  List<DateTime> selectedDates = [];
+
   @override
   void initState() {
     super.initState();
@@ -38,18 +40,23 @@ class _CalendarViewState extends State<CalendarView> {
             startWeekday: WeekDay.monday,
             datesForStreaks: bloc.state.dates,
             datesForSkips: const [],
-            currentDateProperties: DatesProperties(
-              datesDecoration: DatesDecoration(datesBorderRadius: 1000, datesTextColor: Colors.black, datesBackgroundColor: Colors.white),
-            ),
-            generalDatesProperties: DatesProperties(
-              datesDecoration: DatesDecoration(
-                datesBorderRadius: 1000,
-                datesTextColor: Colors.black,
-              ),
-            ),
-            streakDatesProperties: DatesProperties(
-              datesDecoration: DatesDecoration(datesBorderRadius: 1000, datesTextColor: Colors.white, datesBackgroundColor: Colors.black),
-            ),
+
+            // date props
+            generalDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.white, datesBorderColor: Colors.black)),
+            leadingTrailingDatesProperties: DatesProperties(hide: true),
+            streakDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.white, datesBackgroundColor: Colors.black)),
+            selectedDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.black, datesBackgroundColor: Colors.white)),
+
+            dateSelectionMode: DatePickerSelectionMode.singleOrMultiple,
+            onSelectedDates: (List<DateTime> value) {
+              if (selectedDates.isEmpty || selectedDates.first != value.first) {
+                selectedDates = value;
+              } else {
+                selectedDates = [];
+              }
+              setState(() {});
+            },
+            selectedDates: selectedDates,
           ),
         ),
       ),
