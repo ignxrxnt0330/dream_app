@@ -30,7 +30,7 @@ class _DreamFormViewState extends State<DreamFormView> {
 
   void save() {
     Dream dream = context.read<DreamFormBloc>().state.dream.copyWith(
-          title: titleController.text,
+          title: titleController.text != "" ? titleController.text : "nmalol",
           description: descriptionController.text,
         );
     context.read<DreamFormBloc>().add(FieldChanged(dream));
@@ -68,6 +68,7 @@ class _TitleRow extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           labelText: 'Title',
+          hintText: "nmalol",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -75,9 +76,9 @@ class _TitleRow extends StatelessWidget {
         maxLength: 40,
         maxLines: 1,
         validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "empty";
-          }
+          // if (value == null || value.isEmpty) {
+          //   return "empty";
+          // }
           return null;
         },
         onFieldSubmitted: (_) {
@@ -102,6 +103,7 @@ class _DescriptionRow extends StatelessWidget {
         focusNode: descriptionFocusNode,
         decoration: InputDecoration(
           labelText: 'Description',
+          hintText: "asdasdasd...",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
           ),
