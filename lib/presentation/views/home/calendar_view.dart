@@ -34,6 +34,7 @@ class _CalendarViewState extends State<CalendarView> {
       body: RefreshIndicator(
         onRefresh: () async {
           bloc.add(const FetchDates());
+          bloc.add(FetchDreams(selectedDates.first));
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),

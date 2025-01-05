@@ -17,12 +17,13 @@ class CustomDreamListTile extends StatelessWidget {
     return ListTile(
       title: Row(children: [
         SizedBox(
-            child: Text(
-              dream.title ?? "asd",
-              overflow: TextOverflow.ellipsis,
-            )),
-        const SizedBox(width: 20),
-        Expanded(child: Container()),
+          width: MediaQuery.of(context).size.width * 0.4,
+          child: Text(
+            dream.title ?? "asd",
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        const Spacer(),
         Text(dream.formattedDate),
         IconButton(
           icon: dream.isFav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
