@@ -69,7 +69,7 @@ class _CalendarViewState extends State<CalendarView> {
                 child: bloc.state.dreams.isNotEmpty ? Center(child: Text("${bloc.state.dreams.length} dreams")) : null,
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height - 200,
+                height: MediaQuery.of(context).size.height - 250, //FIXME:
                 child: ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: bloc.state.dreams.length,
