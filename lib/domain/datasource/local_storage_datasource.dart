@@ -21,4 +21,5 @@ abstract class LocalStorageDatasource {
   Future<List<DateTime>> allDates();
   Future<DateTime> firstDate();
   Future<DateTime> lastDate();
+  Future<List<Dream>> dreamsOnDate(DateTime date);
 }

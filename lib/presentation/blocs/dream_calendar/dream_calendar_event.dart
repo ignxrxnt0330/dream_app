@@ -7,3 +7,8 @@ abstract class DreamCalendarEvent {
 class FetchDates extends DreamCalendarEvent {
   const FetchDates();
 }
+
+class FetchDreams extends DreamCalendarEvent {
+  final DateTime date;
+  const FetchDreams(this.date);
+}

@@ -242,4 +242,14 @@ class IsarDatasource extends LocalStorageDatasource {
     // TODO: implement lastDate
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<Dream>> dreamsOnDate(DateTime date) async {
+    final DateTime dayStart = DateTime(date.year, date.month, date.day);
+    final DateTime dayEnd = DateTime(date.year, date.month, date.day, 23, 59, 59);
+
+    final isar = await db;
+    final dreams = await isar.dreams.where().filter().dateBetween(dayStart, dayEnd).sortByDate().findAll();
+    return dreams;
+  }
 }
