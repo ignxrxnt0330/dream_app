@@ -35,14 +35,16 @@ class _StatsViewState extends State<StatsView> {
                 return Column(
                   children: [
                     Flex(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       direction: Axis.horizontal,
                       children: [
                         StatCard(title: "total dreams", text: state.dreamCount.toString()),
                         StatCard(title: "total words", text: state.wordCount.toString()),
-                        StatCard(title: "total characters", text: state.charCount.toString()), //TODO: human readable
+                        StatCard(title: "total characters", text: state.charCount.toString()), //TODO: human readable => tap to toggle
                       ],
                     ),
                     Flex(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       direction: Axis.horizontal,
                       children: [
                         StatCard(title: "current streak", text: state.currentStreak.streak.toString()),
@@ -51,6 +53,7 @@ class _StatsViewState extends State<StatsView> {
                       ],
                     ),
                     Flex(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       direction: Axis.horizontal,
                       children: [
                         StatCard(title: "longest streak", text: state.longestStreak.streak.toString()),
@@ -58,6 +61,7 @@ class _StatsViewState extends State<StatsView> {
                         StatCard(title: "end", text: "${state.longestStreak.streakEnd.day}/${state.longestStreak.streakEnd.month}/${state.longestStreak.streakEnd.year % 100}"),
                       ],
                     ),
+                    //TODO: random stats => most used word, most active day of the week, most active timezone, most used name...
                   ],
                 );
               },
@@ -72,6 +76,7 @@ class _StatsViewState extends State<StatsView> {
 class StatCard extends StatelessWidget {
   final String title;
   final String text;
+  //TODO: ontap
   const StatCard({super.key, required this.text, required this.title});
 
   @override
