@@ -34,7 +34,6 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
   }
 
   void _onFormInit(FormInit event, Emitter<DreamFormState> emit) {
-    emit(DreamFormState(dream: Dream(quality: 3, mood: 2, date: DateTime.now())));
-    print(state.dream);
+    emit(DreamFormState(dream: Dream(quality: 3, mood: 2, type: 0, lucidness: 0, rating: 3, date: DateTime.now())));
   }
 }

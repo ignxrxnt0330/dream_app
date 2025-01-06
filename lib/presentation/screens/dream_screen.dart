@@ -31,11 +31,11 @@ class _DreamScreenState extends State<DreamScreen> {
 
     slides = const <Widget>[
       DreamFormView(),
-      SleepQualityView(),
+      // SleepQualityView(),
       DreamMoodView(),
       DreamTypeView(),
-      DreamRatingView(),
       DreamLucidnessView(),
+      DreamRatingView(),
     ];
   }
 
@@ -47,6 +47,27 @@ class _DreamScreenState extends State<DreamScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.dreamId == 0 ? 'new dream' : 'edit dream'),
+          //TODO:
+          // actions: [
+          // if (widget.dreamId != 0)
+          //   IconButton(
+          //     icon: const Icon(Icons.delete),
+          //     onPressed: () {
+          //       context.read<DreamHomeBloc>().add(RemoveDream(dreamId: widget.dreamId!));
+          //       context.pop();
+          //     },
+          //   ),
+          // BlocBuilder<DreamFormBloc, DreamFormState>(
+          //   builder: (context, state) {
+          //     return IconButton(
+          //       icon: state.dream.isFav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+          //       onPressed: () {
+          //         context.read<DreamHomeBloc>().add(ToggleFavDream(dreamId: state.dream.id));
+          //       },
+          //     );
+          //   },
+          // ),
+          // ],
         ),
         body: Form(
           key: formKey,
@@ -97,7 +118,7 @@ class _DreamScreenState extends State<DreamScreen> {
               child: BlocBuilder<DreamFormBloc, DreamFormState>(
                 builder: (context, state) {
                   return Icon(
-                    state.currentIndex >= (slides.length - 1) ? Icons.arrow_upward : (isKeyboardVisible ? Icons.arrow_downward : Icons.arrow_forward ),
+                    state.currentIndex >= (slides.length - 1) ? Icons.arrow_upward : (isKeyboardVisible ? Icons.arrow_downward : Icons.arrow_forward),
                   );
                 },
               ),

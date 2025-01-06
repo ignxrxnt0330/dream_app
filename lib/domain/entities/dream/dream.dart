@@ -8,13 +8,13 @@ class Dream {
   final String? title;
   final String description;
   final DateTime? date;
-  List<String>? tags; //TODO: tag class from db tags ¿?
+  List<String>? tags;
   List<String>? names;
-  final int? rating; //TODO: validate in constructor ¿?
-  final int? lucidness;
-  final int? quality;
-  final int? type;
-  final int? mood;
+  final int? rating; // 0-5
+  final int? lucidness; // 0-3
+  final int? quality; // 0-6
+  final int? type; // 0/1
+  final int? mood; // 0-5
   final bool isFav;
 
   Dream({
@@ -80,7 +80,7 @@ class Dream {
   void initNames() {
     const String excluded = ',.!?"()-';
     final regex = RegExp('[$excluded]');
-  
+
     names = description.split(RegExp(r'[\s\n]')).where((element) => element.startsWith("@")).toList().map((e) => e.substring(1).toLowerCase().replaceAll(regex, "")).toSet().toList();
   }
 
