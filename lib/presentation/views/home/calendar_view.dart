@@ -19,6 +19,7 @@ class _CalendarViewState extends State<CalendarView> {
   void initState() {
     super.initState();
     context.read<DreamCalendarBloc>().add(const FetchDates());
+    context.read<DreamCalendarBloc>().add(const FetchBracket());
     context.read<DreamCalendarBloc>().add(FetchDreams(selectedDates.first));
   }
 
@@ -35,6 +36,7 @@ class _CalendarViewState extends State<CalendarView> {
         onRefresh: () async {
           bloc.add(const FetchDates());
           bloc.add(FetchDreams(selectedDates.first));
+          bloc.add(FetchDreams(selectedDates.first));
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -42,6 +44,8 @@ class _CalendarViewState extends State<CalendarView> {
             children: [
               CleanCalendar(
                 startWeekday: WeekDay.monday,
+                startDateOfCalendar: bloc.state.firstDate,
+                endDateOfCalendar: bloc.state.lastDate,
                 datesForStreaks: bloc.state.dates,
                 datesForSkips: const [],
 

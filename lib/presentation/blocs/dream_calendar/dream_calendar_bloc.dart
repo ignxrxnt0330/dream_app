@@ -7,9 +7,10 @@ part 'dream_calendar_event.dart';
 part 'dream_calendar_state.dart';
 
 class DreamCalendarBloc extends Bloc<DreamCalendarEvent, DreamCalendarState> {
-  DreamCalendarBloc() : super(const DreamCalendarState([], [])) {
+  DreamCalendarBloc() : super(const DreamCalendarState([], [], null, null)) {
     on<FetchDates>(_onFetchDates);
     on<FetchDreams>(_onFetchDreams);
+    on<FetchBracket>(_onFetchBracket);
   }
 
   _onFetchDates(FetchDates event, Emitter<DreamCalendarState> emit) async {
@@ -22,5 +23,12 @@ class DreamCalendarBloc extends Bloc<DreamCalendarEvent, DreamCalendarState> {
     emit(state.copyWith(dreams: []));
     List<Dream> dreams = await IsarDatasource().dreamsOnDate(event.date);
     emit(state.copyWith(dreams: dreams));
+  }
+
+  _onFetchBracket(FetchBracket event, Emitter<DreamCalendarState> emit) async {
+    DateTime firstDate = await IsarDatasource().firstDate().then((value) => DateTime(value.year, value.month, value.day));
+    DateTime lastDate = await IsarDatasource().lastDate().then((value) => DateTime(value.year, value.month, value.day));
+    print('firstDate: $firstDate, lastDate: $lastDate');
+    emit(state.copyWith(firstDate: firstDate, lastDate: lastDate));
   }
 }

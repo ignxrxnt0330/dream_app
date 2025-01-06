@@ -12,3 +12,7 @@ class FetchDreams extends DreamCalendarEvent {
   final DateTime date;
   const FetchDreams(this.date);
 }
+
+class FetchBracket extends DreamCalendarEvent { // first and last date
+  const FetchBracket();
+}

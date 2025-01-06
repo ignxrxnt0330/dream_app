@@ -232,15 +232,17 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<DateTime> firstDate() {
-    // TODO: implement firstDate
-    throw UnimplementedError();
+  Future<DateTime> firstDate() async {
+    final isar = await db;
+    final date = await isar.dreams.where().sortByDate().dateProperty().findFirst();
+    return date!;
   }
 
   @override
-  Future<DateTime> lastDate() {
-    // TODO: implement lastDate
-    throw UnimplementedError();
+  Future<DateTime> lastDate() async {
+    final isar = await db;
+    final date = await isar.dreams.where().sortByDateDesc().dateProperty().findFirst();
+    return date!;
   }
 
   @override
