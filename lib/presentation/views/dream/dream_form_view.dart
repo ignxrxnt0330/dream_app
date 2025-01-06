@@ -22,7 +22,6 @@ class _DreamFormViewState extends State<DreamFormView> {
   @override
   void initState() {
     super.initState();
-    //FIXME:
     Dream dream = context.read<DreamFormBloc>().state.dream;
     titleController.text = dream.title ?? "";
     descriptionController.text = dream.description;
@@ -38,8 +37,6 @@ class _DreamFormViewState extends State<DreamFormView> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: fav / unfav
-    //TODO: tags
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -55,7 +52,6 @@ class _DreamFormViewState extends State<DreamFormView> {
   }
 }
 
-//TODO: initialValue => nmalol, delete onTap
 class _TitleRow extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode nextFocusNode;
@@ -65,6 +61,7 @@ class _TitleRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: TextFormField(
+        autofocus: true,
         controller: controller,
         decoration: InputDecoration(
           labelText: 'Title',
