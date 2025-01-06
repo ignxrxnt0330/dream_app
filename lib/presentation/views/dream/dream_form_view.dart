@@ -43,7 +43,7 @@ class _DreamFormViewState extends State<DreamFormView> {
           const SizedBox(height: 10),
           const _DateTimeRow(),
           const SizedBox(height: 20),
-          _TitleRow(titleController, descriptionFocusNode),
+          _TitleRow(titleController, descriptionFocusNode, context.read<DreamFormBloc>().state.dream.id == -9223372036854775808), // -9223372036854775808 is null
           const SizedBox(height: 20),
           _DescriptionRow(descriptionController, save, descriptionFocusNode),
         ],
@@ -55,13 +55,14 @@ class _DreamFormViewState extends State<DreamFormView> {
 class _TitleRow extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode nextFocusNode;
-  const _TitleRow(this.controller, this.nextFocusNode);
+  final bool autofocus;
+  const _TitleRow(this.controller, this.nextFocusNode, this.autofocus);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: TextFormField(
-        autofocus: true,
+        autofocus: autofocus,
         controller: controller,
         decoration: InputDecoration(
           labelText: 'Title',
