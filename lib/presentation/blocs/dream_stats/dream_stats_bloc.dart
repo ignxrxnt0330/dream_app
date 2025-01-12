@@ -7,7 +7,9 @@ part 'dream_stats_event.dart';
 part 'dream_stats_state.dart';
 
 class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
-  DreamStatsBloc() : super(DreamStatsState(currentStreak: Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()), longestStreak: Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()))) {
+  DreamStatsBloc()
+      : super(DreamStatsState(
+            currentStreak: Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()), longestStreak: Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()), mostActiveDotW: 0, mostUsedName: "")) {
     on<FetchStats>((_fetchStats));
   }
 
@@ -17,6 +19,10 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
     final charCount = await IsarDatasource().charCount();
     final longestStreak = await IsarDatasource().longestStreak();
     final currentStreak = await IsarDatasource().currentStreak();
+    final mostActiveDotW = await IsarDatasource().mostActiveDotW();
+    final mostUsedName = await IsarDatasource().mostUsedName();
+    print("mostActiveDotW: $mostActiveDotW");
+    print("mostUsedName: $mostUsedName");
 
     emit(state.copyWith(
       dreamCount: dreamCount,
@@ -24,6 +30,8 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
       charCount: charCount,
       currentStreak: currentStreak,
       longestStreak: longestStreak,
+      mostActiveDotW: mostActiveDotW,
+      mostUsedName: mostUsedName,
     ));
   }
 }

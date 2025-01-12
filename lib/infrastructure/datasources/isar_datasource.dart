@@ -253,4 +253,47 @@ class IsarDatasource extends LocalStorageDatasource {
     final dreams = await isar.dreams.where().filter().dateBetween(dayStart, dayEnd).sortByDate().findAll();
     return dreams;
   }
+
+  @override
+  Future<int?> mostActiveDotW() async {
+    final isar = await db;
+    final Map<int, int> daysOfTheWeek = {};
+
+    await isar.dreams.where().dateProperty().findAll().then((dates) {
+      // ignore: avoid_function_literals_in_foreach_calls
+      dates.forEach((e) => daysOfTheWeek[e!.weekday] = daysOfTheWeek[e.weekday] ?? 0 + 1);
+    });
+
+    final daysOfTheWeekList = daysOfTheWeek.entries.toList();
+    daysOfTheWeekList.sort((a, b) => b.value.compareTo(a.value));
+
+    return daysOfTheWeekList.first.key;
+  }
+
+  @override
+  Future<List<DateTime>?> mostActiveTime() async {
+    // TODO: implement mostActiveTime
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> mostUsedName() async {
+    final isar = await db;
+    final Map<String, int> allNames = {};
+
+    await isar.dreams.where().namesProperty().findAll().then((dream) {
+      for (List<String>? names in dream) {
+        if (names != null) {
+          for (String name in names) {
+            allNames[name] = (allNames[name] ?? 0) + 1;
+          }
+        }
+      }
+    });
+
+    final namesList = allNames.entries.toList();
+    namesList.sort((a, b) => b.value.compareTo(a.value));
+
+    return namesList.first.key;
+  }
 }

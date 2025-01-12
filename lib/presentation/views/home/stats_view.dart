@@ -1,6 +1,7 @@
 import 'package:dream_app/presentation/blocs/dream_stats/dream_stats_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dream_app/util/date_utils.dart' as DateUtils_;
 
 class StatsView extends StatefulWidget {
   static const name = 'stats_view';
@@ -59,6 +60,15 @@ class _StatsViewState extends State<StatsView> {
                         StatCard(title: "longest streak", text: state.longestStreak.streak.toString()),
                         StatCard(title: "start", text: "${state.longestStreak.streakStart.day}/${state.longestStreak.streakStart.month}/${state.longestStreak.streakStart.year % 100}"),
                         StatCard(title: "end", text: "${state.longestStreak.streakEnd.day}/${state.longestStreak.streakEnd.month}/${state.longestStreak.streakEnd.year % 100}"),
+                      ],
+                    ),
+                    Flex(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      direction: Axis.horizontal,
+                      children: [
+                        StatCard(title: "most active dotw", text: DateUtils_.DateUtils().getDayName(state.mostActiveDotW)),
+                        StatCard(title: "most used name", text: state.mostUsedName),
+                        const StatCard(title: "asd", text: "asd"),
                       ],
                     ),
                     //TODO: random stats => most used word, most active day of the week, most active timezone, most used name...

@@ -22,4 +22,7 @@ abstract class LocalStorageDatasource {
   Future<DateTime> firstDate();
   Future<DateTime> lastDate();
   Future<List<Dream>> dreamsOnDate(DateTime date);
+  Future<int?> mostActiveDotW(); // most active day of the week => day of the week with the most dreams
+  Future<List<DateTime>?> mostActiveTime(); // two hour interval with the most dreams
+  Future<String?> mostUsedName();
 }
