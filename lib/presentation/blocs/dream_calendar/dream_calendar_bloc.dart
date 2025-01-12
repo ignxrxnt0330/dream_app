@@ -28,7 +28,6 @@ class DreamCalendarBloc extends Bloc<DreamCalendarEvent, DreamCalendarState> {
   _onFetchBracket(FetchBracket event, Emitter<DreamCalendarState> emit) async {
     DateTime firstDate = await IsarDatasource().firstDate().then((value) => DateTime(value.year, value.month, value.day));
     DateTime lastDate = await IsarDatasource().lastDate().then((value) => DateTime(value.year, value.month, value.day));
-    print('firstDate: $firstDate, lastDate: $lastDate');
     emit(state.copyWith(firstDate: firstDate, lastDate: lastDate));
   }
 }

@@ -52,11 +52,11 @@ class _DreamRatingViewState extends State<DreamRatingView> {
                       onChanged: (value) {
                         rating = value.toInt();
                         setState(() {});
+                        save();
                       })
                 ],
               ),
               validator: (_) {
-                save();
                 return null;
               },
             ),
