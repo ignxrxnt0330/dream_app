@@ -40,8 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
         );
 
       case 3:
-        return null;
-
+        return FloatingActionButton(
+          onPressed: () {
+            context.read<DreamHomeBloc>().add(ImportDreams(context));
+          },
+          child: const Icon(Icons.upload_file_rounded),
+        );
       default:
         return null;
     }
@@ -77,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
         index: widget.index,
         children: routes,
       ),
-      floatingActionButton: getFab(widget.index,context),
+      floatingActionButton: getFab(widget.index, context),
       bottomNavigationBar: CustomBottomNavigation(
         selectedIndex: widget.index,
       ),

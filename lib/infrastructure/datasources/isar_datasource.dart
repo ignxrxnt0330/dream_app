@@ -1,5 +1,6 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, prefer_const_constructors
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dream_app/domain/datasource/local_storage_datasource.dart';
@@ -102,6 +103,31 @@ class IsarDatasource extends LocalStorageDatasource {
       }
     } catch (e) {
       print("Error saving file: $e");
+    }
+  }
+
+  @override
+  Future<void> importDreams() async {
+    try {
+      final params = OpenFileDialogParams(
+        dialogType: OpenFileDialogType.document,
+        fileExtensionsFilter: ["json"],
+        localOnly: true,
+      );
+      final filePath = await FlutterFileDialog.pickFile(params: params);
+      List<Dream> dreams = [];
+      if (filePath != null) {
+        final file = File(filePath);
+        final data = await file.readAsString();
+        final List<dynamic> jsonDreams = jsonDecode(data);
+        for (Map<String, dynamic> jsonDream in jsonDreams) {
+          dreams.add(Dream.fromJson(jsonDream));
+        }
+        final isar = await db;
+        isar.writeTxnSync(() => isar.dreams.putAllSync(dreams));
+      }
+    } catch (e) {
+      print("Error importing file: $e");
     }
   }
 

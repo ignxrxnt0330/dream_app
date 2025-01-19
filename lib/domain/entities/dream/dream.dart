@@ -92,31 +92,30 @@ class Dream {
   }
 
   String toJson() {
-  return jsonEncode({
-    'id': id,
-    'title': title,
-    'description': description,
-    'date': date!.microsecondsSinceEpoch,
-    'tags': tags,
-    'names': names,
-    'rating': rating,
-    'lucidness': lucidness,
-    'quality': quality,
-    'type': type,
-    'mood': mood,
-    'isFav': isFav,
-  });
-}
-
+    return jsonEncode({
+      'id': id,
+      'title': title,
+      'description': description,
+      'date': date!.microsecondsSinceEpoch,
+      'tags': tags,
+      'names': names,
+      'rating': rating,
+      'lucidness': lucidness,
+      'quality': quality,
+      'type': type,
+      'mood': mood,
+      'isFav': isFav,
+    });
+  }
 
   factory Dream.fromJson(Map<String, dynamic> json) {
     return Dream(
       id: json['id'],
       title: json['title'],
       description: json['description'],
-      date: json['date'],
-      tags: json['tags'],
-      names: json['names'],
+      date: DateTime.fromMicrosecondsSinceEpoch(json['date']),
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      names: (json['names'] as List<dynamic>?)?.map((e) => e as String).toList(),
       rating: json['rating'],
       lucidness: json['lucidness'],
       quality: json['quality'],

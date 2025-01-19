@@ -25,7 +25,8 @@ class ExportDreams extends DreamHomeEvent {
 }
 
 class ImportDreams extends DreamHomeEvent {
-  const ImportDreams();
+ final BuildContext context;
+  const ImportDreams( this.context);
 }
 
 class HandleDream extends DreamHomeEvent {
