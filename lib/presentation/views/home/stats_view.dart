@@ -99,6 +99,7 @@ class StatCard extends StatelessWidget {
           children: [
             Text(title, style: Theme.of(context).textTheme.titleMedium),
             Text(text),
+            
           ],
         ),
       ),

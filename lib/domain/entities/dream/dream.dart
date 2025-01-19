@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:isar/isar.dart';
 
 part 'dream.g.dart';
@@ -89,22 +91,23 @@ class Dream {
     return 'Dream{id: $id, title: $title, description: $description, date: $date, tags: $tags, names: $names, rating: $rating, lucidness: $lucidness, quality: $quality, type: $type, mood: $mood, isFav: $isFav}';
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'date': date,
-      'tags': tags,
-      'names': names,
-      'rating': rating,
-      'lucidness': lucidness,
-      'quality': quality,
-      'type': type,
-      'mood': mood,
-      'isFav': isFav,
-    };
-  }
+  String toJson() {
+  return jsonEncode({
+    'id': id,
+    'title': title,
+    'description': description,
+    'date': date!.microsecondsSinceEpoch,
+    'tags': tags,
+    'names': names,
+    'rating': rating,
+    'lucidness': lucidness,
+    'quality': quality,
+    'type': type,
+    'mood': mood,
+    'isFav': isFav,
+  });
+}
+
 
   factory Dream.fromJson(Map<String, dynamic> json) {
     return Dream(

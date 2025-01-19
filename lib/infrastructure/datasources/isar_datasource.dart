@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dream_app/domain/datasource/local_storage_datasource.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/domain/entities/stats/streak.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -82,17 +83,20 @@ class IsarDatasource extends LocalStorageDatasource {
   @override
   Future<void> exportDreams() async {
     try {
-      DateTime now = DateTime.now();
-      String data = "";
       final List<Dream> dreams = await getAllDreams();
-      data = dreams.map((dream) => dream.toJson()).join("\n");
+      String data = "[${dreams.map((dream) => dream.toJson()).join(",\n")}]";
 
-      final dir = await getDownloadsDirectory();
+      final dir = await getTemporaryDirectory();
       if (dir != null) {
-        final filePath = "${dir.path}/dreams_${now.toIso8601String()}.json";
+        final filePath = "${dir.path}/dreams.json";
         final file = await File(filePath).create();
         await file.writeAsString(data);
-        print("File saved at: $filePath");
+        if (Platform.isAndroid) {
+          final params = SaveFileDialogParams(sourceFilePath: filePath);
+          final finalPath = await FlutterFileDialog.saveFile(params: params);
+
+          print('Download path: $finalPath');
+        }
       } else {
         print("Downloads directory not available");
       }

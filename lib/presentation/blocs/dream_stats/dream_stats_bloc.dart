@@ -21,8 +21,6 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
     final currentStreak = await IsarDatasource().currentStreak();
     final mostActiveDotW = await IsarDatasource().mostActiveDotW();
     final mostUsedName = await IsarDatasource().mostUsedName();
-    print("mostActiveDotW: $mostActiveDotW");
-    print("mostUsedName: $mostUsedName");
 
     emit(state.copyWith(
       dreamCount: dreamCount,
