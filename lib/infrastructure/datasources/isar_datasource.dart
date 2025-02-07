@@ -236,9 +236,9 @@ class IsarDatasource extends LocalStorageDatasource {
   Future<int> charCount() async {
     final isar = await db;
     final descriptions = await isar.dreams.where().descriptionProperty().findAll();
-    final descCount = descriptions.map((e) => e != "" ? e.length : 0).reduce((value, element) => value + element);
+    final descCount = descriptions.isEmpty ? 0 : descriptions.map((e) => e != "" ? e.length : 0).reduce((value, element) => value + element);
     final titles = await isar.dreams.where().titleProperty().findAll();
-    final titleCount = titles.map((e) => e != "" && e != null ? e.length : 0).reduce((value, element) => value + element);
+    final titleCount = titles.isEmpty ? 0 : titles.map((e) => e != "" && e != null ? e.length : 0).reduce((value, element) => value + element);
     return descCount + titleCount;
   }
 
@@ -246,6 +246,7 @@ class IsarDatasource extends LocalStorageDatasource {
   Future<int> wordCount() async {
     final isar = await db;
     final descriptions = await isar.dreams.where().descriptionProperty().findAll();
+    if (descriptions.isEmpty) return 0;
     final descCount = descriptions.map((e) => e.split(" ").where((e) => e != "").toList().length).reduce((value, element) => value + element);
     final titles = await isar.dreams.where().titleProperty().findAll();
     final titleCount = titles.map((e) => e != null ? e.split(" ").where((e) => e != "").toList().length : 0).reduce((value, element) => value + element);
@@ -264,14 +265,14 @@ class IsarDatasource extends LocalStorageDatasource {
   Future<DateTime> firstDate() async {
     final isar = await db;
     final date = await isar.dreams.where().sortByDate().dateProperty().findFirst();
-    return date!;
+    return date ?? DateTime.now();
   }
 
   @override
   Future<DateTime> lastDate() async {
     final isar = await db;
     final date = await isar.dreams.where().sortByDateDesc().dateProperty().findFirst();
-    return date!;
+    return date ?? DateTime.now();
   }
 
   @override
@@ -295,6 +296,7 @@ class IsarDatasource extends LocalStorageDatasource {
     });
 
     final daysOfTheWeekList = daysOfTheWeek.entries.toList();
+    if (daysOfTheWeekList.isEmpty) return null;
     daysOfTheWeekList.sort((a, b) => b.value.compareTo(a.value));
 
     return daysOfTheWeekList.first.key;
@@ -322,6 +324,7 @@ class IsarDatasource extends LocalStorageDatasource {
     });
 
     final namesList = allNames.entries.toList();
+    if (namesList.isEmpty) return null;
     namesList.sort((a, b) => b.value.compareTo(a.value));
 
     return namesList.first.key;
