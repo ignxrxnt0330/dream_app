@@ -89,7 +89,8 @@ class IsarDatasource extends LocalStorageDatasource {
 
       final dir = await getTemporaryDirectory();
       if (dir != null) {
-        final filePath = "${dir.path}/dreams.json";
+        final timeStamp = DateTime.now().millisecondsSinceEpoch;
+        final filePath = "${dir.path}/dreams_$timeStamp.json";
         final file = await File(filePath).create();
         await file.writeAsString(data);
         if (Platform.isAndroid) {
