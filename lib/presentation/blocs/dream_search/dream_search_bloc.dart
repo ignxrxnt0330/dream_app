@@ -16,9 +16,11 @@ class DreamSearchBloc extends Bloc<DreamSearchEvent, DreamSearchState> {
     try {
       if (state.isLoading) return;
       emit(state.copyWith(isLoading: true, dreams: [], count: 0));
+
       final List<Dream> dreams = await IsarDatasource().searchDreams(event.query) ?? [];
       final int count = await IsarDatasource().searchDreamsResultCount(event.query);
-      emit(state.copyWith(dreams: dreams, count: count, isLoading: false, offset: state.offset + 10));
+
+      emit(state.copyWith(dreams: dreams, count: count, isLoading: false, offset: dreams.length,endReached: false));
     } catch (e) {
       emit(state.copyWith(isLoading: false));
     }
@@ -26,10 +28,17 @@ class DreamSearchBloc extends Bloc<DreamSearchEvent, DreamSearchState> {
 
   Future<void> _scrollSearch(ScrollSearch event, Emitter<DreamSearchState> emit) async {
     try {
-      if (state.isLoading) return;
+      if (state.isLoading || state.endReached) return;
       emit(state.copyWith(isLoading: true));
+
       final List<Dream> dreams = await IsarDatasource().searchDreams(event.query, offset: state.offset) ?? [];
-      emit(state.copyWith(dreams: [...state.dreams, ...dreams], isLoading: false, offset: state.offset + 10));
+      print(dreams.length);
+      emit(state.copyWith(
+        dreams: [...state.dreams, ...dreams],
+        isLoading: false,
+        offset: state.offset + 10,
+        endReached: dreams.length < 10,
+      ));
     } catch (e) {
       emit(state.copyWith(isLoading: false));
     }

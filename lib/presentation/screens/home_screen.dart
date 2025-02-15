@@ -59,6 +59,13 @@ class _HomeScreenState extends State<HomeScreen> {
     ConfigView(),
   ];
 
+  final actions = [
+    () => print("home"),
+    () => print("calendar"),
+    () => print("stats"),
+    () => print("config"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: getFab(widget.index, context),
       bottomNavigationBar: CustomBottomNavigation(
         selectedIndex: widget.index,
+        actions: actions,
       ),
     );
   }

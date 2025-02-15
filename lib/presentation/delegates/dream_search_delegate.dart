@@ -5,16 +5,16 @@ import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DreamSearchDelegate extends SearchDelegate<Dream?> {
+  final BuildContext context;
+  final scrollController = ScrollController();
+
   DreamSearchDelegate(this.context) : super() {
     scrollController.addListener(() {
-      //TODO: offset variable ¿?
       if (scrollController.position.pixels + 400 >= scrollController.position.maxScrollExtent) {
-        context.read<DreamSearchBloc>().add(ScrollSearch(query: query, offset: 0, limit: 10));
+        context.read<DreamSearchBloc>().add(ScrollSearch(query: query.trim()));
       }
     });
   }
-  final BuildContext context;
-  final scrollController = ScrollController();
 
   @override
   List<Widget> buildActions(BuildContext context) => [
@@ -42,8 +42,6 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
   Widget buildResults(BuildContext context) {
     final bloc = context.read<DreamSearchBloc>();
 
-    //FIXME: names
-
     if (bloc.state.isLoading) {
       return const Center(
         child: CircularProgressIndicator(strokeWidth: 2),
@@ -70,7 +68,7 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final bloc = context.read<DreamSearchBloc>();
-    bloc.add(SearchDreams(query: query));
+    bloc.add(SearchDreams(query: query.trim()));
 
     if (bloc.state.isLoading) {
       return const Center(
