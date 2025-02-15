@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dream_app/presentation/blocs/dream_search/dream_search_bloc.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_dream_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DreamSearchDelegate extends SearchDelegate<Dream?> {
   final BuildContext context;
   final scrollController = ScrollController();
+  Timer? timeout;
 
   DreamSearchDelegate(this.context) : super() {
     scrollController.addListener(() {
@@ -66,9 +69,13 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final dreamsState = context.watch<DreamSearchBloc>().state;
-    if (query != dreamsState.query) {
-      context.read<DreamSearchBloc>().add(SearchDreams(query: query.trim()));
-    }
+
+    if (timeout?.isActive ?? false) timeout?.cancel();
+    timeout = Timer(const Duration(milliseconds: 500), () async {
+      if (query != dreamsState.query) {
+        context.read<DreamSearchBloc>().add(SearchDreams(query: query.trim()));
+      }
+    });
 
     if (dreamsState.isLoading) {
       return const Center(
