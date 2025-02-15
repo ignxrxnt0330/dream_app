@@ -43,7 +43,7 @@ class _CalendarViewState extends State<CalendarView> {
                     startDateOfCalendar: bloc.state.firstDate,
                     endDateOfCalendar: bloc.state.lastDate,
                     datesForStreaks: bloc.state.dates,
-                    datesForSkips: const [],
+                    datesForSkips: const [], //TODO:
 
                     // date props
                     generalDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.white, datesBorderColor: Colors.black)),
@@ -53,6 +53,9 @@ class _CalendarViewState extends State<CalendarView> {
 
                     dateSelectionMode: DatePickerSelectionMode.singleOrMultiple,
                     onSelectedDates: (List<DateTime> value) {
+                      if (bloc.state.dates.where((el) => el == value.first).isEmpty) {
+                        return;
+                      }
                       if (selectedDates.isEmpty || selectedDates.first != value.first) {
                         selectedDates = value;
                       } else {
