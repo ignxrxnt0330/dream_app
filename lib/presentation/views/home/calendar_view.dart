@@ -13,7 +13,6 @@ class CalendarView extends StatefulWidget {
 }
 
 class _CalendarViewState extends State<CalendarView> {
-  List<DateTime> selectedDates = [DateTime.now()];
   ScrollController scrollController = ScrollController();
 
   @override
@@ -21,7 +20,7 @@ class _CalendarViewState extends State<CalendarView> {
     super.initState();
     context.read<DreamCalendarBloc>().add(const FetchDates());
     context.read<DreamCalendarBloc>().add(const FetchBracket());
-    context.read<DreamCalendarBloc>().add(FetchDreams(selectedDates.first));
+    context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(DateTime.now()));
   }
 
   @override
@@ -39,6 +38,7 @@ class _CalendarViewState extends State<CalendarView> {
         slivers: [
           SliverToBoxAdapter(
             child: CleanCalendar(
+              currentDateOfCalendar: bloc.state.selectedDate,
               startWeekday: WeekDay.monday,
               startDateOfCalendar: bloc.state.firstDate,
               endDateOfCalendar: bloc.state.lastDate,
@@ -57,16 +57,12 @@ class _CalendarViewState extends State<CalendarView> {
                 if (noDreams) {
                   return;
                 }
-                if (selectedDates.isEmpty || selectedDates.first != value.first) {
-                  selectedDates = value;
-                } else {
+                if (bloc.state.selectedDate == value.first) {
                   return;
                 }
-                setState(() {});
-                if (selectedDates.isEmpty) return;
-                bloc.add(FetchDreams(selectedDates.first));
+                bloc.add(FetchDreamsOnDate(value.first));
               },
-              selectedDates: selectedDates,
+              selectedDates: [bloc.state.selectedDate],
             ),
           ),
           SliverToBoxAdapter(
@@ -82,6 +78,11 @@ class _CalendarViewState extends State<CalendarView> {
                 return CustomDreamListTile(dream: dream);
               },
               childCount: bloc.state.dreams.length,
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: SizedBox(
+              height: 100,
             ),
           ),
         ],

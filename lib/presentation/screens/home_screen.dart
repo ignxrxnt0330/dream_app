@@ -1,3 +1,4 @@
+import 'package:dream_app/presentation/blocs/dream_calendar/dream_calendar_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:dream_app/presentation/delegates/dream_search_delegate.dart';
@@ -29,7 +30,24 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Icon(Icons.add),
         );
       case 1:
-        return null;
+        return FloatingActionButton(
+          onPressed: () {
+            var bloc = context.read<DreamCalendarBloc>();
+            // showDatePicker(context: context, firstDate: bloc.state.firstDate ?? DateTime.now(), lastDate: bloc.state.lastDate ?? DateTime.now()).then(
+            showDatePicker(context: context, firstDate: DateTime(2020, 1, 1), lastDate: DateTime(2069, 4, 20)).then(
+              (value) {
+                if (value == null) {
+                  return;
+                }
+                bloc.add(FetchDreamsOnDate(value));
+              },
+              onError: (err) {
+                debugPrint(err);
+              },
+            );
+          },
+          child: const Icon(Icons.date_range),
+        );
 
       case 2:
         return FloatingActionButton(
