@@ -26,6 +26,7 @@ class _CalendarViewState extends State<CalendarView> {
 
   @override
   void dispose() {
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -33,57 +34,58 @@ class _CalendarViewState extends State<CalendarView> {
   Widget build(BuildContext context) {
     final bloc = context.watch<DreamCalendarBloc>();
     return Scaffold(
-      body: NestedScrollView(
-          floatHeaderSlivers: true,
-          controller: scrollController,
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) => [
-                SliverToBoxAdapter(
-                  child: CleanCalendar(
-                    startWeekday: WeekDay.monday,
-                    startDateOfCalendar: bloc.state.firstDate,
-                    endDateOfCalendar: bloc.state.lastDate,
-                    datesForStreaks: bloc.state.dates,
-                    datesForSkips: const [], //TODO:
+      body: CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          SliverToBoxAdapter(
+            child: CleanCalendar(
+              startWeekday: WeekDay.monday,
+              startDateOfCalendar: bloc.state.firstDate,
+              endDateOfCalendar: bloc.state.lastDate,
+              datesForStreaks: bloc.state.dates,
+              datesForSkips: const [], //TODO:
 
-                    // date props
-                    generalDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.white, datesBorderColor: Colors.black)),
-                    leadingTrailingDatesProperties: DatesProperties(hide: true),
-                    streakDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.white, datesBackgroundColor: Colors.black)),
-                    selectedDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.black, datesBackgroundColor: Colors.white)),
+              // date props
+              generalDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.white, datesBorderColor: Colors.black)),
+              leadingTrailingDatesProperties: DatesProperties(hide: true),
+              streakDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.white, datesBackgroundColor: Colors.black)),
+              selectedDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.black, datesBackgroundColor: Colors.white)),
 
-                    dateSelectionMode: DatePickerSelectionMode.singleOrMultiple,
-                    onSelectedDates: (List<DateTime> value) {
-                      if (bloc.state.dates.where((el) => el == value.first).isEmpty) {
-                        return;
-                      }
-                      if (selectedDates.isEmpty || selectedDates.first != value.first) {
-                        selectedDates = value;
-                      } else {
-                        return;
-                      }
-                      setState(() {});
-                      if (selectedDates.isEmpty) return;
-                      bloc.add(FetchDreams(selectedDates.first));
-                    },
-                    selectedDates: selectedDates,
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 20,
-                    child: bloc.state.dreams.isNotEmpty ? Center(child: Text("${bloc.state.dreams.length} dreams")) : null,
-                  ),
-                ),
-              ],
-          body: SizedBox(
-            child: ListView.builder(
-              itemCount: bloc.state.dreams.length,
-              itemBuilder: (context, index) {
+              dateSelectionMode: DatePickerSelectionMode.singleOrMultiple,
+              onSelectedDates: (List<DateTime> value) {
+                bool noDreams = bloc.state.dates.where((el) => el.day == value.first.day && el.month == value.first.month && el.year == value.first.year).isEmpty;
+                if (noDreams) {
+                  return;
+                }
+                if (selectedDates.isEmpty || selectedDates.first != value.first) {
+                  selectedDates = value;
+                } else {
+                  return;
+                }
+                setState(() {});
+                if (selectedDates.isEmpty) return;
+                bloc.add(FetchDreams(selectedDates.first));
+              },
+              selectedDates: selectedDates,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 20,
+              child: bloc.state.dreams.isNotEmpty ? Center(child: Text("${bloc.state.dreams.length} dreams")) : null,
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
                 final dream = bloc.state.dreams[index];
                 return CustomDreamListTile(dream: dream);
               },
+              childCount: bloc.state.dreams.length,
             ),
-          )),
+          ),
+        ],
+      ),
     );
   }
 }
