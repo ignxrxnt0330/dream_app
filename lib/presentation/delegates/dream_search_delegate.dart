@@ -40,55 +40,55 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final bloc = context.read<DreamSearchBloc>();
-
-    if (bloc.state.isLoading) {
+    final dreamsState = context.watch<DreamSearchBloc>().state;
+    if (dreamsState.isLoading) {
       return const Center(
         child: CircularProgressIndicator(strokeWidth: 2),
       );
     }
-    if (bloc.state.dreams.isEmpty) return const Center(child: Text('no results'));
     return Column(children: [
-      bloc.state.isLoading == false && query != ""
+      (!dreamsState.isLoading && query != "")
           ? Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text('${bloc.state.count} ${bloc.state.count == 1 ? 'result' : 'results'}'),
+              child: Text('${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
             )
           : const SizedBox(),
       Expanded(
           child: ListView.builder(
               controller: scrollController,
               itemBuilder: (context, index) {
-                return CustomDreamListTile(dream: bloc.state.dreams[index]);
+                return CustomDreamListTile(dream: dreamsState.dreams[index]);
               },
-              itemCount: bloc.state.dreams.length))
+              itemCount: dreamsState.dreams.length))
     ]);
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final bloc = context.read<DreamSearchBloc>();
-    bloc.add(SearchDreams(query: query.trim()));
+    final dreamsState = context.watch<DreamSearchBloc>().state;
+    if (query != dreamsState.query) {
+      context.read<DreamSearchBloc>().add(SearchDreams(query: query.trim()));
+    }
 
-    if (bloc.state.isLoading) {
+    if (dreamsState.isLoading) {
       return const Center(
         child: CircularProgressIndicator(strokeWidth: 2),
       );
     }
     return Column(children: [
-      bloc.state.isLoading == false && query != ""
+      (!dreamsState.isLoading && query != "")
           ? Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text('${bloc.state.count} ${bloc.state.count == 1 ? 'result' : 'results'}'),
+              child: Text('${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
             )
           : const SizedBox(),
       Expanded(
           child: ListView.builder(
               controller: scrollController,
               itemBuilder: (context, index) {
-                return CustomDreamListTile(dream: bloc.state.dreams[index]);
+                return CustomDreamListTile(dream: dreamsState.dreams[index]);
               },
-              itemCount: bloc.state.dreams.length))
+              itemCount: dreamsState.dreams.length))
     ]);
   }
 }
