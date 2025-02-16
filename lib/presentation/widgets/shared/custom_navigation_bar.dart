@@ -7,14 +7,16 @@ class CustomBottomNavigation extends StatelessWidget {
   const CustomBottomNavigation({super.key, required this.selectedIndex, required this.actions});
 
   void onItemTapped(BuildContext context, int index) {
-    actions[index]();
+    if (selectedIndex == index) {
+      actions[index]();
+      return;
+    }
     context.go("/home/$index");
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      selectedItemColor: Colors.white, //FIXME: ¿?
       elevation: 0,
       currentIndex: selectedIndex,
       onTap: (index) => onItemTapped(context, index),
@@ -23,31 +25,21 @@ class CustomBottomNavigation extends StatelessWidget {
         BottomNavigationBarItem(
             icon: Icon(
               Icons.home_outlined,
-              color: Colors.white,
             ),
             label: "home"),
         BottomNavigationBarItem(
             icon: Icon(
               Icons.calendar_month,
-              color: Colors.white,
             ),
             label: "calendar"),
-        // BottomNavigationBarItem(
-        //     icon: Icon(
-        //       Icons.search,
-        //       color: Colors.white,
-        //     ),
-        //     label: "search"),
         BottomNavigationBarItem(
             icon: Icon(
               Icons.auto_graph,
-              color: Colors.white,
             ),
             label: "stats"),
         BottomNavigationBarItem(
             icon: Icon(
               Icons.settings,
-              color: Colors.white,
             ),
             label: "config"),
       ],

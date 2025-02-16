@@ -1,11 +1,10 @@
-import 'package:dream_app/presentation/blocs/dream_calendar/dream_calendar_bloc.dart';
-import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
-import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
+import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/delegates/dream_search_delegate.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_app/presentation/views/views.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -49,20 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Icon(Icons.date_range),
         );
 
-      case 2:
-        return FloatingActionButton(
-          onPressed: () {
-            context.read<DreamHomeBloc>().add(const ExportDreams());
-          },
-          child: const Icon(Icons.download),
-        );
-
       case 3:
         return FloatingActionButton(
           onPressed: () {
-            context.read<DreamHomeBloc>().add(ImportDreams(context));
+            Phoenix.rebirth(context);
           },
-          child: const Icon(Icons.upload_file_rounded),
+          child: const Icon(Icons.refresh),
         );
       default:
         return null;
@@ -72,7 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final routes = const <Widget>[
     HomeView(),
     CalendarView(),
-    // SearchView(),
     StatsView(),
     ConfigView(),
   ];
