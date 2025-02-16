@@ -219,7 +219,7 @@ class IsarDatasource extends LocalStorageDatasource {
       if (isNextDay) {
         streak++;
         currStreakEnd = previousDate;
-      } else {
+      } else if(!isNextDay || i == dates.length - 1) {
         if (streak > longestStreak) {
           streakStart = currStreakStart;
           streakEnd = currStreakEnd;
