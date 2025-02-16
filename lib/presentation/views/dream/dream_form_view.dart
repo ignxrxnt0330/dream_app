@@ -1,6 +1,6 @@
 import 'package:date_field/date_field.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
-import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
+import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +29,7 @@ class _DreamFormViewState extends State<DreamFormView> {
 
   void save() {
     Dream dream = context.read<DreamFormBloc>().state.dream.copyWith(
-          title: titleController.text != "" ? titleController.text : "nmalol",
+          title: titleController.text != "" ? titleController.text : context.watch<AppConfigBloc>().state.defaultTitle,
           description: descriptionController.text,
         );
     context.read<DreamFormBloc>().add(FieldChanged(dream));
@@ -66,7 +66,7 @@ class _TitleRow extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           labelText: 'Title',
-          hintText: "nmalol",
+          hintText: context.watch<AppConfigBloc>().state.defaultTitle,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
           ),

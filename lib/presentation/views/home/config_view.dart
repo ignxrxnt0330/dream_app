@@ -14,6 +14,7 @@ class ConfigView extends StatefulWidget {
 
 class _ConfigViewState extends State<ConfigView> {
   SpConfig config = SpConfig();
+  TextEditingController defaultTitleController = TextEditingController();
 
   @override
   void initState() {
@@ -39,6 +40,42 @@ class _ConfigViewState extends State<ConfigView> {
           subtitle: const Text("change the app colors"),
           trailing: const Icon(Icons.arrow_forward_ios),
           onTap: () {},
+        ),
+        ListTile(
+          title: const Text("default title"),
+          subtitle: const Text("set a default title for your dreams"),
+          trailing: const Icon(Icons.arrow_forward_ios),
+          onTap: () {
+            defaultTitleController.text = context.read<AppConfigBloc>().state.defaultTitle ?? "";
+            setState(() {});
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("set default title"),
+                  content: TextField(
+                    controller: defaultTitleController,
+                    autofocus: true,
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        context.read<AppConfigBloc>().add(SetDefaultTitle(defaultTitleController.text));
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("confirm"),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
         ),
         ListTile(
           title: const Text("import dreams"),

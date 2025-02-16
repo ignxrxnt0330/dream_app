@@ -8,24 +8,33 @@ part 'app_config_state.dart';
 class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   SpConfig config = SpConfig();
 
-  AppConfigBloc() : super(const AppConfigState(true)) {
+  AppConfigBloc() : super(const AppConfigState(true, null)) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
-  }
-
-  void _setDarkMode(SetDarkMode event, Emitter<AppConfigState> emit) {
-    config.setDarkMode(event.darkMode);
-    emit(AppConfigState(event.darkMode));
-  }
-
-  void _toggleDarkMode(ToggleDarkMode event, Emitter<AppConfigState> emit) {
-    config.toggleDarkMode();
-    emit(AppConfigState(!state.darkMode));
+    on<SetDefaultTitle>(_setDefaultTitle);
   }
 
   void _initConfig() async {
-    add(SetDarkMode(darkMode: await config.getDarkMode()));
-    print("dark mode: ${state.darkMode}");
+    add(SetDarkMode(await config.getDarkMode()));
+    String? defTitle = await config.getDefaultTitle();
+    if (defTitle != null && defTitle.isNotEmpty) {
+      add(SetDefaultTitle(defTitle));
+    }
+  }
+
+  void _setDarkMode(SetDarkMode event, Emitter<AppConfigState> emit) async {
+    await config.setDarkMode(event.darkMode);
+    emit(state.copyWith(darkMode: event.darkMode));
+  }
+
+  void _toggleDarkMode(ToggleDarkMode event, Emitter<AppConfigState> emit) async {
+    await config.toggleDarkMode();
+    emit(state.copyWith(darkMode: !state.darkMode));
+  }
+
+  void _setDefaultTitle(SetDefaultTitle event, Emitter<AppConfigState> emit) async {
+    await config.setDefaultTitle(event.title);
+    emit(state.copyWith(defaultTitle: event.title));
   }
 }

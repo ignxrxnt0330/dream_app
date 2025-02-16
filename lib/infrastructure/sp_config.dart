@@ -22,4 +22,16 @@ class SpConfig extends ConfigDatasource {
   Future<bool> toggleDarkMode() async {
     return await setDarkMode(!await getDarkMode());
   }
+
+  @override
+  Future<String?> getDefaultTitle() async {
+    prefs = await SharedPreferences.getInstance();
+    return prefs.getString('defaultTitle');
+  }
+
+  @override
+  Future<void> setDefaultTitle(String title) async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString('defaultTitle', title);
+  }
 }

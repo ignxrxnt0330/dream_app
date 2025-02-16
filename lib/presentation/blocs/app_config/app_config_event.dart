@@ -6,9 +6,14 @@ abstract class AppConfigEvent {
 
 class SetDarkMode extends AppConfigEvent {
   final bool darkMode;
-  const SetDarkMode({required this.darkMode});
+  const SetDarkMode(this.darkMode);
 }
 
 class ToggleDarkMode extends AppConfigEvent {
   const ToggleDarkMode();
+}
+
+class SetDefaultTitle extends AppConfigEvent {
+  final String title;
+  const SetDefaultTitle(this.title);
 }
