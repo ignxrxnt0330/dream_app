@@ -18,6 +18,7 @@ class Dream {
   final int? type; // 0/1
   final int? mood; // 0-5
   final bool isFav;
+  bool hidden;
 
   Dream({
     this.id = Isar.autoIncrement,
@@ -32,6 +33,7 @@ class Dream {
     this.isFav = false,
     this.rating = 0,
     this.lucidness = 0,
+    this.hidden = false,
   });
 
   Dream copyWith({
@@ -47,6 +49,7 @@ class Dream {
     final int? type,
     final int? mood,
     final bool? isFav,
+    final bool? hidden,
   }) {
     return Dream(
       id: id ?? this.id,
@@ -61,6 +64,7 @@ class Dream {
       type: type ?? this.type,
       mood: mood ?? this.mood,
       isFav: isFav ?? this.isFav,
+      hidden: hidden ?? this.hidden,
     );
   }
 
@@ -86,6 +90,11 @@ class Dream {
     names = description.split(RegExp(r'[\s\n]')).where((element) => element.startsWith("@")).toList().map((e) => e.substring(1).toLowerCase().replaceAll(regex, "")).toSet().toList();
   }
 
+  void initHidden() {
+    if (title == null && title!.isEmpty) return;
+    hidden = title!.startsWith(".");
+  }
+
   @override
   String toString() {
     return 'Dream{id: $id, title: $title, description: $description, date: $date, tags: $tags, names: $names, rating: $rating, lucidness: $lucidness, quality: $quality, type: $type, mood: $mood, isFav: $isFav}';
@@ -105,6 +114,7 @@ class Dream {
       'type': type,
       'mood': mood,
       'isFav': isFav,
+      "hidden": hidden,
     });
   }
 
@@ -122,6 +132,7 @@ class Dream {
       type: json['type'],
       mood: json['mood'],
       isFav: json['isFav'],
+      hidden: json['hidden'],
     );
   }
 }

@@ -18,6 +18,7 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
   void _onDreamSubmitted(DreamSubmitted event, Emitter<DreamFormState> emit) async {
     // upload dream
     state.dream.initNames();
+    state.dream.initHidden();
     await IsarDatasource().saveDream(state.dream);
   }
 

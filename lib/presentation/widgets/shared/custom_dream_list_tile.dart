@@ -1,4 +1,5 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
+import 'package:dream_app/infrastructure/auth/biometrics.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,7 @@ class CustomDreamListTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            dream.description,
+            !dream.hidden ? dream.description : "...",
             style: const TextStyle(
               overflow: TextOverflow.ellipsis,
             ),
@@ -45,16 +46,21 @@ class CustomDreamListTile extends StatelessWidget {
           if (dream.tags != null)
             Wrap(
               spacing: 5,
-              children: dream.tags!.map((tag) => Chip(label: Text(tag))).toList(),
+              children: !dream.hidden ? dream.tags!.map((tag) => Chip(label: Text(tag))).toList() : dream.tags!.map((tag) => const Chip(label: Text("..."))).toList(),
             ),
           if (dream.names != null)
             Wrap(
               spacing: 5,
-              children: dream.names!.map((name) => Chip(label: Text(name))).toList(),
+              children: !dream.hidden ? dream.names!.map((name) => Chip(label: Text(name))).toList() : dream.names!.map((tag) => const Chip(label: Text("..."))).toList(),
             ),
         ],
       ),
-      onTap: () {
+      onTap: () async {
+        if (dream.hidden) {
+          bool allowed = await Biometrics.authenticate();
+          if (!allowed) return;
+        }
+        if (!context.mounted) return;
         context.push("/dream/${dream.id}");
       },
       onLongPress: () {

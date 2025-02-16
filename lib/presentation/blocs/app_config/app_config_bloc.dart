@@ -1,4 +1,4 @@
-import 'package:dream_app/infrastructure/sp_config.dart';
+import 'package:dream_app/infrastructure/datasources/sp_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 

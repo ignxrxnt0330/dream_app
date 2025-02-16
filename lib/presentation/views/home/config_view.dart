@@ -2,7 +2,7 @@ import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import "package:dream_app/infrastructure/sp_config.dart";
+import "package:dream_app/infrastructure/datasources/sp_config.dart";
 
 class ConfigView extends StatefulWidget {
   static const name = 'config_view';
