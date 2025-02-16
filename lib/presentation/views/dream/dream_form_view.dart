@@ -18,6 +18,7 @@ class _DreamFormViewState extends State<DreamFormView> {
   final descriptionController = TextEditingController();
   final dateController = TextEditingController();
   final descriptionFocusNode = FocusNode();
+  List<String> names = [];
 
   @override
   void initState() {
@@ -25,6 +26,7 @@ class _DreamFormViewState extends State<DreamFormView> {
     Dream dream = context.read<DreamFormBloc>().state.dream;
     titleController.text = dream.title ?? "";
     descriptionController.text = dream.description;
+    names = dream.names ?? [];
     context.read<DreamFormBloc>().stream.firstWhere((state) => state is DreamFetched).then((_) {
       setState(() {});
     });
@@ -38,6 +40,11 @@ class _DreamFormViewState extends State<DreamFormView> {
     context.read<DreamFormBloc>().add(FieldChanged(dream));
   }
 
+  void checkNames() {
+    if (descriptionController.text.contains("@")) {}
+    if (descriptionController.text.contains("@")) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -49,6 +56,8 @@ class _DreamFormViewState extends State<DreamFormView> {
           _TitleRow(titleController, descriptionFocusNode, context.read<DreamFormBloc>().state.dream.id == -9223372036854775808), // -9223372036854775808 is null
           const SizedBox(height: 20),
           _DescriptionRow(descriptionController, save, descriptionFocusNode),
+          const SizedBox(height: 20),
+          _NamesRow(names),
         ],
       ),
     );
@@ -119,6 +128,20 @@ class _DescriptionRow extends StatelessWidget {
           return null;
         },
       ),
+    );
+  }
+}
+
+class _NamesRow extends StatelessWidget {
+  final List<String> names;
+  const _NamesRow(this.names);
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 5,
+      crossAxisAlignment: WrapCrossAlignment.start,
+      children: names.map((name) => Chip(label: Text(name))).toList(),
     );
   }
 }
