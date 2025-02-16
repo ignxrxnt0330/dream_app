@@ -68,10 +68,19 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   final actions = [
-    () => print("home"),
-    () => print("calendar"),
-    () => print("stats"),
-    () => print("config"),
+    (BuildContext context) {
+      context.read<DreamHomeBloc>().add(const RefreshDreams());
+    },
+    (BuildContext context) {
+      var calendarBloc = context.read<DreamCalendarBloc>();
+      calendarBloc.add(const FetchBracket());
+      calendarBloc.add(const FetchDates());
+      calendarBloc.add( FetchDreamsOnDate(calendarBloc.state.selectedDate));
+    },
+    (BuildContext context) {
+      context.read<DreamStatsBloc>().add(const FetchStats());
+    },
+    (BuildContext context) {},
   ];
 
   @override
