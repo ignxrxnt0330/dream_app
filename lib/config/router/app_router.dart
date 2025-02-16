@@ -2,7 +2,6 @@ import 'package:dream_app/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(
-
   initialLocation: '/home/0',
   routes: [
     GoRoute(
@@ -26,6 +25,18 @@ final appRouter = GoRouter(
     GoRoute(
       path: "/", // arg is always a string
       redirect: (_, __) => "/home/0",
+    ),
+    GoRoute(
+      path: "/bio_validate/:obj/:finalUrl",
+      name: BiometricsValidator.name,
+      builder: (context, state) {
+        final obj = state.pathParameters['obj'] ?? "";
+        final finalUrl = state.pathParameters['finalUrl'] ?? "";
+        return BiometricsValidator(
+          obj:obj,
+          redirUrl: finalUrl,
+        );
+      },
     ),
   ],
 );

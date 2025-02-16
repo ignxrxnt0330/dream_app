@@ -1,5 +1,6 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/auth/biometrics.dart';
+import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,8 +58,8 @@ class CustomDreamListTile extends StatelessWidget {
       ),
       onTap: () async {
         if (dream.hidden) {
-          bool allowed = await Biometrics.authenticate();
-          if (!allowed) return;
+          context.push("/bio_validate/dream/${dream.id}");
+          return;
         }
         if (!context.mounted) return;
         context.push("/dream/${dream.id}");
