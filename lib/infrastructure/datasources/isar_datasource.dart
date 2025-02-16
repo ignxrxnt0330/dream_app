@@ -202,8 +202,8 @@ class IsarDatasource extends LocalStorageDatasource {
 
     DateTime streakEnd = dates.last ?? DateTime.now();
     DateTime streakStart = dates.last ?? DateTime.now();
-    late DateTime currStreakEnd;
-    late DateTime currStreakStart;
+    late DateTime currStreakEnd = DateTime.now();
+    late DateTime currStreakStart = DateTime.now();
 
     int longestStreak = 0;
 
@@ -219,7 +219,7 @@ class IsarDatasource extends LocalStorageDatasource {
       if (isNextDay) {
         streak++;
         currStreakEnd = previousDate;
-      } else if(!isNextDay || i == dates.length - 1) {
+      } else if (!isNextDay || i == dates.length - 1) {
         if (streak > longestStreak) {
           streakStart = currStreakStart;
           streakEnd = currStreakEnd;
