@@ -33,6 +33,7 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
   Future<void> _onFetchDream(FetchDream event, Emitter<DreamFormState> emit) async {
     Dream? dream = await IsarDatasource().getDream(event.dreamId);
     emit(state.copyWith(dream: dream, currentIndex: 0));
+    add(const DreamFetched());
   }
 
   void _onFormInit(FormInit event, Emitter<DreamFormState> emit) {

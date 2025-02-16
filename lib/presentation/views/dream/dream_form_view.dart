@@ -25,6 +25,9 @@ class _DreamFormViewState extends State<DreamFormView> {
     Dream dream = context.read<DreamFormBloc>().state.dream;
     titleController.text = dream.title ?? "";
     descriptionController.text = dream.description;
+    context.read<DreamFormBloc>().stream.firstWhere((state) => state is DreamFetched).then((_) {
+      setState(() {});
+    });
   }
 
   void save() {
