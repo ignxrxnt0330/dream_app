@@ -32,7 +32,36 @@ class _ConfigViewState extends State<ConfigView> {
           subtitle: const Text("swtich between dark and light mode"),
           value: context.watch<AppConfigBloc>().state.darkMode,
           onChanged: (value) {
-            context.read<AppConfigBloc>().add(const ToggleDarkMode());
+            if (value == false) {
+              AlertDialog dialog = AlertDialog(
+                title: const Text("are you sure¿"),
+                content: const Text("you are making a really bad choice"),
+                actions: [
+                  TextButton(
+                    child: const Text("ye"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      context.read<AppConfigBloc>().add(const ToggleDarkMode());
+                    },
+                  ),
+                  TextButton(
+                    child: const Text("na"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      return;
+                    },
+                  ),
+                ],
+              );
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return dialog;
+                },
+              );
+            } else {
+              context.read<AppConfigBloc>().add(const ToggleDarkMode());
+            }
           },
         ),
         ListTile(
