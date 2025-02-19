@@ -48,17 +48,20 @@ class _DreamFormViewState extends State<DreamFormView> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(height: 10),
-          const _DateTimeRow(),
-          const SizedBox(height: 20),
-          _TitleRow(titleController, descriptionFocusNode, context.read<DreamFormBloc>().state.dream.id == -9223372036854775808), // -9223372036854775808 is null
-          const SizedBox(height: 20),
-          _DescriptionRow(descriptionController, save, descriptionFocusNode),
-          const SizedBox(height: 20),
-          _NamesRow(names),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            const _DateTimeRow(),
+            const SizedBox(height: 20),
+            _TitleRow(titleController, descriptionFocusNode, context.read<DreamFormBloc>().state.dream.id == -9223372036854775808), // -9223372036854775808 is null
+            const SizedBox(height: 20),
+            _DescriptionRow(descriptionController, save, descriptionFocusNode),
+            const SizedBox(height: 20),
+            _NamesRow(names),
+          ],
+        ),
       ),
     );
   }
