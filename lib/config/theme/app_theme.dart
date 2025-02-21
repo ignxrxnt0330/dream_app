@@ -22,6 +22,12 @@ class AppTheme {
         selectedItemColor: bloc.state.darkMode ? Colors.white : Colors.black,
         unselectedItemColor: bloc.state.darkMode ? Colors.white : Colors.black,
       ),
+      listTileTheme: ListTileThemeData(
+        iconColor: bloc.state.darkMode ? Colors.white : Colors.black,
+        selectedColor: bloc.state.darkMode ? Colors.white : Colors.black,
+        textColor: bloc.state.darkMode ? Colors.white : Colors.black,
+        selectedTileColor: bloc.state.darkMode ? Colors.black : Colors.white,
+      ),
     );
   }
 }

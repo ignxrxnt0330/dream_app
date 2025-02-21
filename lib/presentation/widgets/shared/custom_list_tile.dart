@@ -1,4 +1,6 @@
+import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomListTile extends StatefulWidget {
   final IconData icon;
@@ -16,10 +18,12 @@ class CustomListTile extends StatefulWidget {
 class CustomListTileState extends State<CustomListTile> {
   @override
   Widget build(BuildContext context) {
+    var state = context.read<AppConfigBloc>().state;
+
     return ListTile(
       leading: Icon(widget.icon),
       title: Text(widget.title),
-      tileColor: widget.selected ? Colors.grey.shade900 : Colors.transparent,
+      tileColor: widget.selected ? (state.darkMode ? Colors.grey.shade900 : Colors.grey.shade300) : Colors.transparent,
       onTap: widget.onTap,
     );
   }
