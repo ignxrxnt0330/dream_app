@@ -61,6 +61,17 @@ class _DreamTypeViewState extends State<DreamTypeView> {
                       });
                     },
                   ),
+                  CustomListTile(
+                    icon: Icons.mood_bad_outlined,
+                    title: "paralysis",
+                    selected: type == 2,
+                    value: 2,
+                    onTap: () {
+                      setState(() {
+                        type = 2;
+                      });
+                    },
+                  ),
                 ],
               ),
               validator: (_) {
