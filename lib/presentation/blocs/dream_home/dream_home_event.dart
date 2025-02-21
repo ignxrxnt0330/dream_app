@@ -25,8 +25,8 @@ class ExportDreams extends DreamHomeEvent {
 }
 
 class ImportDreams extends DreamHomeEvent {
- final BuildContext context;
-  const ImportDreams( this.context);
+  final BuildContext context;
+  const ImportDreams(this.context);
 }
 
 class HandleDream extends DreamHomeEvent {
@@ -37,4 +37,10 @@ class HandleDream extends DreamHomeEvent {
 class RemoveDream extends DreamHomeEvent {
   final int dreamId;
   const RemoveDream({required this.dreamId});
+}
+
+class OrderChanged extends DreamHomeEvent {
+  final String order;
+  final bool asc;
+  const OrderChanged({required this.order, required this.asc});
 }

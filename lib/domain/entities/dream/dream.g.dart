@@ -22,53 +22,63 @@ const DreamSchema = CollectionSchema(
       name: r'date',
       type: IsarType.dateTime,
     ),
-    r'description': PropertySchema(
+    r'descLength': PropertySchema(
       id: 1,
+      name: r'descLength',
+      type: IsarType.long,
+    ),
+    r'description': PropertySchema(
+      id: 2,
       name: r'description',
       type: IsarType.string,
     ),
     r'formattedDate': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'formattedDate',
       type: IsarType.string,
     ),
     r'hidden': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'hidden',
       type: IsarType.bool,
     ),
     r'isFav': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'isFav',
       type: IsarType.bool,
     ),
     r'lucidness': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'lucidness',
       type: IsarType.long,
     ),
     r'mood': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'mood',
       type: IsarType.long,
     ),
+    r'nameCount': PropertySchema(
+      id: 8,
+      name: r'nameCount',
+      type: IsarType.long,
+    ),
     r'names': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'names',
       type: IsarType.stringList,
     ),
     r'rating': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'rating',
       type: IsarType.long,
     ),
     r'title': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'title',
       type: IsarType.string,
     ),
     r'type': PropertySchema(
-      id: 10,
+      id: 12,
       name: r'type',
       type: IsarType.long,
     )
@@ -123,16 +133,18 @@ void _dreamSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.date);
-  writer.writeString(offsets[1], object.description);
-  writer.writeString(offsets[2], object.formattedDate);
-  writer.writeBool(offsets[3], object.hidden);
-  writer.writeBool(offsets[4], object.isFav);
-  writer.writeLong(offsets[5], object.lucidness);
-  writer.writeLong(offsets[6], object.mood);
-  writer.writeStringList(offsets[7], object.names);
-  writer.writeLong(offsets[8], object.rating);
-  writer.writeString(offsets[9], object.title);
-  writer.writeLong(offsets[10], object.type);
+  writer.writeLong(offsets[1], object.descLength);
+  writer.writeString(offsets[2], object.description);
+  writer.writeString(offsets[3], object.formattedDate);
+  writer.writeBool(offsets[4], object.hidden);
+  writer.writeBool(offsets[5], object.isFav);
+  writer.writeLong(offsets[6], object.lucidness);
+  writer.writeLong(offsets[7], object.mood);
+  writer.writeLong(offsets[8], object.nameCount);
+  writer.writeStringList(offsets[9], object.names);
+  writer.writeLong(offsets[10], object.rating);
+  writer.writeString(offsets[11], object.title);
+  writer.writeLong(offsets[12], object.type);
 }
 
 Dream _dreamDeserialize(
@@ -143,16 +155,18 @@ Dream _dreamDeserialize(
 ) {
   final object = Dream(
     date: reader.readDateTimeOrNull(offsets[0]),
-    description: reader.readStringOrNull(offsets[1]) ?? "",
-    hidden: reader.readBoolOrNull(offsets[3]) ?? false,
+    descLength: reader.readLongOrNull(offsets[1]) ?? 0,
+    description: reader.readStringOrNull(offsets[2]) ?? "",
+    hidden: reader.readBoolOrNull(offsets[4]) ?? false,
     id: id,
-    isFav: reader.readBoolOrNull(offsets[4]) ?? false,
-    lucidness: reader.readLongOrNull(offsets[5]),
-    mood: reader.readLongOrNull(offsets[6]),
-    names: reader.readStringList(offsets[7]),
-    rating: reader.readLongOrNull(offsets[8]),
-    title: reader.readStringOrNull(offsets[9]),
-    type: reader.readLongOrNull(offsets[10]),
+    isFav: reader.readBoolOrNull(offsets[5]) ?? false,
+    lucidness: reader.readLongOrNull(offsets[6]),
+    mood: reader.readLongOrNull(offsets[7]),
+    nameCount: reader.readLongOrNull(offsets[8]) ?? 0,
+    names: reader.readStringList(offsets[9]),
+    rating: reader.readLongOrNull(offsets[10]),
+    title: reader.readStringOrNull(offsets[11]),
+    type: reader.readLongOrNull(offsets[12]),
   );
   return object;
 }
@@ -167,24 +181,28 @@ P _dreamDeserializeProp<P>(
     case 0:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset) ?? "") as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? "") as P;
     case 3:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
+      return (reader.readString(offset)) as P;
     case 4:
       return (reader.readBoolOrNull(offset) ?? false) as P;
     case 5:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset) ?? false) as P;
     case 6:
       return (reader.readLongOrNull(offset)) as P;
     case 7:
-      return (reader.readStringList(offset)) as P;
-    case 8:
       return (reader.readLongOrNull(offset)) as P;
+    case 8:
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 9:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringList(offset)) as P;
     case 10:
+      return (reader.readLongOrNull(offset)) as P;
+    case 11:
+      return (reader.readStringOrNull(offset)) as P;
+    case 12:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -340,6 +358,59 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'date',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> descLengthEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'descLength',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> descLengthGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'descLength',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> descLengthLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'descLength',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> descLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'descLength',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -807,6 +878,59 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'mood',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> nameCountEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nameCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> nameCountGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'nameCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> nameCountLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'nameCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> nameCountBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'nameCount',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1343,6 +1467,18 @@ extension DreamQuerySortBy on QueryBuilder<Dream, Dream, QSortBy> {
     });
   }
 
+  QueryBuilder<Dream, Dream, QAfterSortBy> sortByDescLength() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'descLength', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterSortBy> sortByDescLengthDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'descLength', Sort.desc);
+    });
+  }
+
   QueryBuilder<Dream, Dream, QAfterSortBy> sortByDescription() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.asc);
@@ -1415,6 +1551,18 @@ extension DreamQuerySortBy on QueryBuilder<Dream, Dream, QSortBy> {
     });
   }
 
+  QueryBuilder<Dream, Dream, QAfterSortBy> sortByNameCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nameCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterSortBy> sortByNameCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nameCount', Sort.desc);
+    });
+  }
+
   QueryBuilder<Dream, Dream, QAfterSortBy> sortByRating() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'rating', Sort.asc);
@@ -1462,6 +1610,18 @@ extension DreamQuerySortThenBy on QueryBuilder<Dream, Dream, QSortThenBy> {
   QueryBuilder<Dream, Dream, QAfterSortBy> thenByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterSortBy> thenByDescLength() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'descLength', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterSortBy> thenByDescLengthDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'descLength', Sort.desc);
     });
   }
 
@@ -1549,6 +1709,18 @@ extension DreamQuerySortThenBy on QueryBuilder<Dream, Dream, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Dream, Dream, QAfterSortBy> thenByNameCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nameCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QAfterSortBy> thenByNameCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nameCount', Sort.desc);
+    });
+  }
+
   QueryBuilder<Dream, Dream, QAfterSortBy> thenByRating() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'rating', Sort.asc);
@@ -1593,6 +1765,12 @@ extension DreamQueryWhereDistinct on QueryBuilder<Dream, Dream, QDistinct> {
     });
   }
 
+  QueryBuilder<Dream, Dream, QDistinct> distinctByDescLength() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'descLength');
+    });
+  }
+
   QueryBuilder<Dream, Dream, QDistinct> distinctByDescription(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1629,6 +1807,12 @@ extension DreamQueryWhereDistinct on QueryBuilder<Dream, Dream, QDistinct> {
   QueryBuilder<Dream, Dream, QDistinct> distinctByMood() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'mood');
+    });
+  }
+
+  QueryBuilder<Dream, Dream, QDistinct> distinctByNameCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'nameCount');
     });
   }
 
@@ -1671,6 +1855,12 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Dream, int, QQueryOperations> descLengthProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'descLength');
+    });
+  }
+
   QueryBuilder<Dream, String, QQueryOperations> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'description');
@@ -1704,6 +1894,12 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
   QueryBuilder<Dream, int?, QQueryOperations> moodProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'mood');
+    });
+  }
+
+  QueryBuilder<Dream, int, QQueryOperations> nameCountProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'nameCount');
     });
   }
 

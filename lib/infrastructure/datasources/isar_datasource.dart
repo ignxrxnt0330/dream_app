@@ -61,10 +61,11 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<List<Dream>> loadDreams({int limit = 10, int offset = 0}) async {
+  Future<List<Dream>> loadDreams({int limit = 10, int offset = 0, String order = "date", bool asc = false}) async {
+    print("order: $order, asc: $asc");
     final isar = await db;
-    final List<Dream> dreams = await isar.dreams.where().sortByDateDesc().offset(offset).limit(limit).findAll();
-    return dreams;
+    final dreams = await isar.dreams.buildQuery(sortBy: [SortProperty(property: order, sort: asc ? Sort.asc : Sort.desc)]).findAll();
+    return dreams.cast<Dream>();
   }
 
   @override

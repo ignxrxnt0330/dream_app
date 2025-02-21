@@ -17,6 +17,8 @@ class Dream {
   final int? mood; // 0-5
   final bool isFav;
   bool hidden;
+  int descLength;
+  int nameCount;
 
   Dream({
     this.id = Isar.autoIncrement,
@@ -30,6 +32,8 @@ class Dream {
     this.rating = 0,
     this.lucidness = 0,
     this.hidden = false,
+    this.descLength = 0,
+    this.nameCount = 0,
   });
 
   Dream copyWith({
@@ -44,6 +48,8 @@ class Dream {
     final int? mood,
     final bool? isFav,
     final bool? hidden,
+    final int? descLength,
+    final int? nameCount,
   }) {
     return Dream(
       id: id ?? this.id,
@@ -57,6 +63,8 @@ class Dream {
       mood: mood ?? this.mood,
       isFav: isFav ?? this.isFav,
       hidden: hidden ?? this.hidden,
+      descLength: descLength ?? this.descLength,
+      nameCount: nameCount ?? this.nameCount,
     );
   }
 
@@ -87,24 +95,42 @@ class Dream {
     hidden = title!.startsWith(".");
   }
 
+  void initDescLength() {
+    descLength = description.length;
+  }
+
+  void initNameCount() {
+    nameCount = names?.length ?? 0;
+  }
+
+  void initMiscFields() {
+    initNames();
+    initHidden();
+    initDescLength();
+    initNameCount();
+  }
+
   @override
   String toString() {
     return 'Dream{id: $id, title: $title, description: $description, date: $date, names: $names, rating: $rating, lucidness: $lucidness, type: $type, mood: $mood, isFav: $isFav}';
   }
 
   String toJson() {
+    initMiscFields();
     return jsonEncode({
       'id': id,
       'title': title,
       'description': description,
       'date': date!.microsecondsSinceEpoch,
-      'names': names,
+      'names': names, //FIXME: rm
       'rating': rating,
       'lucidness': lucidness,
       'type': type,
       'mood': mood,
       'isFav': isFav,
-      "hidden": hidden,
+      "hidden": hidden, //FIXME: rm
+      "descLength": descLength, //FIXME: rm
+      "nameCount": nameCount, //FIXME: rm
     });
   }
 
@@ -114,13 +140,15 @@ class Dream {
       title: json['title'],
       description: json['description'],
       date: DateTime.fromMicrosecondsSinceEpoch(json['date']),
-      names: (json['names'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      names: (json['names'] as List<dynamic>?)?.map((e) => e as String).toList(), //FIXME: rm
       rating: json['rating'],
       lucidness: json['lucidness'],
       type: json['type'],
       mood: json['mood'],
       isFav: json['isFav'],
-      hidden: json['hidden'],
+      hidden: json['hidden'], //FIXME: rm
+      descLength: json["descLength"], //FIXME: rm
+      nameCount: json["nameCount"], //FIXME: rm
     );
   }
 }

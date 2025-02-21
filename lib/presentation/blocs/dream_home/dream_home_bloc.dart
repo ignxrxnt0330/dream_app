@@ -20,23 +20,16 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     on<ExportDreams>(_exportDreams);
     on<HandleDream>(_handleDream);
     on<RemoveDream>(_removeDream);
+    on<OrderChanged>(_orderChanged);
   }
 
   void _fetchMoreDreams(FetchDreams event, Emitter<DreamHomeState> emit) async {
     if (state.isLoading || state.endReached) return;
     emit(state.copyWith(isLoading: true));
-    final dreams = await datasource.loadDreams(offset: state.offset);
-
-    if (dreams.isEmpty) {
-      emit(state.copyWith(
-        isLoading: false,
-        endReached: true,
-      ));
-      return;
-    }
+    final dreams = await datasource.loadDreams(offset: state.offset, order: state.order, asc: state.asc);
     emit(state.copyWith(
       isLoading: false,
-      endReached: false,
+      endReached: dreams.length < 10,
       offset: state.offset + 10,
       dreams: [...state.dreams, ...dreams],
     ));
@@ -89,5 +82,10 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     List<Dream> updatedDreams = state.dreams.where((dream) => dream.id != event.dreamId).toList();
     await datasource.deleteDream(event.dreamId);
     emit(state.copyWith(dreams: updatedDreams));
+  }
+
+  void _orderChanged(OrderChanged event, Emitter<DreamHomeState> emit) async {
+    emit(state.copyWith(order: event.order, asc: event.asc));
+    add(const RefreshDreams());
   }
 }
