@@ -10,12 +10,10 @@ class Dream {
   final String? title;
   final String description;
   final DateTime? date;
-  List<String>? tags;
   List<String>? names;
   final int? rating; // 0-5
   final int? lucidness; // 0-3
-  final int? quality; // 0-6
-  final int? type; // 0/1
+  final int? type; // 0-2
   final int? mood; // 0-5
   final bool isFav;
   bool hidden;
@@ -25,9 +23,7 @@ class Dream {
     this.title = "",
     this.description = "",
     this.date,
-    this.tags,
     this.names,
-    this.quality,
     this.type,
     this.mood,
     this.isFav = false,
@@ -41,11 +37,9 @@ class Dream {
     final String? title,
     final String? description,
     final DateTime? date,
-    final List<String>? tags,
     final List<String>? names,
     final int? rating,
     final int? lucidness,
-    final int? quality,
     final int? type,
     final int? mood,
     final bool? isFav,
@@ -56,11 +50,9 @@ class Dream {
       title: title ?? this.title,
       description: description ?? this.description,
       date: date ?? this.date,
-      tags: tags ?? this.tags,
       names: names ?? this.names,
       rating: rating ?? this.rating,
       lucidness: lucidness ?? this.lucidness,
-      quality: quality ?? this.quality,
       type: type ?? this.type,
       mood: mood ?? this.mood,
       isFav: isFav ?? this.isFav,
@@ -97,7 +89,7 @@ class Dream {
 
   @override
   String toString() {
-    return 'Dream{id: $id, title: $title, description: $description, date: $date, tags: $tags, names: $names, rating: $rating, lucidness: $lucidness, quality: $quality, type: $type, mood: $mood, isFav: $isFav}';
+    return 'Dream{id: $id, title: $title, description: $description, date: $date, names: $names, rating: $rating, lucidness: $lucidness, type: $type, mood: $mood, isFav: $isFav}';
   }
 
   String toJson() {
@@ -106,11 +98,9 @@ class Dream {
       'title': title,
       'description': description,
       'date': date!.microsecondsSinceEpoch,
-      'tags': tags,
       'names': names,
       'rating': rating,
       'lucidness': lucidness,
-      'quality': quality,
       'type': type,
       'mood': mood,
       'isFav': isFav,
@@ -124,11 +114,9 @@ class Dream {
       title: json['title'],
       description: json['description'],
       date: DateTime.fromMicrosecondsSinceEpoch(json['date']),
-      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
       names: (json['names'] as List<dynamic>?)?.map((e) => e as String).toList(),
       rating: json['rating'],
       lucidness: json['lucidness'],
-      quality: json['quality'],
       type: json['type'],
       mood: json['mood'],
       isFav: json['isFav'],

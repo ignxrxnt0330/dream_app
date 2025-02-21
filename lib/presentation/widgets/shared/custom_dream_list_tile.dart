@@ -1,5 +1,4 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
-import 'package:dream_app/infrastructure/auth/biometrics.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +43,6 @@ class CustomDreamListTile extends StatelessWidget {
             ),
             maxLines: 2,
           ),
-          if (dream.tags != null)
-            Wrap(
-              spacing: 5,
-              children: !dream.hidden ? dream.tags!.map((tag) => Chip(label: Text(tag))).toList() : dream.tags!.map((tag) => const Chip(label: Text("..."))).toList(),
-            ),
           if (dream.names != null)
             Wrap(
               spacing: 5,
