@@ -16,9 +16,9 @@ class CustomDreamListTile extends StatelessWidget {
   Widget getNamesChips(Dream dream) {
     var names = dream.names;
     if (names == null || names.isEmpty) return const SizedBox(height: 0);
-    if (dream.hidden) return Wrap(children: [Chip(label: Text("${names.length} people"))]);
-    if (names.length > 3) return Wrap(children: [...dream.names!.take(3).map((name) => Chip(label: Text(name))), Chip(label: Text("${dream.names!.length - 3} more"))]);
-    return Wrap(children: names.map((name) => Chip(label: Text(name))).toList());
+    if (dream.hidden) return Wrap(spacing: 5, children: [Chip(label: Text("${names.length} people"))]);
+    if (names.length > 3) return Wrap(spacing: 5, children: [...dream.names!.take(3).map((name) => Chip(label: Text(name))), Chip(label: Text("${dream.names!.length - 3} more"))]);
+    return Wrap(spacing: 5, children: names.map((name) => Chip(label: Text(name))).toList());
   }
 
   @override
