@@ -28,5 +28,5 @@ class DreamSearchState extends Equatable {
   String toString() => 'DreamSearchState { dreams: $dreams, isLoading: $isLoading, count: $count, offset: $offset, endReached: $endReached, query: $query }';
 
   @override
-  List<Object> get props => [dreams];
+  List<Object> get props => [dreams,isLoading,endReached,query];
 }
