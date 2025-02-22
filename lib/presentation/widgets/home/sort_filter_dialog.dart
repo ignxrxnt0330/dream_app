@@ -52,29 +52,32 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
   Widget build(BuildContext context) {
     return Opacity(
       opacity: 0.8,
-      child: Dialog(
-        backgroundColor: Colors.black,
-        child: Column(children: [
-          Flex(
-            direction: Axis.horizontal,
-            children: [
-              Expanded(
-                child: TextButton.icon(
-                  onPressed: toggleSort,
-                  label: Text(asc ? "asc" : "desc"),
-                  icon: asc ? const Icon(Icons.north_rounded) : const Icon(Icons.south_rounded),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: toggleSort,
+                    label: Text(asc ? "asc" : "desc"),
+                    icon: asc ? const Icon(Icons.north_rounded) : const Icon(Icons.south_rounded),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: TextButton.icon(
-                  onPressed: cycleOrder,
-                  label: Text(sortOptions[sort].keys.first),
-                  icon: Icon(sortOptions[sort].values.first),
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: cycleOrder,
+                    label: Text(sortOptions[sort].keys.first),
+                    icon: Icon(sortOptions[sort].values.first),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ]),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

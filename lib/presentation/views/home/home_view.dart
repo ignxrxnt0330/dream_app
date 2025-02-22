@@ -42,10 +42,11 @@ class _HomeViewState extends State<HomeView> {
         child: CustomScrollView(
           controller: scrollController,
           slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: TextButton.icon(
+            SliverAppBar(
+              floating: true,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                  title: TextButton(
                   onPressed: () {
                     showDialog(
                         context: context,
@@ -53,17 +54,15 @@ class _HomeViewState extends State<HomeView> {
                           return const SortFilterDialog();
                         });
                   },
-                  label: const Text("asd"),
-                ),
-              ),
+                  child: const Text("filter dreams"),
+              )),
+              expandedHeight: 50.0,
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return CustomDreamListTile(dream: dreamsState.dreams[index]);
-                },
-                childCount: dreamsState.dreams.length,
-              ),
+            SliverList.builder(
+              itemBuilder: (context, index) {
+                return CustomDreamListTile(dream: dreamsState.dreams[index]);
+              },
+              itemCount: dreamsState.dreams.length,
             ),
           ],
         ));
