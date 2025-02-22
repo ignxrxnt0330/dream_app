@@ -81,7 +81,7 @@ class _TitleRow extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           labelText: 'Title',
-          hintText: context.read<AppConfigBloc>().state.defaultTitle,
+          hintText: context.read<AppConfigBloc>().state.defaultTitle != "" ? context.read<AppConfigBloc>().state.defaultTitle : null,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
           ),

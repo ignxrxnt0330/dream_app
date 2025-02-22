@@ -1,6 +1,6 @@
 import 'package:dream_app/presentation/blocs/blocs.dart';
-import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:dream_app/presentation/widgets/config/color_picker_dialog.dart';
+import 'package:dream_app/presentation/widgets/config/default_title_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import "package:dream_app/infrastructure/datasources/sp_config.dart";
@@ -15,8 +15,6 @@ class ConfigView extends StatefulWidget {
 
 class _ConfigViewState extends State<ConfigView> {
   SpConfig config = SpConfig();
-  TextEditingController defaultTitleController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -82,33 +80,11 @@ class _ConfigViewState extends State<ConfigView> {
           subtitle: const Text("set a default title for your dreams"),
           trailing: const Icon(Icons.arrow_forward_ios),
           onTap: () {
-            defaultTitleController.text = context.read<AppConfigBloc>().state.defaultTitle ?? "";
             setState(() {});
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text("set default title"),
-                  content: TextField(
-                    controller: defaultTitleController,
-                    autofocus: true,
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("cancel"),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        context.read<AppConfigBloc>().add(SetDefaultTitle(defaultTitleController.text));
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("confirm"),
-                    ),
-                  ],
-                );
+                return const DefaultTitleDialog();
               },
             );
           },

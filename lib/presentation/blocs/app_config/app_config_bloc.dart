@@ -10,7 +10,7 @@ part 'app_config_state.dart';
 class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   SpConfig config = SpConfig();
 
-  AppConfigBloc() : super(const AppConfigState(true, null, Color(0xFF9C27B0))) {
+  AppConfigBloc() : super(const AppConfigState(true, "", Color(0xFF9C27B0))) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);

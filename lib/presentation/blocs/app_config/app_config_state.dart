@@ -2,7 +2,7 @@ part of 'app_config_bloc.dart';
 
 class AppConfigState extends Equatable {
   final bool darkMode;
-  final String? defaultTitle;
+  final String defaultTitle;
   final Color appColor;
   const AppConfigState(this.darkMode, this.defaultTitle, this.appColor);
 
@@ -15,5 +15,5 @@ class AppConfigState extends Equatable {
   }
 
   @override
-  List<Object> get props => [darkMode, appColor];
+  List<Object> get props => [darkMode, defaultTitle, appColor];
 }
