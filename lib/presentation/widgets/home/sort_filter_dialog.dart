@@ -17,6 +17,14 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
   bool asc = false;
   int sort = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    String order = context.read<DreamHomeBloc>().state.order;
+    sort = sortOptions.indexWhere((el) => el.keys.first == order);
+    asc = context.read<DreamHomeBloc>().state.asc;
+  }
+
   List<Map<String, IconData>> sortOptions = [
     {"date": Icons.timer},
     {"descLength": Icons.sort},
