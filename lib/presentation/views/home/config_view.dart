@@ -1,5 +1,6 @@
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
+import 'package:dream_app/presentation/widgets/config/color_picker_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import "package:dream_app/infrastructure/datasources/sp_config.dart";
@@ -68,7 +69,13 @@ class _ConfigViewState extends State<ConfigView> {
           title: const Text("colors"),
           subtitle: const Text("change the app colors"),
           trailing: const Icon(Icons.arrow_forward_ios),
-          onTap: () {},
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return const ColorPickerDialog();
+                });
+          },
         ),
         ListTile(
           title: const Text("default title"),

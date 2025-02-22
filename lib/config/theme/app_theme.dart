@@ -9,7 +9,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.purple,
+        seedColor: bloc.state.appColor,
         brightness: bloc.state.darkMode ? Brightness.dark : Brightness.light,
         surface: bloc.state.darkMode ? Colors.black : Colors.white,
       ),

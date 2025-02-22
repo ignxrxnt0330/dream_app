@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dream_app/infrastructure/datasources/sp_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -8,11 +10,12 @@ part 'app_config_state.dart';
 class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   SpConfig config = SpConfig();
 
-  AppConfigBloc() : super(const AppConfigState(true, null)) {
+  AppConfigBloc() : super(const AppConfigState(true, null, Color(0xFF9C27B0))) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
     on<SetDefaultTitle>(_setDefaultTitle);
+    on<ChangeAppColor>(_changeAppColor);
   }
 
   void _initConfig() async {
@@ -21,6 +24,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     if (defTitle != null && defTitle.isNotEmpty) {
       add(SetDefaultTitle(defTitle));
     }
+    add(ChangeAppColor(await config.getAppColor()));
   }
 
   void _setDarkMode(SetDarkMode event, Emitter<AppConfigState> emit) async {
@@ -36,5 +40,10 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   void _setDefaultTitle(SetDefaultTitle event, Emitter<AppConfigState> emit) async {
     await config.setDefaultTitle(event.title);
     emit(state.copyWith(defaultTitle: event.title));
+  }
+
+  void _changeAppColor(ChangeAppColor event, Emitter<AppConfigState> emit) async {
+    await config.changeAppColor(event.appColor);
+    emit(state.copyWith(appColor: event.appColor));
   }
 }

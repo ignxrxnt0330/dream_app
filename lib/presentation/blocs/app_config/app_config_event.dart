@@ -17,3 +17,8 @@ class SetDefaultTitle extends AppConfigEvent {
   final String title;
   const SetDefaultTitle(this.title);
 }
+
+class ChangeAppColor extends AppConfigEvent {
+  final Color appColor;
+  const ChangeAppColor(this.appColor);
+}
