@@ -13,6 +13,14 @@ class CustomDreamListTile extends StatelessWidget {
 
   final Dream dream;
 
+  Widget getNamesChips(Dream dream) {
+    var names = dream.names;
+    if (names == null || names.isEmpty) return const SizedBox(height: 0);
+    if (dream.hidden) return Wrap(children: [Chip(label: Text("${names.length} people"))]);
+    if (names.length > 3) return Wrap(children: [...dream.names!.take(3).map((name) => Chip(label: Text(name))), Chip(label: Text("${dream.names!.length - 3} more"))]);
+    return Wrap(children: names.map((name) => Chip(label: Text(name))).toList());
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -43,11 +51,7 @@ class CustomDreamListTile extends StatelessWidget {
             ),
             maxLines: 2,
           ),
-          if (dream.names != null)
-            Wrap(
-              spacing: 5,
-              children: !dream.hidden ? dream.names!.map((name) => Chip(label: Text(name))).toList() : dream.names!.map((tag) => const Chip(label: Text("..."))).toList(),
-            ),
+          getNamesChips(dream),
         ],
       ),
       onTap: () async {
