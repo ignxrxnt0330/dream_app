@@ -42,5 +42,6 @@ class RemoveDream extends DreamHomeEvent {
 class OrderChanged extends DreamHomeEvent {
   final String order;
   final bool asc;
-  const OrderChanged({required this.order, required this.asc});
+  final bool fav;
+  const OrderChanged({required this.order, required this.asc, required this.fav});
 }

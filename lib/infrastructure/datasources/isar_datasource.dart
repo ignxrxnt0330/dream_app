@@ -61,9 +61,12 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<List<Dream>> loadDreams({int limit = 10, int offset = 0, String order = "date", bool asc = false}) async {
+  Future<List<Dream>> loadDreams({int limit = 10, int offset = 0, String order = "date", bool asc = false, bool fav = false}) async {
     final isar = await db;
-    final dreams = await isar.dreams.buildQuery(sortBy: [SortProperty(property: order, sort: asc ? Sort.asc : Sort.desc)]).findAll();
+    final dreams = await isar.dreams.buildQuery(
+      filter: fav ? FilterGroup.and([FilterCondition.equalTo(property: 'isFav', value: true)]) : null,
+      sortBy: [SortProperty(property: order, sort: asc ? Sort.asc : Sort.desc)],
+    ).findAll();
     return dreams.cast<Dream>();
   }
 

@@ -16,13 +16,16 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
 
   bool asc = false;
   int sort = 0;
+  bool fav = false;
 
   @override
   void initState() {
     super.initState();
-    String order = context.read<DreamHomeBloc>().state.order;
+    DreamHomeState state = context.read<DreamHomeBloc>().state;
+    String order = state.order;
     sort = sortOptions.indexWhere((el) => el.keys.first == order);
-    asc = context.read<DreamHomeBloc>().state.asc;
+    asc = state.asc;
+    fav = state.fav;
   }
 
   List<Map<String, IconData>> sortOptions = [
@@ -39,7 +42,7 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     setState(() {});
     if (timeout?.isActive ?? false) timeout?.cancel();
     timeout = Timer(const Duration(milliseconds: 500), () async {
-      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc));
+      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav));
     });
   }
 
@@ -52,7 +55,16 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     setState(() {});
     if (timeout?.isActive ?? false) timeout?.cancel();
     timeout = Timer(const Duration(milliseconds: 500), () async {
-      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc));
+      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav));
+    });
+  }
+
+  void toggleFav() {
+    fav = !fav;
+    setState(() {});
+    if (timeout?.isActive ?? false) timeout?.cancel();
+    timeout = Timer(const Duration(milliseconds: 500), () async {
+      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav));
     });
   }
 
@@ -80,6 +92,19 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
                     onPressed: cycleOrder,
                     label: Text(sortOptions[sort].keys.first),
                     icon: Icon(sortOptions[sort].values.first),
+                  ),
+                ),
+              ],
+            ),
+            Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: toggleFav,
+                    label: const Text("fav"),
+                    icon: fav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border_outlined),
                   ),
                 ),
               ],
