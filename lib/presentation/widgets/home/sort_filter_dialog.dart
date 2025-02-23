@@ -72,45 +72,25 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
   Widget build(BuildContext context) {
     return Opacity(
       opacity: 0.8,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Flex(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: TextButton.icon(
-                    onPressed: toggleSort,
-                    label: Text(asc ? "asc" : "desc"),
-                    icon: asc ? const Icon(Icons.north_rounded) : const Icon(Icons.south_rounded),
-                  ),
-                ),
-                Expanded(
-                  child: TextButton.icon(
-                    onPressed: cycleOrder,
-                    label: Text(sortOptions[sort].keys.first),
-                    icon: Icon(sortOptions[sort].values.first),
-                  ),
-                ),
-              ],
-            ),
-            Flex(
-              direction: Axis.horizontal,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: TextButton.icon(
-                    onPressed: toggleFav,
-                    label: const Text("fav"),
-                    icon: fav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border_outlined),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextButton.icon(
+            onPressed: cycleOrder,
+            label: Text(sortOptions[sort].keys.first),
+            icon: Icon(sortOptions[sort].values.first),
+          ),
+          TextButton.icon(
+            onPressed: toggleSort,
+            label: Text(asc ? "asc" : "desc"),
+            icon: asc ? const Icon(Icons.north_rounded) : const Icon(Icons.south_rounded),
+          ),
+          TextButton.icon(
+            onPressed: toggleFav,
+            label: const Text("fav"),
+            icon: fav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border_outlined),
+          ),
+        ],
       ),
     );
   }
