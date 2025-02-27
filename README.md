@@ -1,16 +1,20 @@
-# dream_app
+dream_app
+A simple dream journaling app.
 
-A new Flutter project.
+## Table of contents
+- [Installation](#installation)
+- [Features](#features)
+- [Usage](#usage)
+- [Screenshots](#screenshots)
+- [Contributing](#contributing)
+- [License](#license)
+- [Project status](#project_status)
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Instalation
+    
+## Usage
+## Features
+## Screenshots
+## Contributing
+## License
+## Project status

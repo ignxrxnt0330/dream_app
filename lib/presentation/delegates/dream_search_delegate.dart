@@ -11,6 +11,13 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
   final scrollController = ScrollController();
   Timer? timeout;
 
+  @override
+  void dispose() {
+    timeout?.cancel();
+    scrollController.dispose();
+    super.dispose();
+  }
+
   DreamSearchDelegate(this.context) : super() {
     scrollController.addListener(() {
       if (scrollController.position.pixels + 400 >= scrollController.position.maxScrollExtent) {
@@ -43,59 +50,50 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final dreamsState = context.watch<DreamSearchBloc>().state;
-    if (dreamsState.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(strokeWidth: 2),
-      );
-    }
-    return Column(children: [
-      (!dreamsState.isLoading && query != "")
-          ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
-            )
-          : const SizedBox(),
-      Expanded(
-          child: ListView.builder(
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                return CustomDreamListTile(dream: dreamsState.dreams[index]);
-              },
-              itemCount: dreamsState.dreams.length))
-    ]);
+    return BlocBuilder<DreamSearchBloc, DreamSearchState>(
+      builder: (context, dreamsState) {
+        return Column(children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
+          ),
+          Expanded(
+              child: ListView.builder(
+                  controller: scrollController,
+                  itemBuilder: (context, index) {
+                    return CustomDreamListTile(dream: dreamsState.dreams[index]);
+                  },
+                  itemCount: dreamsState.dreams.length))
+        ]);
+      },
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final dreamsState = context.watch<DreamSearchBloc>().state;
+    return BlocBuilder<DreamSearchBloc, DreamSearchState>(
+      builder: (context, dreamsState) {
+        if (timeout?.isActive ?? false) timeout?.cancel();
+        timeout = Timer(const Duration(milliseconds: 500), () async {
+          if (query != dreamsState.query) {
+            context.read<DreamSearchBloc>().add(SearchDreams(query: query.trim()));
+          }
+        });
 
-    if (timeout?.isActive ?? false) timeout?.cancel();
-    timeout = Timer(const Duration(milliseconds: 500), () async {
-      if (query != dreamsState.query) {
-        context.read<DreamSearchBloc>().add(SearchDreams(query: query.trim()));
-      }
-    });
-
-    if (dreamsState.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(strokeWidth: 2),
-      );
-    }
-    return Column(children: [
-      (!dreamsState.isLoading && query != "")
-          ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
-            )
-          : const SizedBox(),
-      Expanded(
-          child: ListView.builder(
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                return CustomDreamListTile(dream: dreamsState.dreams[index]);
-              },
-              itemCount: dreamsState.dreams.length))
-    ]);
+        return Column(children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
+          ),
+          Expanded(
+              child: ListView.builder(
+                  controller: scrollController,
+                  itemBuilder: (context, index) {
+                    return CustomDreamListTile(dream: dreamsState.dreams[index]);
+                  },
+                  itemCount: dreamsState.dreams.length))
+        ]);
+      },
+    );
   }
 }

@@ -29,7 +29,3 @@ class ScrollSearch extends DreamSearchEvent {
     this.names,
   });
 }
-
-class GetAllNames extends DreamSearchEvent {
-  const GetAllNames();
-}

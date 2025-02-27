@@ -147,7 +147,7 @@ class IsarDatasource extends LocalStorageDatasource {
   @override
   Future<List<Dream>>? searchDreams(String query, {int limit = 10, int offset = 0, names = const <String>[], newToOld = true}) async {
     final isar = await db;
-    final List<Dream> dreams = await isar.dreams.where().filter().descriptionContains(query, caseSensitive: false).or().titleContains(query, caseSensitive: false).sortByDateDesc().offset(offset).limit(limit).findAll();
+    final dreams = await isar.dreams.where().filter().descriptionContains(query, caseSensitive: false).or().titleContains(query, caseSensitive: false).sortByDateDesc().offset(offset).limit(limit).findAll();
     return dreams;
   }
 
