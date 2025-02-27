@@ -13,6 +13,7 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
     on<FieldChanged>(_onFieldChanged);
     on<FetchDream>(_onFetchDream);
     on<FormInit>(_onFormInit);
+    on<DreamFetched>(_onDreamFetched);
   }
 
   void _onDreamSubmitted(DreamSubmitted event, Emitter<DreamFormState> emit) async {
@@ -32,8 +33,13 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
 
   Future<void> _onFetchDream(FetchDream event, Emitter<DreamFormState> emit) async {
     Dream? dream = await IsarDatasource().getDream(event.dreamId);
+    if (dream == null) return;
     emit(state.copyWith(dream: dream, currentIndex: 0));
-    add(const DreamFetched());
+    add(DreamFetched(dream: dream));
+  }
+
+  void _onDreamFetched(DreamFetched event, Emitter<DreamFormState> emit) {
+    emit(state.copyWith(dream: event.dream));
   }
 
   void _onFormInit(FormInit event, Emitter<DreamFormState> emit) {
