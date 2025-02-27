@@ -25,6 +25,13 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
         actions: [
           TextButton(
             onPressed: () {
+              context.read<AppConfigBloc>().add(const ChangeAppColor(Color(0xFF9C27B0)));
+              Navigator.of(context).pop();
+            },
+            child: const Text("reset default"),
+          ),
+          TextButton(
+            onPressed: () {
               Navigator.of(context).pop();
             },
             child: const Text("cancel"),
