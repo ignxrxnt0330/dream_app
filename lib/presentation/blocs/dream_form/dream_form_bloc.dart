@@ -18,7 +18,8 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
   void _onDreamSubmitted(DreamSubmitted event, Emitter<DreamFormState> emit) async {
     // upload dream
     state.dream.initMiscFields();
-    await IsarDatasource().saveDream(state.dream);
+    final id = await IsarDatasource().saveDream(state.dream);
+    emit(state.copyWith(dream: state.dream.copyWith(id: id)));
   }
 
   void _onIndexChanged(IndexChanged event, Emitter<DreamFormState> emit) {
