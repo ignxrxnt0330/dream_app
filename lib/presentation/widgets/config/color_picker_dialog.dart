@@ -20,8 +20,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: AlertDialog(
+    return AlertDialog(
         actions: [
           TextButton(
             onPressed: () {
@@ -52,7 +51,6 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
             },
           ),
         ),
-      ),
     );
   }
 }
