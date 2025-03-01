@@ -8,6 +8,7 @@ class DreamHomeState extends Equatable {
   final String order;
   final bool asc;
   final bool fav;
+  final bool hidden;
 
   const DreamHomeState({
     required this.dreams,
@@ -17,6 +18,7 @@ class DreamHomeState extends Equatable {
     this.order = "date",
     this.asc = false,
     this.fav = false,
+    this.hidden = false,
   });
 
   DreamHomeState copyWith({
@@ -27,6 +29,7 @@ class DreamHomeState extends Equatable {
     String? order,
     bool? asc,
     bool? fav,
+    bool? hidden,
   }) =>
       DreamHomeState(
         dreams: dreams ?? this.dreams,
@@ -36,13 +39,14 @@ class DreamHomeState extends Equatable {
         order: order ?? this.order,
         asc: asc ?? this.asc,
         fav: fav ?? this.fav,
+        hidden: hidden ?? this.hidden,
       );
 
   @override
-  List<Object> get props => [dreams, isLoading, endReached, order, asc, fav];
+  List<Object> get props => [dreams, isLoading, endReached, order, asc, fav,hidden];
 
   @override
   String toString() {
-    return 'DreamHomeState{dreams: $dreams, order: $order, asc: $asc, fav: $fav, offset: $offset, isLoading: $isLoading, endReached: $endReached}';
+    return 'DreamHomeState{dreams: $dreams, order: $order, asc: $asc, fav: $fav, hidden: $hidden, offset: $offset, isLoading: $isLoading, endReached: $endReached}';
   }
 }

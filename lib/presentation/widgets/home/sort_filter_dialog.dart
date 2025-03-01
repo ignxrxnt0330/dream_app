@@ -17,6 +17,7 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
   bool asc = false;
   int sort = 0;
   bool fav = false;
+  bool hidden = false;
 
   @override
   void initState() {
@@ -26,6 +27,7 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     sort = sortOptions.indexWhere((el) => el.keys.first == order);
     asc = state.asc;
     fav = state.fav;
+    hidden = state.hidden;
   }
 
   List<Map<String, IconData>> sortOptions = [
@@ -42,7 +44,7 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     setState(() {});
     if (timeout?.isActive ?? false) timeout?.cancel();
     timeout = Timer(const Duration(milliseconds: 500), () async {
-      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav));
+      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav, hidden: hidden));
     });
   }
 
@@ -55,7 +57,7 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     setState(() {});
     if (timeout?.isActive ?? false) timeout?.cancel();
     timeout = Timer(const Duration(milliseconds: 500), () async {
-      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav));
+      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav, hidden: hidden));
     });
   }
 
@@ -64,7 +66,16 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     setState(() {});
     if (timeout?.isActive ?? false) timeout?.cancel();
     timeout = Timer(const Duration(milliseconds: 500), () async {
-      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav));
+      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav, hidden: hidden));
+    });
+  }
+
+  void toggleHidden() {
+    hidden = !hidden;
+    setState(() {});
+    if (timeout?.isActive ?? false) timeout?.cancel();
+    timeout = Timer(const Duration(milliseconds: 500), () async {
+      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav, hidden: hidden));
     });
   }
 
@@ -89,6 +100,11 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
             onPressed: toggleFav,
             label: const Text("fav"),
             icon: fav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border_outlined),
+          ),
+          TextButton.icon(
+            onPressed: toggleHidden,
+            label: const Text("hidden"),
+            icon: hidden ? const Icon(Icons.remove_red_eye) : const Icon(Icons.lock),
           ),
         ],
       ),
