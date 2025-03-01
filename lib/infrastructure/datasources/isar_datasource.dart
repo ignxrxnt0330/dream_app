@@ -38,6 +38,14 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
+  Future<void> deleteAllDreams() async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.dreams.where().deleteAll();
+    });
+  }
+
+  @override
   Future<Dream?> getDream(int id) async {
     final isar = await db;
     final dream = await isar.dreams.filter().idEqualTo(id).findFirst();

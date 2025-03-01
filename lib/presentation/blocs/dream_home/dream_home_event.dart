@@ -20,15 +20,6 @@ class RefreshDreams extends DreamHomeEvent {
   const RefreshDreams();
 }
 
-class ExportDreams extends DreamHomeEvent {
-  const ExportDreams();
-}
-
-class ImportDreams extends DreamHomeEvent {
-  final BuildContext context;
-  const ImportDreams(this.context);
-}
-
 class HandleDream extends DreamHomeEvent {
   final Dream dream;
   const HandleDream({required this.dream});

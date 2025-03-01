@@ -4,6 +4,7 @@ import 'package:dream_app/domain/entities/stats/streak.dart';
 abstract class LocalStorageDatasource {
   Future<int> saveDream(Dream dream);
   Future<void> deleteDream(int id);
+  Future<void> deleteAllDreams();
   Future<List<Dream?>> loadDreams({int limit = 10, int offset = 0, String order = "date", bool asc = false, bool fav = false,bool hidden = false});
   Future<Dream?> getDream(int id);
   Future<void> toggleFavDream(int id);

@@ -94,7 +94,7 @@ class _ConfigViewState extends State<ConfigView> {
           subtitle: const Text("import your previously exported dreams"),
           trailing: const Icon(Icons.upload_file_rounded),
           onTap: () {
-            context.read<DreamHomeBloc>().add(ImportDreams(context));
+            context.read<AppConfigBloc>().add(ImportDreams(context));
           },
         ),
         ListTile(
@@ -102,7 +102,38 @@ class _ConfigViewState extends State<ConfigView> {
           subtitle: const Text("download your dreams as a json file so you can keep them safe"),
           trailing: const Icon(Icons.download),
           onTap: () {
-            context.read<DreamHomeBloc>().add(const ExportDreams());
+            context.read<AppConfigBloc>().add(const ExportDreams());
+          },
+        ),
+        ListTile(
+          title: const Text("delete all dreams"),
+          subtitle: const Text("delete all of your dreams"),
+          trailing: const Icon(Icons.warning),
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text("delete all dreams"),
+                  content: const Text("do you really wanna delete all dreams ¿?"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("nah"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        context.read<AppConfigBloc>().add(DeleteAllDreams(context));
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("ye"),
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
         ListTile(

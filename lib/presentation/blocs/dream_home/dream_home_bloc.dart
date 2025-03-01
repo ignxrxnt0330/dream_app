@@ -1,9 +1,7 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:isar/isar.dart';
 
 part 'dream_home_event.dart';
@@ -16,8 +14,6 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     on<FetchDreams>(_fetchMoreDreams);
     on<ToggleFavDream>(_toggleFavDream);
     on<RefreshDreams>(_refreshDreams);
-    on<ImportDreams>(_importDreams);
-    on<ExportDreams>(_exportDreams);
     on<HandleDream>(_handleDream);
     on<RemoveDream>(_removeDream);
     on<OrderChanged>(_orderChanged);
@@ -53,18 +49,6 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
       isLoading: false,
     ));
     add(const FetchDreams(offset: 0, limit: 10));
-  }
-
-  void _exportDreams(ExportDreams event, Emitter<DreamHomeState> emit) async {
-    emit(state.copyWith(isLoading: true));
-    await datasource.exportDreams();
-    emit(state.copyWith(isLoading: false));
-  }
-
-  void _importDreams(ImportDreams event, Emitter<DreamHomeState> emit) async {
-    emit(state.copyWith(isLoading: true));
-    await datasource.importDreams();
-    if (event.context.mounted) Phoenix.rebirth(event.context);
   }
 
   void _handleDream(HandleDream event, Emitter<DreamHomeState> emit) async {

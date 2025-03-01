@@ -22,3 +22,16 @@ class ChangeAppColor extends AppConfigEvent {
   final Color appColor;
   const ChangeAppColor(this.appColor);
 }
+
+class ExportDreams extends AppConfigEvent {
+  const ExportDreams();
+}
+
+class ImportDreams extends AppConfigEvent {
+  final BuildContext context;
+  const ImportDreams(this.context);
+}
+class DeleteAllDreams extends AppConfigEvent {
+  final BuildContext context;
+  const DeleteAllDreams(this.context);
+}

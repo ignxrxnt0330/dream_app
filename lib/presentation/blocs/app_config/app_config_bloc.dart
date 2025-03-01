@@ -1,14 +1,16 @@
-import 'dart:ui';
-
+import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:dream_app/infrastructure/datasources/sp_config.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 part 'app_config_event.dart';
 part 'app_config_state.dart';
 
 class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   SpConfig config = SpConfig();
+  final datasource = IsarDatasource();
 
   AppConfigBloc() : super(const AppConfigState(true, "", Color(0xFF9C27B0))) {
     _initConfig();
@@ -16,6 +18,9 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     on<ToggleDarkMode>(_toggleDarkMode);
     on<SetDefaultTitle>(_setDefaultTitle);
     on<ChangeAppColor>(_changeAppColor);
+    on<ImportDreams>(_importDreams);
+    on<ExportDreams>(_exportDreams);
+    on<DeleteAllDreams>(_deleteAllDreams);
   }
 
   void _initConfig() async {
@@ -45,5 +50,19 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   void _changeAppColor(ChangeAppColor event, Emitter<AppConfigState> emit) async {
     await config.changeAppColor(event.appColor);
     emit(state.copyWith(appColor: event.appColor));
+  }
+
+  void _exportDreams(ExportDreams event, Emitter<AppConfigState> emit) async {
+    await datasource.exportDreams();
+  }
+
+  void _importDreams(ImportDreams event, Emitter<AppConfigState> emit) async {
+    await datasource.importDreams();
+    if (event.context.mounted) Phoenix.rebirth(event.context); //FIXME:
+  }
+
+  void _deleteAllDreams(DeleteAllDreams event, Emitter<AppConfigState> emit) async {
+    await datasource.deleteAllDreams();
+    if (event.context.mounted) Phoenix.rebirth(event.context); //FIXME:
   }
 }
