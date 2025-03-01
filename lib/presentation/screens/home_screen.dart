@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('dream_app'),
+        title: const Text('dream_app', style: TextStyle(fontFamily: "Consolas")),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
