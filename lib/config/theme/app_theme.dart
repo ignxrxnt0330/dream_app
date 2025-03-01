@@ -8,6 +8,7 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
+      splashFactory: NoSplash.splashFactory,
       colorScheme: ColorScheme.fromSeed(
         seedColor: bloc.state.appColor,
         brightness: bloc.state.darkMode ? Brightness.dark : Brightness.light,

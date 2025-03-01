@@ -7,17 +7,22 @@ class CustomBottomNavigation extends StatelessWidget {
   const CustomBottomNavigation({super.key, required this.selectedIndex, required this.actions});
 
   void onItemTapped(BuildContext context, int index) {
-    actions[index](context);
+    if (selectedIndex == index) {
+      actions[index](context);
+      return;
+    }
     context.go("/home/$index");
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      backgroundColor: Colors.transparent,
       elevation: 0,
+      enableFeedback: false,
+      selectedLabelStyle: const TextStyle(fontFamily: "Consolas"),
       currentIndex: selectedIndex,
       onTap: (index) => onItemTapped(context, index),
-      //! min 2 items with label
       items: const [
         BottomNavigationBarItem(
             icon: Icon(
