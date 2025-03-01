@@ -28,10 +28,9 @@ class ExportDreams extends AppConfigEvent {
 }
 
 class ImportDreams extends AppConfigEvent {
-  final BuildContext context;
-  const ImportDreams(this.context);
+  const ImportDreams();
 }
+
 class DeleteAllDreams extends AppConfigEvent {
-  final BuildContext context;
-  const DeleteAllDreams(this.context);
+  const DeleteAllDreams();
 }

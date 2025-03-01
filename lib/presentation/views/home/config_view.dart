@@ -94,7 +94,7 @@ class _ConfigViewState extends State<ConfigView> {
           subtitle: const Text("import your previously exported dreams"),
           trailing: const Icon(Icons.upload_file_rounded),
           onTap: () {
-            context.read<AppConfigBloc>().add(ImportDreams(context));
+            context.read<AppConfigBloc>().add(const ImportDreams());
           },
         ),
         ListTile(
@@ -125,7 +125,7 @@ class _ConfigViewState extends State<ConfigView> {
                     ),
                     TextButton(
                       onPressed: () {
-                        context.read<AppConfigBloc>().add(DeleteAllDreams(context));
+                        context.read<AppConfigBloc>().add(const DeleteAllDreams());
                         Navigator.of(context).pop();
                       },
                       child: const Text("ye"),

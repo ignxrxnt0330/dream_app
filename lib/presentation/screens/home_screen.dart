@@ -4,8 +4,8 @@ import 'package:dream_app/presentation/widgets/shared/custom_navigation_bar.dart
 import 'package:flutter/material.dart';
 import 'package:dream_app/presentation/views/views.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restart_app/restart_app.dart';
 
 class HomeScreen extends StatefulWidget {
   static const name = 'HomeScreen';
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 3:
         return FloatingActionButton(
           onPressed: () {
-            Phoenix.rebirth(context);
+            Restart.restartApp();
           },
           child: const Icon(Icons.refresh),
         );

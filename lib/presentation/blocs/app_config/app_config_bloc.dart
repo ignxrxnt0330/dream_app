@@ -3,7 +3,7 @@ import 'package:dream_app/infrastructure/datasources/sp_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:restart_app/restart_app.dart';
 
 part 'app_config_event.dart';
 part 'app_config_state.dart';
@@ -58,11 +58,11 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
 
   void _importDreams(ImportDreams event, Emitter<AppConfigState> emit) async {
     await datasource.importDreams();
-    if (event.context.mounted) Phoenix.rebirth(event.context); //FIXME:
+    Restart.restartApp();
   }
 
   void _deleteAllDreams(DeleteAllDreams event, Emitter<AppConfigState> emit) async {
     await datasource.deleteAllDreams();
-    if (event.context.mounted) Phoenix.rebirth(event.context); //FIXME:
+    Restart.restartApp();
   }
 }

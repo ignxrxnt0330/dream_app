@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:dream_app/config/router/app_router.dart';
 import 'package:dream_app/config/theme/app_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:intl/intl_standalone.dart';
 
 Future main() async {
@@ -12,9 +11,7 @@ Future main() async {
   //FIXME:
   await findSystemLocale();
 
-  runApp(
-    Phoenix(child: const MainApp()),
-  );
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
