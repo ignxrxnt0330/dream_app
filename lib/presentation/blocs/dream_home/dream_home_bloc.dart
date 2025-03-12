@@ -22,7 +22,7 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
   void _fetchMoreDreams(FetchDreams event, Emitter<DreamHomeState> emit) async {
     if (state.isLoading || state.endReached) return;
     emit(state.copyWith(isLoading: true));
-    final dreams = await datasource.loadDreams(offset: state.offset, order: state.order, asc: state.asc, fav: state.fav, hidden: state.hidden);
+    final dreams = await datasource.loadDreams(offset: state.offset, order: state.order, asc: state.asc, fav: state.fav, hidden: state.hidden, type: state.type);
     emit(state.copyWith(
       isLoading: false,
       endReached: dreams.length < 10,
@@ -69,7 +69,7 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
   }
 
   void _orderChanged(OrderChanged event, Emitter<DreamHomeState> emit) async {
-    emit(state.copyWith(order: event.order, asc: event.asc, fav: event.fav, hidden: event.hidden));
+    emit(state.copyWith(order: event.order, asc: event.asc, fav: event.fav, hidden: event.hidden, type: event.type));
     add(const RefreshDreams());
   }
 }
