@@ -34,7 +34,7 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     {"date": Icons.timer},
     {"descLength": Icons.sort},
     {"nameCount": Icons.people},
-    {"rating": Icons.start},
+    {"rating": Icons.star_half_outlined},
     {"lucidness": Icons.remove_red_eye},
     {"mood": Icons.back_hand_outlined},
   ];
