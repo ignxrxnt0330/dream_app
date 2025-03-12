@@ -194,8 +194,10 @@ class IsarDatasource extends LocalStorageDatasource {
     int streak = 0;
 
     final isar = await db;
-    final dates = await isar.dreams.where(distinct: true).sortByDateDesc().dateProperty().findAll();
+    List<DateTime?> dates = await isar.dreams.where(distinct: true).sortByDateDesc().dateProperty().findAll();
     if (dates.isEmpty) return Streak(streak: streak, streakStart: DateTime.now(), streakEnd: DateTime.now());
+
+    dates = dates.where((date) => date != null).map((date) => DateTime(date!.year, date.month, date.day)).toSet().toList();
 
     DateTime streakEnd = dates.last ?? DateTime.now();
     DateTime streakStart = dates.last ?? DateTime.now();
@@ -224,8 +226,10 @@ class IsarDatasource extends LocalStorageDatasource {
   Future<Streak> longestStreak() async {
     int streak = 0;
     final isar = await db;
-    final dates = await isar.dreams.where(distinct: true).sortByDateDesc().dateProperty().findAll();
+    List<DateTime?> dates = await isar.dreams.where(distinct: true).sortByDateDesc().dateProperty().findAll();
     if (dates.isEmpty) return Streak(streak: streak, streakStart: DateTime.now(), streakEnd: DateTime.now());
+
+    dates = dates.where((date) => date != null).map((date) => DateTime(date!.year, date.month, date.day)).toSet().toList();
 
     DateTime streakEnd = dates.last ?? DateTime.now();
     DateTime streakStart = dates.last ?? DateTime.now();
@@ -239,7 +243,6 @@ class IsarDatasource extends LocalStorageDatasource {
       final previousDate = dates[i - 1 != -1 ? i - 1 : i];
 
       if (currentDate == null || previousDate == null) continue;
-      if (currentDate.day == previousDate.day && currentDate.month == previousDate.month && currentDate.year == previousDate.year) continue;
 
       final isNextDay = previousDate.day == currentDate.add(const Duration(days: 1)).day;
 
