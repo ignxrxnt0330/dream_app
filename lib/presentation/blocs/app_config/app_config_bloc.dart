@@ -57,8 +57,8 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   }
 
   void _importDreams(ImportDreams event, Emitter<AppConfigState> emit) async {
-    await datasource.importDreams();
-    Restart.restartApp();
+    bool res = await datasource.importDreams();
+    if (res) Restart.restartApp();
   }
 
   void _deleteAllDreams(DeleteAllDreams event, Emitter<AppConfigState> emit) async {

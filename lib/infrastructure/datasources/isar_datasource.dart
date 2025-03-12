@@ -100,10 +100,11 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<void> exportDreams() async {
+  Future<bool> exportDreams() async {
     try {
       final List<Dream> dreams = await getAllDreams();
       String data = "[${dreams.map((dream) => dream.toJson()).join(",\n")}]";
+      bool saved = false;
 
       final dir = await getTemporaryDirectory();
       if (dir != null) {
@@ -113,20 +114,23 @@ class IsarDatasource extends LocalStorageDatasource {
         await file.writeAsString(data);
         if (Platform.isAndroid) {
           final params = SaveFileDialogParams(sourceFilePath: filePath);
-          final finalPath = await FlutterFileDialog.saveFile(params: params);
+          final finalPath = await FlutterFileDialog.saveFile(params: params).then((res) => saved = true);
 
           print('Download path: $finalPath');
         }
       } else {
         print("Downloads directory not available");
+        return saved;
       }
+      return true;
     } catch (e) {
       print("Error saving file: $e");
+      return false;
     }
   }
 
   @override
-  Future<void> importDreams() async {
+  Future<bool> importDreams() async {
     try {
       final params = OpenFileDialogParams(
         dialogType: OpenFileDialogType.document,
@@ -144,9 +148,13 @@ class IsarDatasource extends LocalStorageDatasource {
         }
         final isar = await db;
         isar.writeTxnSync(() => isar.dreams.putAllSync(dreams));
+        return true;
+      } else {
+        return false;
       }
     } catch (e) {
       print("Error importing file: $e");
+      return false;
     }
   }
 
