@@ -116,39 +116,33 @@ class Dream {
   }
 
   String toJson() {
-    initMiscFields();
     return jsonEncode({
       'id': id,
       'title': title,
       'description': description,
       'date': date!.microsecondsSinceEpoch,
-      'names': names, //FIXME: rm
       'rating': rating,
       'lucidness': lucidness,
       'type': type,
       'mood': mood,
       'isFav': isFav,
-      "hidden": hidden, //FIXME: rm
-      "descLength": descLength, //FIXME: rm
-      "nameCount": nameCount, //FIXME: rm
     });
   }
 
   factory Dream.fromJson(Map<String, dynamic> json) {
-    return Dream(
+    Dream dream = Dream(
       id: json['id'],
       title: json['title'],
       description: json['description'],
       date: DateTime.fromMicrosecondsSinceEpoch(json['date']),
-      names: (json['names'] as List<dynamic>?)?.map((e) => e as String).toList(), //FIXME: rm
       rating: json['rating'],
       lucidness: json['lucidness'],
       type: json['type'],
       mood: json['mood'],
       isFav: json['isFav'],
-      hidden: json['hidden'], //FIXME: rm
-      descLength: json["descLength"], //FIXME: rm
-      nameCount: json["nameCount"], //FIXME: rm
     );
+
+    dream.initMiscFields();
+    return dream;
   }
 }
