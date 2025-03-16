@@ -48,13 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Icon(Icons.date_range),
         );
 
-      case 3:
-        return FloatingActionButton(
-          onPressed: () {
-            Restart.restartApp();
-          },
-          child: const Icon(Icons.refresh),
-        );
+      // case 3:
+      //   return FloatingActionButton(
+      //     onPressed: () {
+      //       Restart.restartApp();
+      //     },
+      //     child: const Icon(Icons.refresh),
+      //   );
       default:
         return null;
     }
