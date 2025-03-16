@@ -40,17 +40,17 @@ class _ConfigViewState extends State<ConfigView> {
                     content: const Text("you are making a really bad choice"),
                     actions: [
                       TextButton(
-                        child: const Text("ye"),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          context.read<AppConfigBloc>().add(const ToggleDarkMode());
-                        },
-                      ),
-                      TextButton(
                         child: const Text("na"),
                         onPressed: () {
                           Navigator.of(context).pop();
                           return;
+                        },
+                      ),
+                      TextButton(
+                        child: const Text("ye"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          context.read<AppConfigBloc>().add(const ToggleDarkMode());
                         },
                       ),
                     ],
