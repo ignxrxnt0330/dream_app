@@ -1,3 +1,4 @@
+import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_calendar/dream_calendar_bloc.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_dream_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _CalendarViewState extends State<CalendarView> {
   @override
   Widget build(BuildContext context) {
     final bloc = context.watch<DreamCalendarBloc>();
+    final configState = context.watch<AppConfigBloc>().state;
     return Scaffold(
       body: CustomScrollView(
         controller: scrollController,
@@ -46,10 +48,10 @@ class _CalendarViewState extends State<CalendarView> {
               datesForSkips: const [], //TODO:
 
               // date props
-              generalDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.white, datesBorderColor: Colors.black)),
+              generalDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: configState.darkMode ? Colors.white : Colors.black, datesBorderColor: configState.darkMode ? Colors.black : Colors.white)),
               leadingTrailingDatesProperties: DatesProperties(hide: true),
-              streakDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.white, datesBackgroundColor: Colors.black)),
-              selectedDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: Colors.black, datesBackgroundColor: Colors.white)),
+              streakDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: configState.darkMode ? Colors.white : Colors.black, datesBackgroundColor: configState.darkMode ? Colors.black : Colors.white)),
+              selectedDatesProperties: DatesProperties(datesDecoration: DatesDecoration(datesTextColor: configState.darkMode ? Colors.black : Colors.white, datesBackgroundColor: configState.darkMode ? Colors.white : Colors.black)),
 
               dateSelectionMode: DatePickerSelectionMode.singleOrMultiple,
               onSelectedDates: (List<DateTime> value) {

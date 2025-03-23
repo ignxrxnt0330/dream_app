@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -112,6 +113,8 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final configState = context.watch<AppConfigBloc>().state;
+    final color = configState.darkMode ? null : Colors.white;
     return Opacity(
       opacity: 0.8,
       child: Column(
@@ -119,28 +122,28 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
         children: [
           TextButton.icon(
             onPressed: cycleOrder,
-            label: Text(sortOptions[sort].keys.first),
-            icon: Icon(sortOptions[sort].values.first),
+            label: Text(sortOptions[sort].keys.first, style: TextStyle(color: color)),
+            icon: Icon(sortOptions[sort].values.first, color: color),
           ),
           TextButton.icon(
             onPressed: toggleSort,
-            label: Text(asc ? "asc" : "desc"),
-            icon: asc ? const Icon(Icons.north_rounded) : const Icon(Icons.south_rounded),
+            label: Text(asc ? "asc" : "desc", style: TextStyle(color: color)),
+            icon: asc ? Icon(Icons.north_rounded, color: color) : Icon(Icons.south_rounded, color: color),
           ),
           TextButton.icon(
             onPressed: toggleFav,
-            label: const Text("fav"),
-            icon: fav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border_outlined),
+            label: Text("fav", style: TextStyle(color: color)),
+            icon: fav ? Icon(Icons.favorite, color: color) : Icon(Icons.favorite_border_outlined, color: color),
           ),
           TextButton.icon(
             onPressed: toggleHidden,
-            label: const Text("hidden"),
-            icon: hidden ? const Icon(Icons.remove_red_eye) : const Icon(Icons.lock),
+            label: Text("hidden", style: TextStyle(color: color)),
+            icon: hidden ? Icon(Icons.remove_red_eye, color: color) : Icon(Icons.lock, color: color),
           ),
           TextButton.icon(
             onPressed: cycleType,
-            label: Text(types[type].values.first.entries.first.key),
-            icon: Icon(types[type].values.first.entries.first.value),
+            label: Text(types[type].values.first.entries.first.key, style: TextStyle(color: color)),
+            icon: Icon(types[type].values.first.entries.first.value, color: color),
           ),
         ],
       ),
