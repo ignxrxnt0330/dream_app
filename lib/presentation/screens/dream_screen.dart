@@ -21,6 +21,7 @@ class _DreamScreenState extends State<DreamScreen> {
 
   final formKey = GlobalKey<FormState>();
   final swiperController = SwiperController();
+  // bool scrollable = false;
 
   @override
   void initState() {
@@ -80,7 +81,7 @@ class _DreamScreenState extends State<DreamScreen> {
                   loop: false,
                   scale: 1,
                   autoplay: false,
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: (formKey.currentState?.validate() ?? false) ? const AlwaysScrollableScrollPhysics() : const NeverScrollableScrollPhysics(),
                   pagination: SwiperPagination(
                       margin: const EdgeInsets.only(top: 0),
                       builder: RectSwiperPaginationBuilder(
