@@ -2,10 +2,12 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dream_app/domain/datasource/local_storage_datasource.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/domain/entities/stats/streak.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -101,27 +103,25 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<bool> exportDreams() async {
+  Future<bool> exportDreams({bool dialog = true}) async {
     try {
       final List<Dream> dreams = await getAllDreams();
-      String data = "[${dreams.map((dream) => dream.toJson()).join(",\n")}]";
-      bool saved = false;
+      Uint8List data = Uint8List.fromList(utf8.encode("[${dreams.map((dream) => dream.toJson()).join(",\n")}]"));
+      final timeStamp = DateTime.now().millisecondsSinceEpoch;
+      final fileName = "dreams_$timeStamp.json";
 
-      final dir = await getTemporaryDirectory();
-      if (dir != null) {
-        final timeStamp = DateTime.now().millisecondsSinceEpoch;
-        final filePath = "${dir.path}/dreams_$timeStamp.json";
-        final file = await File(filePath).create();
-        await file.writeAsString(data);
-        if (Platform.isAndroid) {
-          final params = SaveFileDialogParams(sourceFilePath: filePath);
-          final finalPath = await FlutterFileDialog.saveFile(params: params).then((res) => saved = true);
-
-          print('Download path: $finalPath');
-        }
+      final dir = await getDownloadsDirectory();
+      if (dir == null || !(await dir.exists())) return false;
+      if (dialog) {
+        await FileSaver.instance.saveAs(name: fileName.split(".").first, filePath: "${dir.path}/$fileName", bytes: data, ext: "json", mimeType: MimeType.json);
       } else {
-        print("Downloads directory not available");
-        return saved;
+        if (dir != null) {
+          // await File("${dir.path}/$fileName").create();
+          await FileSaver.instance.saveFile(name: fileName.split(".").first, filePath: "${dir.path}/$fileName", bytes: data, ext: "json", mimeType: MimeType.json);
+        } else {
+          print("Error: External storage directory not available.");
+          return false;
+        }
       }
       return true;
     } catch (e) {

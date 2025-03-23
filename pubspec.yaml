@@ -50,6 +50,9 @@ dependencies:
   local_auth: ^2.3.0
   flutter_colorpicker: ^1.1.0
   restart_app: ^1.3.2
+  workmanager: ^0.5.2
+  file_saver: ^0.2.14
+  permission_handler: ^11.4.0
 
 dev_dependencies:
   flutter_test:

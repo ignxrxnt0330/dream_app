@@ -108,6 +108,14 @@ class _ConfigViewState extends State<ConfigView> {
                 context.read<AppConfigBloc>().add(const ExportDreams());
               },
             ),
+            // ListTile(
+            //   title: const Text("automate export dreams"),
+            //   subtitle: const Text("automate and streamline dream exports"),
+            //   trailing: const Icon(Icons.downloading_rounded),
+            //   onTap: () {
+            //     context.read<AppConfigBloc>().add(const ExportDreams());
+            //   },
+            // ),
             const ListTile(
               title: Text("restart app"),
               subtitle: Text("close and reopen the app"),
