@@ -1,4 +1,6 @@
 import 'package:card_swiper/card_swiper.dart';
+import 'package:dream_app/domain/entities/dream/dream.dart';
+import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +23,17 @@ class _DreamScreenState extends State<DreamScreen> {
 
   final formKey = GlobalKey<FormState>();
   final swiperController = SwiperController();
-  // bool scrollable = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.dreamId != 0) {
-      context.read<DreamFormBloc>().add(FetchDream(widget.dreamId!));
+      // context.read<DreamFormBloc>().add(FetchDream(widget.dreamId!));
+      initDream(widget.dreamId).then((dream) {
+        if (!context.mounted || dream == null) return;
+        // ignore: use_build_context_synchronously
+        context.read<DreamFormBloc>().add(DreamFetched(dream: dream));
+      });
     }
 
     slides = const <Widget>[
@@ -38,6 +44,11 @@ class _DreamScreenState extends State<DreamScreen> {
       DreamLucidnessView(),
       DreamRatingView(),
     ];
+  }
+
+  Future<Dream?> initDream(dreamId) async {
+    Dream? dream = await IsarDatasource().getDream(dreamId);
+    return dream;
   }
 
   @override

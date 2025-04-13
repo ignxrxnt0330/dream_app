@@ -24,12 +24,18 @@ class _DreamFormViewState extends State<DreamFormView> {
   void initState() {
     super.initState();
     Dream dream = context.read<DreamFormBloc>().state.dream;
+    init(dream);
+    context.read<DreamFormBloc>().stream.firstWhere((state) => state is DreamFetched).then((state) {
+      init(state.dream);
+      setState(() {});
+    });
+  }
+
+  void init(Dream dream) {
+    print("init");
     titleController.text = dream.title ?? "";
     descriptionController.text = dream.description;
     names = dream.names ?? [];
-    context.read<DreamFormBloc>().stream.firstWhere((state) => state is DreamFetched).then((_) {
-      setState(() {});
-    });
   }
 
   void save() {
