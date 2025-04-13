@@ -98,35 +98,32 @@ class _DreamScreenState extends State<DreamScreen> {
             ],
           ),
         ),
-        floatingActionButton: Builder(
-          builder: (context) {
-            final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
-            return FloatingActionButton(
+        floatingActionButton: BlocBuilder<DreamFormBloc, DreamFormState>(builder: (context, state) {
+          final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+          return Visibility(
+            visible: state.currentIndex == 0 ? state.showHideKBButton : true,
+            child: FloatingActionButton(
               onPressed: () {
                 if (isKeyboardVisible) {
                   FocusManager.instance.primaryFocus?.unfocus();
                   return;
                 }
                 if (!formKey.currentState!.validate()) return;
-                if (context.read<DreamFormBloc>().state.currentIndex == slides.length - 1) {
+                if (state.currentIndex == slides.length - 1) {
                   context.read<DreamFormBloc>().add(const DreamSubmitted());
                   context.pop();
-                  context.read<DreamHomeBloc>().add(HandleDream(dream: context.read<DreamFormBloc>().state.dream));
+                  context.read<DreamHomeBloc>().add(HandleDream(dream: state.dream));
                   return;
                 }
                 FocusManager.instance.primaryFocus?.unfocus();
                 swiperController.next(animation: true);
               },
-              child: BlocBuilder<DreamFormBloc, DreamFormState>(
-                builder: (context, state) {
-                  return Icon(
-                    state.currentIndex >= (slides.length - 1) ? Icons.arrow_upward : (isKeyboardVisible ? Icons.arrow_downward : Icons.arrow_forward),
-                  );
-                },
+              child: Icon(
+                state.currentIndex >= (slides.length - 1) ? Icons.arrow_upward : (isKeyboardVisible ? Icons.arrow_downward : Icons.arrow_forward),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        }),
       ),
     );
   }

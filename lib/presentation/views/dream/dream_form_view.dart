@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:date_field/date_field.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
@@ -19,6 +21,8 @@ class _DreamFormViewState extends State<DreamFormView> {
   final dateController = TextEditingController();
   final descriptionFocusNode = FocusNode();
   List<String> names = [];
+  Timer? timeout;
+  bool hideKBButtonHidden = false;
 
   @override
   void initState() {
@@ -43,6 +47,10 @@ class _DreamFormViewState extends State<DreamFormView> {
   void checkNames() {
     if (descriptionController.text.contains("@")) {}
     if (descriptionController.text.contains("@")) {}
+  }
+
+  void setHideKBBUtton(bool show) {
+    hideKBButtonHidden = show;
   }
 
   @override
@@ -102,18 +110,25 @@ class _TitleRow extends StatelessWidget {
   }
 }
 
-class _DescriptionRow extends StatelessWidget {
+class _DescriptionRow extends StatefulWidget {
   final TextEditingController controller;
   final Function save;
   final FocusNode descriptionFocusNode;
   const _DescriptionRow(this.controller, this.save, this.descriptionFocusNode);
 
   @override
+  State<_DescriptionRow> createState() => _DescriptionRowState();
+}
+
+class _DescriptionRowState extends State<_DescriptionRow> {
+  Timer? timeout;
+
+  @override
   Widget build(BuildContext context) {
     return Material(
       child: TextFormField(
-        controller: controller,
-        focusNode: descriptionFocusNode,
+        controller: widget.controller,
+        focusNode: widget.descriptionFocusNode,
         decoration: InputDecoration(
           labelText: 'Description',
           hintText: "asdasdasd...",
@@ -121,14 +136,23 @@ class _DescriptionRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        maxLines: 20,
         minLines: 5,
+        maxLines: 20,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return "empty";
           }
-          save();
+          widget.save();
           return null;
+        },
+        onChanged: (_) {
+          if (timeout?.isActive ?? false) {
+            timeout?.cancel();
+            context.read<DreamFormBloc>().add(const ShowHideKBButtonChanged(false));
+          }
+          timeout = Timer(const Duration(milliseconds: 500), () async {
+            context.read<DreamFormBloc>().add(const ShowHideKBButtonChanged(true));
+          });
         },
       ),
     );
