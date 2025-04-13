@@ -17,7 +17,7 @@ class _DreamRatingViewState extends State<DreamRatingView> {
   @override
   void initState() {
     super.initState();
-    rating = context.read<DreamFormBloc>().state.dream.rating ?? 3;
+    rating = context.read<DreamFormBloc>().state.dream.rating ;
   }
 
   void save() {

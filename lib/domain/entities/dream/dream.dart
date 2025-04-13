@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dream_app/infrastructure/datasources/sp_config.dart';
 import 'package:isar/isar.dart';
 
 part 'dream.g.dart';
@@ -7,15 +8,15 @@ part 'dream.g.dart';
 @collection
 class Dream {
   Id id; // isar Id
-  final String? title;
-  final String description;
-  final DateTime? date;
-  List<String>? names;
-  final int? rating; // 0-5
-  final int? lucidness; // 0-3
-  final int? type; // 0-2
-  final int? mood; // 0-5
-  final bool isFav;
+  String title;
+  String description;
+  DateTime? date;
+  List<String> names;
+  int rating = 3; // 0-5
+  int lucidness = 0; // 0-3
+  int type = 0; // 0-2
+  int mood = 3; // 0-5
+  bool isFav;
   bool hidden;
   int descLength;
   int nameCount;
@@ -25,9 +26,9 @@ class Dream {
     this.title = "",
     this.description = "",
     this.date,
-    this.names,
-    this.type,
-    this.mood,
+    this.names = const [],
+    this.type = 0,
+    this.mood = 3,
     this.isFav = false,
     this.rating = 0,
     this.lucidness = 0,
@@ -90,9 +91,9 @@ class Dream {
     names = description.split(RegExp(r'[\s\n]')).where((element) => element.startsWith("@")).toList().map((e) => e.substring(1).toLowerCase().replaceAll(regex, "")).toSet().toList();
   }
 
-  void initHidden() {
-    if (title == null && title!.isEmpty) return;
-    hidden = title!.startsWith(".");
+  void initHidden() async {
+    hidden = title.startsWith(".");
+    title = title == "." ? ".${await SpConfig().getDefaultTitle() ?? title}" : title;
   }
 
   void initDescLength() {
@@ -100,7 +101,7 @@ class Dream {
   }
 
   void initNameCount() {
-    nameCount = names?.length ?? 0;
+    nameCount = names.length;
   }
 
   void initMiscFields() {

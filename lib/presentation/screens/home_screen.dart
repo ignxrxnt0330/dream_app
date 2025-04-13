@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:dream_app/presentation/views/views.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restart_app/restart_app.dart';
 
 class HomeScreen extends StatefulWidget {
   static const name = 'HomeScreen';

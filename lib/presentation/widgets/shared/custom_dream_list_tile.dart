@@ -15,9 +15,9 @@ class CustomDreamListTile extends StatelessWidget {
 
   Widget getNamesChips(Dream dream) {
     var names = dream.names;
-    if (names == null || names.isEmpty) return const SizedBox(height: 0);
+    if (names.isEmpty) return const SizedBox(height: 0);
     if (dream.hidden) return Wrap(spacing: 5, children: [Chip(label: Text("${names.length} people"))]);
-    if (names.length > 3) return Wrap(spacing: 5, children: [...dream.names!.take(3).map((name) => Chip(label: Text(name))), Chip(label: Text("${dream.names!.length - 3} more"))]);
+    if (names.length > 3) return Wrap(spacing: 5, children: [...dream.names.take(3).map((name) => Chip(label: Text(name))), Chip(label: Text("${dream.names.length - 3} more"))]);
     return Wrap(spacing: 5, children: names.map((name) => Chip(label: Text(name))).toList());
   }
 
@@ -28,7 +28,7 @@ class CustomDreamListTile extends StatelessWidget {
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.4,
           child: Text(
-            dream.title ?? "asd",
+            dream.title,
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -68,7 +68,7 @@ class CustomDreamListTile extends StatelessWidget {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text(dream.title ?? "delete dream"),
+              title: Text(dream.title),
               content: const Text("do you really wanna delete this dream ¿?"),
               actions: [
                 TextButton(

@@ -28,9 +28,9 @@ class _DreamFormViewState extends State<DreamFormView> {
   void initState() {
     super.initState();
     Dream dream = context.read<DreamFormBloc>().state.dream;
-    titleController.text = dream.title ?? "";
+    titleController.text = dream.title ;
     descriptionController.text = dream.description;
-    names = dream.names ?? [];
+    names = dream.names;
     context.read<DreamFormBloc>().stream.firstWhere((state) => state is DreamFetched).then((_) {
       setState(() {});
     });
@@ -150,7 +150,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
             timeout?.cancel();
             context.read<DreamFormBloc>().add(const ShowHideKBButtonChanged(false));
           }
-          timeout = Timer(const Duration(milliseconds: 500), () async {
+          timeout = Timer(const Duration(milliseconds: 250), () async {
             context.read<DreamFormBloc>().add(const ShowHideKBButtonChanged(true));
           });
         },
