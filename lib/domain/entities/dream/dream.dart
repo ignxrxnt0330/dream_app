@@ -78,6 +78,10 @@ class Dream {
     final hour = date?.hour.toString().padLeft(2, '0');
     final minute = date?.minute.toString().padLeft(2, '0');
     if (year == now.year) {
+      if (int.tryParse(day ?? '') == now.day && int.tryParse(month ?? '') == now.month) {
+        // today
+        return "$hour:$minute";
+      }
       return "$day/$month $hour:$minute";
     } else {
       return "$day/$month/$year $hour:$minute";
