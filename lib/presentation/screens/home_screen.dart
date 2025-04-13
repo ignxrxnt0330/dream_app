@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final routes = const <Widget>[
     HomeView(),
     CalendarView(),
-    StatsView(),
+    StatsViewNew(),
     ConfigView(),
   ];
 
