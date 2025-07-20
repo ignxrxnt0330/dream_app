@@ -90,7 +90,7 @@ flutter:
         - asset: assets/fonts/consolas/Consolas.ttf
         - asset: assets/fonts/consolas/Consolai.ttf
         - asset: assets/fonts/consolas/Consolaz.ttf
-        - asset: assets/fonts/consolas/CONSOLA.ttf
-        - asset: assets/fonts/consolas/CONSOLAB.ttf
+        - asset: assets/fonts/consolas/Consola.ttf
+        - asset: assets/fonts/consolas/Consolab.ttf
           style: normal
           weight: 700
