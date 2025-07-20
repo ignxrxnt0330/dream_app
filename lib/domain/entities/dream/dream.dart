@@ -132,7 +132,7 @@ class Dream {
 
   factory Dream.fromJson(Map<String, dynamic> json) {
     Dream dream = Dream(
-      id: json['id'],
+      id: json['id'] ?? Isar.autoIncrement,
       title: json['title'],
       description: json['description'],
       date: DateTime.fromMicrosecondsSinceEpoch(json['date']),
