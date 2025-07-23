@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return;
                 }
                 bloc.add(FetchDreamsOnDate(value));
+                bloc.add(ChangeTargetDate(value));
               },
               onError: (err) {
                 debugPrint(err);

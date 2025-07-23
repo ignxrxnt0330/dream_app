@@ -42,8 +42,7 @@ migrate_working_dir/
 version
 analysis_benchmark.json
 
-# packages file containing multi-root paths
-.packages.generated
+# packages file containing multi-root paths .packages.generated
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -127,3 +126,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+/android/gradle.properties
