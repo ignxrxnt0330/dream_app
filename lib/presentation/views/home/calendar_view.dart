@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
-import 'package:intl/intl.dart' show DateFormat;
 
 class CalendarView extends StatefulWidget {
     static const name = 'calendar_view';
@@ -17,30 +16,7 @@ class CalendarView extends StatefulWidget {
 
 class _CalendarViewState extends State<CalendarView> {
     ScrollController scrollController = ScrollController();
-final EventList<Event> _markedDateMap = EventList<Event>(
-    events: {
-      DateTime(2019, 2, 10): [
-        Event(
-          date: DateTime(2019, 2, 10),
-          title: 'Event 1',
-          dot: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 1),
-            color: Colors.red,
-            height: 5,
-            width: 5,
-          ),
-        ),
-        Event(
-          date: DateTime(2019, 2, 10),
-          title: 'Event 2',
-        ),
-        Event(
-          date: DateTime(2019, 2, 10),
-          title: 'Event 3',
-        ),
-      ],
-    },
-  );
+    final EventList<Event> _markedDateMap = EventList<Event>(events:{});
 
     @override
         void initState() {
@@ -67,70 +43,129 @@ final EventList<Event> _markedDateMap = EventList<Event>(
                         SliverToBoxAdapter(
                             child: CalendarCarousel<Event>(
                                 onDayPressed: (DateTime date, List<Event> events) {
+                                bool noDreams = bloc.state.dates.where((el) => el.day == date.day && el.month == date.month && el.year == date.year).isEmpty;
+                                if (noDreams) {
+                                return;
+                                }
+                                bool selected = bloc.state.selectedDate == date;
+                                if(selected){
+                                return;
+                                }
                                 bloc.add(FetchDreamsOnDate(date));
                                 },
-//weekendTextStyle: const TextStyle(
-//                      color: Colors.red,
-//                      ),
-thisMonthDayBorderColor: Colors.grey,
-targetDateTime:bloc.state.targetDate,
-//      weekDays: null, /// for pass null when you do not want to render weekDays
-//      headerText: Container( /// Example for rendering custom header
-//        child: Text('Custom Header'),
-//      ),
-customDayBuilder: (   /// you can provide your own build function to make custom day containers
-    bool isSelectable,
-    int index,
-    bool isSelectedDay,
-    bool isToday,
-    bool isPrevMonthDay,
-    TextStyle textStyle,
-    bool isNextMonthDay,
-    bool isThisMonthDay,
-    DateTime day,
-    ) {
-    /// If you return null, [CalendarCarousel] will build container for current [day] with default function.
-    /// This way you can build custom containers for specific days only, leaving rest as default.
 
-    // Example: every 15th of month, we have a flight, we can place an icon in the container like that:
-    //    if (day.day == 15) {
-    //        return const Center(
-    //                child: Icon(Icons.local_airport),
-    //                );
-    //    } else {
-    //        return null;
-    //    }
-    return null;
-},
-weekFormat: false,
-    markedDatesMap: _markedDateMap,
-    height: 420.0,
-    selectedDateTime: bloc.state.selectedDate,
-    daysHaveCircularBorder: false, /// null for not rendering any border, true for circular border, false for rectangular border
-    ),
-    ),
-    SliverToBoxAdapter(
-            child: SizedBox(
-                height: 20,
-                child: bloc.state.dreams.isNotEmpty ? Center(child: Text("${bloc.state.dreams.length} dreams")) : null,
+daysHaveCircularBorder: true,
+customGridViewPhysics: const NeverScrollableScrollPhysics(),
+
+// header
+showHeader: true,
+headerTextStyle:  TextStyle(
+                      color: configState.darkMode ? Colors.white : Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      ),
+headerMargin: const EdgeInsets.symmetric(vertical: 10),
+
+rightButtonIcon:  Icon(Icons.chevron_right, color: configState.darkMode ? Colors.white : Colors.black),
+leftButtonIcon:  Icon(Icons.chevron_left, color: configState.darkMode ? Colors.white : Colors.black),
+
+headerTitleTouchable:true,
+onHeaderTitlePressed: () => context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(DateTime.now())),
+
+// selected
+selectedDayButtonColor:  configState.darkMode ? Colors.white : Colors.black,
+selectedDayBorderColor: configState.darkMode ? Colors.black : Colors.white,
+selectedDayTextStyle:  TextStyle(color: configState.darkMode ? Colors.black : Colors.white),
+
+// today
+todayButtonColor: configState.darkMode ? Colors.white : Colors.black,
+todayBorderColor: configState.darkMode ? Colors.black : Colors.white,
+todayTextStyle:  TextStyle(color: configState.darkMode ? Colors.black : Colors.white),
+
+targetDateTime:bloc.state.targetDate,
+firstDayOfWeek:1, // monday
+pageSnapping: true,
+weekdayTextStyle: TextStyle(
+        color: configState.darkMode ? Colors.white : Colors.black,
+        ),
+weekendTextStyle: TextStyle(
+        color: Colors.black,
+        ),
+markedDatesMap: _markedDateMap,
+height: 450.0,
+selectedDateTime: bloc.state.selectedDate,
+pageScrollPhysics: const PageScrollPhysics(),
+customDayBuilder: (   /// you can provide your own build function to make custom day containers
+        bool isSelectable,
+        int index,
+        bool isSelectedDay,
+        bool isToday,
+        bool isPrevMonthDay,
+        TextStyle textStyle,
+        bool isNextMonthDay,
+        bool isThisMonthDay,
+        DateTime day,
+        ) {
+    bool noDreams = bloc.state.dates.where((el) => el.day == day.day && el.month == day.month && el.year == day.year).isEmpty;
+    if(isPrevMonthDay || isNextMonthDay){
+        return Container(
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                shape: BoxShape.circle,
+                border: Border.all(
+                    color: Colors.transparent
+                    )
                 ),
+        );
+    }
+    return Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: isSelectedDay
+                ? ( configState.darkMode ? Colors.white : Colors.black)
+                : Colors.transparent,
+                shape: BoxShape.circle,
+                border: Border.all(
+                    color:(isSelectedDay || isToday) 
+                    ? ( configState.darkMode ? Colors.white : Colors.black) 
+                    : (noDreams ? Colors.transparent : Colors.grey),
+                    )
+                ),
+            child: Text(
+                '${day.day}',
+                style: TextStyle(
+                    color:(isToday || isSelectedDay) 
+                    ? ( configState.darkMode ? Colors.black : Colors.white)
+                    : (noDreams ? Colors.grey : ( configState.darkMode ? Colors.white : Colors.black)),
+                    fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                    ),
+                ),
+            );
+},
+    ),
+    ),
+SliverToBoxAdapter(
+        child: SizedBox(
+            height: 20,
+            child: bloc.state.dreams.isNotEmpty ? Center(child: Text("${bloc.state.dreams.length} dreams")) : null,
             ),
-    SliverList(
-            delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                final dream = bloc.state.dreams[index];
-                return CustomDreamListTile(dream: dream);
-                },
+        ),
+SliverList(
+        delegate: SliverChildBuilderDelegate(
+            (context, index) {
+            final dream = bloc.state.dreams[index];
+            return CustomDreamListTile(dream: dream);
+            },
 childCount: bloc.state.dreams.length,
 ),
+        ),
+const SliverToBoxAdapter(
+        child: SizedBox(
+            height: 100,
             ),
-    const SliverToBoxAdapter(
-            child: SizedBox(
-                height: 100,
-                ),
-            ),
-    ],
-    ),
-    );
-}
+        ),
+],
+),
+);
+        }
 }
