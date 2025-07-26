@@ -147,7 +147,7 @@ customDayBuilder: (   /// you can provide your own build function to make custom
 SliverToBoxAdapter(
         child: SizedBox(
             height: 20,
-            child: bloc.state.dreams.isNotEmpty ? Center(child: Text("${bloc.state.dreams.length} dreams")) : null,
+            child: bloc.state.dreams.isNotEmpty ? Center(child: Text("${bloc.state.dreams.length} ${bloc.state.dreams.length == 1 ? "dream" : "dreams"}")) : null,
             ),
         ),
 SliverList(
