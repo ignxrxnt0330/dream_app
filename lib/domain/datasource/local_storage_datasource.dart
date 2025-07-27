@@ -15,16 +15,19 @@ abstract class LocalStorageDatasource {
   Future<List<String>>? getAllNames();
   Future<List<Dream>>? searchDreams(String query, {int limit = 10, int offset = 0, names = const [], bool newToOld = true});
   Future<int> searchDreamsResultCount(String query, {names = const []});
-  Future<int> dreamCount();
-  Future<int> wordCount();
-  Future<int> charCount();
-  Future<Streak> currentStreak();
-  Future<Streak> longestStreak();
   Future<List<DateTime>> allDates();
   Future<DateTime> firstDate();
   Future<DateTime> lastDate();
   Future<List<Dream>> dreamsOnDate(DateTime date);
-  Future<int?> mostActiveDotW(); // most active day of the week => day of the week with the most dreams
-  Future<List<DateTime>?> mostActiveTime(); // two hour interval with the most dreams
-  Future<String?> mostUsedName();
+
+  // stats
+  Future<int> dreamCount(int bracket);
+  Future<int> wordCount(int bracket);
+  Future<int> charCount(int bracket); 
+  Future<int?> mostActiveDotW(int bracket); // most active day of the week => day of the week with the most dreams
+  Future<List<DateTime>?> mostActiveTime(int bracket); // two hour interval with the most dreams
+  Future<Map<String,int>?> mostUsedNames(int bracket);
+
+  Future<Streak> currentStreak();
+  Future<Streak> longestStreak();
 }

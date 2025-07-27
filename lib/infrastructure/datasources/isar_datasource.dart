@@ -183,9 +183,10 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<int> dreamCount() async {
+  Future<int> dreamCount(int bracket) async {
+    DateTime date = DateTime.now().subtract(Duration(days: bracket));
     final isar = await db;
-    final int dreamCount = await isar.dreams.where().count();
+    final int dreamCount = await isar.dreams.where().filter().dateGreaterThan(date).count();
     return dreamCount;
   }
 
@@ -264,22 +265,24 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<int> charCount() async {
+  Future<int> charCount(int bracket) async {
+    DateTime date = DateTime.now().subtract(Duration(days: bracket));
     final isar = await db;
-    final descriptions = await isar.dreams.where().descriptionProperty().findAll();
+    final descriptions = await isar.dreams.where().filter().dateGreaterThan(date).descriptionProperty().findAll();
     final descCount = descriptions.isEmpty ? 0 : descriptions.map((e) => e != "" ? e.length : 0).reduce((value, element) => value + element);
-    final titles = await isar.dreams.where().titleProperty().findAll();
+    final titles = await isar.dreams.where().filter().dateGreaterThan(date).titleProperty().findAll();
     final titleCount = titles.isEmpty ? 0 : titles.map((e) => e != "" && e != null ? e.length : 0).reduce((value, element) => value + element);
     return descCount + titleCount;
   }
 
   @override
-  Future<int> wordCount() async {
+  Future<int> wordCount(int bracket) async {
+    DateTime date = DateTime.now().subtract(Duration(days: bracket));
     final isar = await db;
-    final descriptions = await isar.dreams.where().descriptionProperty().findAll();
+    final descriptions = await isar.dreams.where().filter().dateGreaterThan(date).descriptionProperty().findAll();
     if (descriptions.isEmpty) return 0;
     final descCount = descriptions.map((e) => e.split(" ").where((e) => e != "").toList().length).reduce((value, element) => value + element);
-    final titles = await isar.dreams.where().titleProperty().findAll();
+    final titles = await isar.dreams.where().filter().dateGreaterThan(date).titleProperty().findAll();
     final titleCount = titles.map((e) => e != null ? e.split(" ").where((e) => e != "").toList().length : 0).reduce((value, element) => value + element);
     return descCount + titleCount;
   }
@@ -317,11 +320,12 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<int?> mostActiveDotW() async {
+  Future<int?> mostActiveDotW(int bracket) async {
+    DateTime date = DateTime.now().subtract(Duration(days: bracket));
     final isar = await db;
     final Map<int, int> daysOfTheWeek = {};
 
-    await isar.dreams.where().dateProperty().findAll().then((dates) {
+    await isar.dreams.where().filter().dateGreaterThan(date).dateProperty().findAll().then((dates) {
       // ignore: avoid_function_literals_in_foreach_calls
       dates.forEach((e) => daysOfTheWeek[e!.weekday] = daysOfTheWeek[e.weekday] ?? 0 + 1);
     });
@@ -334,17 +338,20 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<List<DateTime>?> mostActiveTime() async {
+  Future<List<DateTime>?> mostActiveTime(int bracket) async {
+    DateTime date = DateTime.now().subtract(Duration(days: bracket));
     // TODO: implement mostActiveTime
+    //TODO: 2h intervals ¿?
     throw UnimplementedError();
   }
 
   @override
-  Future<String?> mostUsedName() async {
+  Future<Map<String,int>?> mostUsedNames(int bracket) async {
+    DateTime date = DateTime.now().subtract(Duration(days: bracket));
     final isar = await db;
     final Map<String, int> allNames = {};
 
-    await isar.dreams.where().namesProperty().findAll().then((dream) {
+    await isar.dreams.where().filter().dateGreaterThan(date).namesProperty().findAll().then((dream) {
       for (List<String>? names in dream) {
         if (names != null) {
           for (String name in names) {
@@ -358,6 +365,6 @@ class IsarDatasource extends LocalStorageDatasource {
     if (namesList.isEmpty) return null;
     namesList.sort((a, b) => b.value.compareTo(a.value));
 
-    return namesList.first.key;
+    return Map.fromEntries(namesList);
   }
 }

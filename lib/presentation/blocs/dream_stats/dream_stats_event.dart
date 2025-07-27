@@ -10,3 +10,7 @@ abstract class DreamStatsEvent extends Equatable {
 class FetchStats extends DreamStatsEvent {
   const FetchStats();
 }
+class BracketChanged extends DreamStatsEvent {
+  int bracket;
+  BracketChanged({required this.bracket});
+}

@@ -1,4 +1,6 @@
+import 'package:dream_app/config/theme/app_theme.dart';
 import 'package:dream_app/presentation/blocs/dream_stats/dream_stats_bloc.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dream_app/util/date_utils.dart' as DateUtils_;
@@ -7,94 +9,192 @@ class StatsView extends StatefulWidget {
   static const name = 'stats_view';
   const StatsView({super.key});
 
+
   @override
-  State<StatsView> createState() => _StatsViewState();
+    State<StatsView> createState() => _StatsViewState();
 }
 
-class _StatsViewState extends State<StatsView> {
-  @override
-  void initState() {
-    super.initState();
+class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
+  late TabController tabBarController;
 
-    context.read<DreamStatsBloc>().add(const FetchStats());
-  }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Center(
-          child: BlocBuilder<DreamStatsBloc, DreamStatsState>(
-            builder: (context, state) {
-              return Column(
-                children: [
-                  Flex(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    direction: Axis.horizontal,
-                    children: [
-                      StatCard(title: "total dreams", text: state.dreamCount.toString()),
-                      StatCard(title: "total words", text: state.wordCount.toString()),
-                      StatCard(title: "total characters", text: state.charCount.toString()), //TODO: human readable => tap to toggle
-                    ],
+    void initState() {
+      super.initState();
+
+      context.read<DreamStatsBloc>().add(const FetchStats());
+    }
+
+  @override
+    Widget build(BuildContext context) {
+      final bloc = context.watch<DreamStatsBloc>();
+      tabBarController = TabController(vsync: this, length: 4);
+
+      final List<Tab> tabs = <Tab>[
+        Tab(text: 'Weekly'),
+        Tab(text: 'Monthly'), 
+        Tab(text: 'Yearly'), 
+        Tab(text: 'All time')];
+
+      return BlocBuilder<DreamStatsBloc, DreamStatsState>(
+          builder:(context,state){
+          return DefaultTabController(
+              length: tabs.length,
+              child: Scaffold(
+                appBar: AppBar(
+                  bottom: TabBar(
+                    tabs: tabs,
+                    onTap: (index) {
+                    late int bracket;
+                    switch (index) {
+                    case 0: bracket = 7;
+                    case 1: bracket = 30;
+                    case 2: bracket = 365;
+                    case 3: bracket = 99999;
+                    }
+                    bloc.add( BracketChanged(bracket: bracket));
+                    },
+                    ),
                   ),
-                  Flex(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    direction: Axis.horizontal,
-                    children: [
-                      StatCard(title: "current streak", text: state.currentStreak.streak.toString()),
-                      StatCard(title: "start", text: "${state.currentStreak.streakStart.day}/${state.currentStreak.streakStart.month}/${state.currentStreak.streakStart.year % 100}"),
-                      StatCard(title: "end", text: "${state.currentStreak.streakEnd.day}/${state.currentStreak.streakEnd.month}/${state.currentStreak.streakEnd.year % 100}"),
-                    ],
-                  ),
-                  Flex(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    direction: Axis.horizontal,
-                    children: [
-                      StatCard(title: "longest streak", text: state.longestStreak.streak.toString()),
-                      StatCard(title: "start", text: "${state.longestStreak.streakStart.day}/${state.longestStreak.streakStart.month}/${state.longestStreak.streakStart.year % 100}"),
-                      StatCard(title: "end", text: "${state.longestStreak.streakEnd.day}/${state.longestStreak.streakEnd.month}/${state.longestStreak.streakEnd.year % 100}"),
-                    ],
-                  ),
-                  Flex(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    direction: Axis.horizontal,
-                    children: [
-                      StatCard(title: "most active dotw", text: DateUtils_.DateUtils().getDayName(state.mostActiveDotW)),
-                      StatCard(title: "most used name", text: state.mostUsedName),
-                      const StatCard(title: "asd", text: "asd"),
-                    ],
-                  ),
-                  //TODO: random stats => most used word, most active day of the week, most active timezone, most used name...
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
+                body: TabBarView(
+                  children: tabs.map((Tab tab) { return Center(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                          Card(
+                            color: Theme.of(context).cardColor,
+                            child: Column(
+                              children: [ Text("${state.dreamCount} dreams"),
+                              Text("${state.wordCount} words"),
+                              Text("${state.charCount} characters"),
+                              Text(
+                                state.names.isNotEmpty
+                                ? "most named person ${state.names.keys.first} (${state.names.values.first})"
+                                : "No names found"
+                                ),
+                              Text("madotw ${DateUtils_.DateUtils().getDayName(state.mostActiveDotW)}"),
+                              GestureDetector(
+                                child:SizedBox(
+                                  height: 200,
+                                  child: NamesChart(names:state.names)
+
+                                  ),
+                                onDoubleTap: (){
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                    return AlertDialog(
+                                        title: const Text("All names"),
+                                        content: SingleChildScrollView(
+                                          child: Column(
+                                            children:state.names.entries.map((name) {
+                                              return Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                  Text(name.key),
+                                                  Text(name.value.toString())
+                                                  ],
+                                                  );
+                                              }).toList(),
+                                            ),
+                                          ),
+                                        actions: [
+                                        TextButton(
+                                          child: const Text("Close"),
+                                          onPressed: () {
+                                          Navigator.of(context).pop();
+                                          return;
+                                          },
+                                          ),
+                                        ],
+                                        );
+
+                                    },
+                                    );
+
+                                },
+),
+                              ],
+                              ),
+                              ),
+                              ]
+                                )
+                                )
+                                );
+                  }).toList(),
+              ),
+              ),
+              );  
+
+          }
+      );
+    }
 }
 
-class StatCard extends StatelessWidget {
-  final String title;
-  final String text;
-  //TODO: ontap
-  const StatCard({super.key, required this.text, required this.title});
+
+class NamesChart extends StatelessWidget {
+  final Map<String, int> names;
+
+  const NamesChart({super.key, required this.names});
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: SizedBox(
-        height: MediaQuery.of(context).size.width / 3.5,
-        width: MediaQuery.of(context).size.width / 3.5,
-        child: Column(
-          children: [
-            Text(title, style: Theme.of(context).textTheme.titleMedium),
-            Text(text),
-          ],
-        ),
-      ),
-    );
-  }
+    Widget build(BuildContext context) {
+      if (names.isEmpty) {
+        return const Text("No name data available.");
+      }
+
+      final entries = names.entries.toList().take(7).toList();
+
+      return BarChart(
+          BarChartData(
+            borderData: FlBorderData(
+              border: const Border(
+                top: BorderSide.none,
+                right: BorderSide.none,
+                left: BorderSide(width: 1),
+                bottom: BorderSide(width: 1),
+                ),
+              ),
+            groupsSpace: 10,
+            barGroups: List.generate(entries.length, (i) {
+              final entry = entries[i];
+              return BarChartGroupData(
+                  x: i,
+                  barRods: [
+                  BarChartRodData(
+                    fromY: 0,
+                    toY: entry.value.toDouble(),
+                    width: 15,
+                    color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ],
+                  );
+              }),
+titlesData: FlTitlesData(
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: true),
+                  ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (value, meta) {
+                    final index = value.toInt();
+                    if (index < 0 || index >= entries.length) {
+                    return const SizedBox.shrink();
+                    }
+                    return SideTitleWidget(
+                        meta: meta,
+                        child: Text(
+                              entries[index].key,
+                              style: const TextStyle(fontSize: 10),
+                              overflow: TextOverflow.ellipsis,
+                              ),
+                        );
+                    },
+                    ),
+                    ),
+                    ),
+            ),
+            );
+    }
 }
