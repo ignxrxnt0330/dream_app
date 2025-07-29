@@ -55,14 +55,18 @@ class CustomDreamListTile extends StatelessWidget {
         ],
       ),
       onTap: () async {
-        if (dream.hidden) {
-          context.push("/bio_validate/dream/${dream.id}");
-          return;
-        }
-        if (!context.mounted) return;
-        context.push("/dream/${dream.id}");
+            print("asd");
+        context.read<DreamFormBloc>().add(FetchDream(dream.id));
+        context.read<DreamFormBloc>().stream.firstWhere((state) => state.dream.id == dream.id).then((state) {
+            if (!context.mounted) return;
+            if (dream.hidden) {
+            context.push("/bio_validate/dream/${dream.id}");
+            return;
+            }
+            context.push("/dream/${dream.id}");
+            });
       },
-      onLongPress: () {
+onLongPress: () {
         // show dialog
         showDialog(
           context: context,
