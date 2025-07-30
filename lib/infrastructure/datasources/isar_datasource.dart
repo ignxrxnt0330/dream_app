@@ -87,6 +87,20 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
+  Future<int> homeDreamCount({ bool fav = false, bool hidden = false, int type = 3}) async {
+    final isar = await db;
+    final count = await isar.dreams
+      .buildQuery(
+          filter: FilterGroup.and([
+            if (fav) FilterCondition.equalTo(property: 'isFav', value: true),
+            if (hidden) FilterCondition.equalTo(property: 'hidden', value: true),
+            if (type != 3) FilterCondition.equalTo(property: 'type', value: type),
+          ]),
+          ).count();
+    return count;
+  }
+
+  @override
   Future<List<Dream?>> loadFavoriteDreams({int limit = 10, int offset = 0}) async {
     final isar = await db;
     final List<Dream> dreams = await isar.dreams.where().filter().isFavEqualTo(true).sortByDateDesc().offset(offset).limit(limit).findAll();

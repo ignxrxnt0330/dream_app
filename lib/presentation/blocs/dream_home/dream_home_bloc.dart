@@ -23,12 +23,14 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     if (state.isLoading || state.endReached) return;
     emit(state.copyWith(isLoading: true));
     final dreams = await datasource.loadDreams(offset: state.offset, order: state.order, asc: state.asc, fav: state.fav, hidden: state.hidden, type: state.type);
+    final count = await datasource.homeDreamCount(fav: state.fav, hidden: state.hidden, type: state.type);
     emit(state.copyWith(
       isLoading: false,
       endReached: dreams.length < 10,
       offset: state.offset + 10,
       dreams: [...state.dreams, ...dreams],
-    ));
+      count: count
+      ));
   }
 
   void _toggleFavDream(ToggleFavDream event, Emitter<DreamHomeState> emit) async {

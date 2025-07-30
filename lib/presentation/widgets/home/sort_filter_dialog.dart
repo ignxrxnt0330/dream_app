@@ -144,9 +144,13 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
             onPressed: cycleType,
             label: Text(types[type].values.first.entries.first.key, style: TextStyle(color: color)),
             icon: Icon(types[type].values.first.entries.first.value, color: color),
-          ),
-        ],
-      ),
-    );
+            ),
+          BlocBuilder<DreamHomeBloc, DreamHomeState>(
+              builder: (context,state) {
+              return Text("(${state.count})");
+              })
+    ]
+      )
+      );
   }
 }
