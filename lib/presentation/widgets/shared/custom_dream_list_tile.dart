@@ -13,13 +13,42 @@ class CustomDreamListTile extends StatelessWidget {
 
   final Dream dream;
 
-  Widget getNamesChips(Dream dream) {
-    var names = dream.names;
-    if (names.isEmpty) return const SizedBox(height: 0);
-    if (dream.hidden) return Wrap(spacing: 5, children: [Chip(label: Text("${names.length} people"))]);
-    if (names.length > 3) return Wrap(spacing: 5, children: [...dream.names.take(3).map((name) => Chip(label: Text(name))), Chip(label: Text("${dream.names.length - 3} more"))]);
-    return Wrap(spacing: 5, children: names.map((name) => Chip(label: Text(name))).toList());
+Widget getNamesChips(Dream dream) {
+  var names = dream.names;
+  if (names.isEmpty) return const SizedBox(height: 0);
+  
+  if (dream.hidden) {
+    return Wrap(spacing: 5, children: [Chip(label: Text("${names.length} people"))]);
   }
+
+  int shownNamesLength = 0;
+  int totalLength = 0;
+
+  for (int i = 0; i < names.length; i++) {
+    totalLength += names[i].length;
+    if (totalLength <= 20) {
+      shownNamesLength = i + 1;
+    } else {
+      break;
+    }
+  }
+
+
+  if (shownNamesLength != names.length) {
+    return Wrap(
+      spacing: 5,
+      children: [
+        ...names.take(shownNamesLength).map((name) => Chip(label: Text(name))),
+        Chip(label: Text("${names.length - shownNamesLength} more"))
+      ],
+    );
+  }
+  
+  return Wrap(
+    spacing: 5,
+    children: names.map((name) => Chip(label: Text(name))).toList(),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +84,6 @@ class CustomDreamListTile extends StatelessWidget {
         ],
       ),
       onTap: () async {
-            print("asd");
         context.read<DreamFormBloc>().add(FetchDream(dream.id));
         context.read<DreamFormBloc>().stream.firstWhere((state) => state.dream.id == dream.id).then((state) {
             if (!context.mounted) return;

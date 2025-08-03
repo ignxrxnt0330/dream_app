@@ -126,6 +126,9 @@ class _DescriptionRowState extends State<_DescriptionRow> {
       child: TextFormField(
         controller: widget.controller,
         focusNode: widget.descriptionFocusNode,
+        onTapOutside:(event){
+        FocusScope.of(context).unfocus();
+        },
         decoration: InputDecoration(
           labelText: 'Description',
           hintText: "asdasdasd...",
