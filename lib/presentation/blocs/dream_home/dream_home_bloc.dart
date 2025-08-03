@@ -54,7 +54,8 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
   }
 
   void _handleDream(HandleDream event, Emitter<DreamHomeState> emit) async {
-    if (state.dreams.where((dream) => dream.id == event.dream.id).toList().isNotEmpty) {
+    if (event.dream.id != -9223372036854775808 && 
+        state.dreams.where((dream) => dream.id == event.dream.id).toList().isNotEmpty) {
       // updating
       final updatedDreams = state.dreams.map((dream) => dream.id == event.dream.id ? event.dream : dream).toList();
       emit(state.copyWith(dreams: updatedDreams));
