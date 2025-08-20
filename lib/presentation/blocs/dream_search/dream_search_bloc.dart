@@ -10,6 +10,7 @@ class DreamSearchBloc extends Bloc<DreamSearchEvent, DreamSearchState> {
   DreamSearchBloc() : super(const DreamSearchState()) {
     on<SearchDreams>(_searchDreams);
     on<ScrollSearch>(_scrollSearch);
+    on<ScrollChange>(_scrollChanged);
   }
 
   Future<void> _searchDreams(SearchDreams event, Emitter<DreamSearchState> emit) async {
@@ -47,5 +48,11 @@ class DreamSearchBloc extends Bloc<DreamSearchEvent, DreamSearchState> {
     } catch (e) {
       emit(state.copyWith(isLoading: false));
     }
+  }
+
+  Future<void> _scrollChanged(ScrollChange event, Emitter<DreamSearchState> emit) async {
+    emit(state.copyWith(
+          scroll: event.scroll,
+          ));
   }
 }
