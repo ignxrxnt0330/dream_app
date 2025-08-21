@@ -21,8 +21,6 @@ class _DreamFormViewState extends State<DreamFormView> {
   final dateController = TextEditingController();
   final descriptionFocusNode = FocusNode();
   List<String> names = [];
-  Timer? timeout;
-  bool hideKBButtonHidden = false;
 
   @override
   void initState() {
@@ -44,10 +42,6 @@ class _DreamFormViewState extends State<DreamFormView> {
   void checkNames() {
     if (descriptionController.text.contains("@")) {}
     if (descriptionController.text.contains("@")) {}
-  }
-
-  void setHideKBBUtton(bool show) {
-    hideKBButtonHidden = show;
   }
 
   @override
@@ -118,7 +112,6 @@ class _DescriptionRow extends StatefulWidget {
 }
 
 class _DescriptionRowState extends State<_DescriptionRow> {
-  Timer? timeout;
 
   @override
   Widget build(BuildContext context) {
@@ -144,16 +137,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
           }
           widget.save();
           return null;
-        },
-        onChanged: (_) {
-          if (timeout?.isActive ?? false) {
-            timeout?.cancel();
-            context.read<DreamFormBloc>().add(const ShowHideKBButtonChanged(false));
-          }
-          timeout = Timer(const Duration(milliseconds: 250), () async {
-            context.read<DreamFormBloc>().add(const ShowHideKBButtonChanged(true));
-          });
-        },
+        }
       ),
     );
   }

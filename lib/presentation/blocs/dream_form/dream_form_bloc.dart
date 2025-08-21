@@ -14,7 +14,6 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
     on<FetchDream>(_onFetchDream);
     on<FormInit>(_onFormInit);
     on<DreamFetched>(_onDreamFetched);
-    on<ShowHideKBButtonChanged>(onChangeHideKBButton);
   }
 
   void _onDreamSubmitted(DreamSubmitted event, Emitter<DreamFormState> emit) async {
@@ -45,9 +44,5 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
 
   void _onFormInit(FormInit event, Emitter<DreamFormState> emit) {
     emit(DreamFormState(dream: Dream(mood: 2, type: 0, lucidness: 0, rating: 3, date: DateTime.now())));
-  }
-
-  void onChangeHideKBButton(ShowHideKBButtonChanged event, Emitter<DreamFormState> emit) {
-    emit(state.copyWith(showHideKBButton: event.show));
   }
 }

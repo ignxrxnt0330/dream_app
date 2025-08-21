@@ -31,11 +31,6 @@ class DreamFetched extends DreamFormEvent {
   const DreamFetched({required this.dream});
 }
 
-class ShowHideKBButtonChanged extends DreamFormEvent {
-  final bool show;
-  const ShowHideKBButtonChanged(this.show);
-}
-
 class FormInit extends DreamFormEvent {
   const FormInit();
 }

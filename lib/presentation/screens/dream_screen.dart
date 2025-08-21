@@ -101,7 +101,7 @@ class _DreamScreenState extends State<DreamScreen> {
         floatingActionButton: BlocBuilder<DreamFormBloc, DreamFormState>(builder: (context, state) {
           final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
           return Visibility(
-            visible: state.currentIndex == 0 ? state.showHideKBButton : true,
+            visible: state.currentIndex == 0 ? !isKeyboardVisible : true,
             child: FloatingActionButton(
               onPressed: () {
                 if (isKeyboardVisible) {
