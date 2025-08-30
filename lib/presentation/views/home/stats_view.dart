@@ -1,4 +1,5 @@
 import 'package:dream_app/config/theme/app_theme.dart';
+import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/blocs/dream_stats/dream_stats_bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +26,23 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
       context.read<DreamStatsBloc>().add(const FetchStats());
     }
 
+  void onChangeIndex (int index) {
+    late int bracket;
+    switch (index) {
+      case 0: bracket = 7;
+      case 1: bracket = 30;
+      case 2: bracket = 365;
+      case 3: bracket = 99999;
+    }
+    context.read<DreamStatsBloc>().add( BracketChanged(bracket: bracket));
+  }
+
   @override
     Widget build(BuildContext context) {
-      final bloc = context.watch<DreamStatsBloc>();
       tabBarController = TabController(vsync: this, length: 4);
+      tabBarController.addListener(() {
+          onChangeIndex(tabBarController.index);
+          });
 
       final List<Tab> tabs = <Tab>[
         Tab(text: 'Weekly'),
@@ -44,132 +58,115 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
                 appBar: AppBar(
                   bottom: TabBar(
                     tabs: tabs,
-                    onTap: (index) {
-                    late int bracket;
-                    switch (index) {
-                    case 0: bracket = 7;
-                    case 1: bracket = 30;
-                    case 2: bracket = 365;
-                    case 3: bracket = 99999;
-                    }
-                    bloc.add( BracketChanged(bracket: bracket));
-                    },
+                    onTap: onChangeIndex,
                     ),
                   ),
-                body: TabBarView(
-                  children: tabs.map((Tab tab) { return Center(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                          Card(
-                            color: Theme.of(context).cardColor,
+                body: 
+                Column(
+                  children: [
+                  Card(
+                    color: Theme.of(context).cardColor,
+                    child: Column(
+                      children: [
+                      Row(
+                        mainAxisAlignment:MainAxisAlignment.center,
+                        children: [
+                        StatCard(number: state.dreamCount ,text:"dreams"),
+                        StatCard(number: state.wordCount ,text:"words"),
+                        StatCard(number: state.charCount ,text:"characters"),
+                        ],),
+                      //Text("madotw ${DateUtils_.DateUtils().getDayName(state.mostActiveDotW)}"),
+                      ],
+                      ),
+                    ),
+                  Expanded(
+                    child: TabBarView(
+                      children: tabs.map((Tab tab) { return Center(
+                          child: SingleChildScrollView(
                             child: Column(
-                              children: [ Text("${state.dreamCount} dreams"),
-                              Text("${state.wordCount} words"),
-                              Text("${state.charCount} characters"),
-                              Text(
-                                state.names.isNotEmpty
-                                ? "most named person ${state.names.keys.first} (${state.names.values.first})"
-                                : "No names found"
-                                ),
-                              Text("madotw ${DateUtils_.DateUtils().getDayName(state.mostActiveDotW)}"),
-                              GestureDetector(
-                                child:SizedBox(
-                                  height: 200,
-                                  child: NamesChart(names:state.names)
-
-                                  ),
-                                onDoubleTap: (){
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                    return AlertDialog(
-                                        title: const Text("All names"),
-                                        content: SingleChildScrollView(
-                                          child: Column(
-                                            children:state.names.entries.map((name) {
-                                              return Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                  Text(name.key),
-                                                  Text(name.value.toString())
-                                                  ],
-                                                  );
-                                              }).toList(),
-                                            ),
-                                          ),
-                                        actions: [
-                                        TextButton(
-                                          child: const Text("Close"),
-                                          onPressed: () {
-                                          Navigator.of(context).pop();
-                                          return;
-                                          },
-                                          ),
-                                        ],
-                                        );
-
-                                    },
-                                    );
-
-                                },
-),
-                              ],
-                              ),
-                              ),
+                              children: [
+                              CustomBarChart(data:state.names),
+                              CustomPieChart(data:state.types),
+                              CustomPieChart(data:state.lucidness),
                               ]
-                                )
-                                )
-                                );
-                  }).toList(),
-              ),
-              ),
-              );  
+                              )
+                            )
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ]
+                    ),
+                  ),
+                  );  
 
           }
       );
     }
 }
 
-
-class NamesChart extends StatelessWidget {
-  final Map<String, int> names;
-
-  const NamesChart({super.key, required this.names});
+class StatCard extends StatelessWidget {
+  final int number;
+  final String text;
+  const StatCard({super.key,required this.number,required this.text});
 
   @override
     Widget build(BuildContext context) {
-      if (names.isEmpty) {
-        return const Text("No name data available.");
+      return Card(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(children: [
+              Text(number.toString()),
+              Text(text),
+            ],),
+            ),
+          );
+    }
+}
+
+
+class CustomBarChart extends StatelessWidget {
+  final Map<String, int> data;
+  const CustomBarChart({super.key,required this.data});
+
+  @override
+    Widget build(BuildContext context) {
+      if (data.isEmpty) {
+        return const Text("No data available.");
       }
 
-      final entries = names.entries.toList().take(7).toList();
+      final entries = data.entries.toList().take(7).toList();
 
-      return BarChart(
-          BarChartData(
-            borderData: FlBorderData(
-              border: const Border(
-                top: BorderSide.none,
-                right: BorderSide.none,
-                left: BorderSide(width: 1),
-                bottom: BorderSide(width: 1),
-                ),
-              ),
-            groupsSpace: 10,
-            barGroups: List.generate(entries.length, (i) {
-              final entry = entries[i];
-              return BarChartGroupData(
-                  x: i,
-                  barRods: [
-                  BarChartRodData(
-                    fromY: 0,
-                    toY: entry.value.toDouble(),
-                    width: 15,
-                    color: Theme.of(context).colorScheme.primary,
+      return Padding(
+          padding: EdgeInsetsGeometry.all(10),
+          child: GestureDetector(
+            child:SizedBox(
+              height: 200,
+              child: BarChart(
+                BarChartData(
+                  borderData: FlBorderData(
+                    border: const Border(
+                      top: BorderSide.none,
+                      right: BorderSide.none,
+                      left: BorderSide(width: 1),
+                      bottom: BorderSide(width: 1),
+                      ),
                     ),
-                  ],
-                  );
-              }),
+                  groupsSpace: 10,
+                  barGroups: List.generate(entries.length, (i) {
+                    final entry = entries[i];
+                    return BarChartGroupData(
+                        x: i,
+                        barRods: [
+                        BarChartRodData(
+                          fromY: 0,
+                          toY: entry.value.toDouble(),
+                          width: 15,
+                          color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ],
+                        );
+                    }),
 titlesData: FlTitlesData(
                 leftTitles: AxisTitles(
                   sideTitles: SideTitles(showTitles: true),
@@ -185,16 +182,132 @@ titlesData: FlTitlesData(
                     return SideTitleWidget(
                         meta: meta,
                         child: Text(
-                              entries[index].key,
-                              style: const TextStyle(fontSize: 10),
-                              overflow: TextOverflow.ellipsis,
-                              ),
+                          entries[index].key,
+                          style: const TextStyle(fontSize: 10),
+                          overflow: TextOverflow.ellipsis,
+                          ),
                         );
                     },
                     ),
+                  ),
+                ),
+                ),
+                )
+
+                  ),
+                onDoubleTap: (){
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                      return AlertDialog(
+                          title: const Text("All data"),
+                          content: SingleChildScrollView(
+                            child: Column(
+                              children:data.entries.map((name) {
+                                return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                    Text(name.key),
+                                    Text(name.value.toString())
+                                    ],
+                                    );
+                                }).toList(),
+                              ),
+                            ),
+                          actions: [
+                          TextButton(
+                            child: const Text("Close"),
+                            onPressed: () {
+                            Navigator.of(context).pop();
+                            return;
+                            },
+                            ),
+                          ],
+                          );
+
+                      },
+
+                      );
+                }),
+                );
+    }
+
+
+}
+
+class CustomPieChart extends StatelessWidget {
+  final Map<String, int> data;
+  const CustomPieChart({super.key,required this.data});
+
+  @override
+    Widget build(BuildContext context) {
+      if (data.isEmpty) {
+        return const Text("No data available.");
+      }
+
+      final entries = data.entries.toList().take(7).toList();
+
+      return Padding(
+          padding: EdgeInsetsGeometry.all(10),
+          child: GestureDetector(
+            child:SizedBox(
+              height: 200,
+              child: PieChart(
+                PieChartData(
+                  borderData: FlBorderData(
+                    border: const Border(
+                      top: BorderSide.none,
+                      right: BorderSide.none,
+                      left: BorderSide(width: 1),
+                      bottom: BorderSide(width: 1),
+                      ),
                     ),
-                    ),
-            ),
-            );
+                  sections: List.generate(entries.length, (i) {
+                    final entry = entries[i];
+                    return PieChartSectionData(
+                        value: entry.value.toDouble(),
+                        title: entry.key,
+                          color: Theme.of(context).colorScheme.primary,
+                        );
+                    }),
+                  ),
+                )
+
+                  ),
+                onDoubleTap: (){
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                      return AlertDialog(
+                          title: const Text("All data"),
+                          content: SingleChildScrollView(
+                            child: Column(
+                              children:data.entries.map((name) {
+                                return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                    Text(name.key),
+                                    Text(name.value.toString())
+                                    ],
+                                    );
+                                }).toList(),
+                              ),
+                            ),
+                          actions: [
+                          TextButton(
+                            child: const Text("Close"),
+                            onPressed: () {
+                            Navigator.of(context).pop();
+                            return;
+                            },
+                            ),
+                          ],
+                          );
+
+                      },
+
+                      );
+                }),
+                );
     }
 }

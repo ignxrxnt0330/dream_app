@@ -28,6 +28,8 @@ abstract class LocalStorageDatasource {
   Future<int?> mostActiveDotW(int bracket); // most active day of the week => day of the week with the most dreams
   Future<List<DateTime>?> mostActiveTime(int bracket); // two hour interval with the most dreams
   Future<Map<String,int>?> mostUsedNames(int bracket);
+  Future<Map<String,int>?> dreamLucidness(int bracket);
+  Future<Map<String,int>?> dreamTypes(int bracket);
 
   Future<Streak> currentStreak();
   Future<Streak> longestStreak();

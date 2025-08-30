@@ -381,4 +381,30 @@ class IsarDatasource extends LocalStorageDatasource {
 
     return Map.fromEntries(namesList);
   }
-}
+
+  @override
+    Future<Map<String,int>?> dreamLucidness(int bracket) async{
+      DateTime date = DateTime.now().subtract(Duration(days: bracket));
+
+      final Map<String,int> map = {};
+      final isar = await db;
+      final List<int> lucidnesses = isar.dreams.where().filter().dateGreaterThan(date).lucidnessProperty().findAllSync();
+      for (var lucidness in lucidnesses) {
+        map[lucidness.toString()] = (map[lucidness.toString()] ?? 0) + 1;
+      }
+      return map;
+    }
+
+    @override
+  Future<Map<String,int>?> dreamTypes(int bracket) async  {
+    DateTime date = DateTime.now().subtract(Duration(days: bracket));
+      final Map<String,int> map = {};
+      final isar = await db;
+      final List<int> types = isar.dreams.where().filter().dateGreaterThan(date).typeProperty().findAllSync();
+      for (var type in types) {
+        map[type.toString()] = (map[type.toString()] ?? 0) + 1;
+      }
+      return map;
+    }
+  }
+
