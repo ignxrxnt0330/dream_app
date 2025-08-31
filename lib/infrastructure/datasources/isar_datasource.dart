@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dream_app/domain/consts.dart';
 import 'package:dream_app/domain/datasource/local_storage_datasource.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/domain/entities/stats/streak.dart';
@@ -385,12 +386,19 @@ class IsarDatasource extends LocalStorageDatasource {
   @override
     Future<Map<String,int>?> dreamLucidness(int bracket) async{
       DateTime date = DateTime.now().subtract(Duration(days: bracket));
-
+      final Map<int,String> lucidnessMap = Consts().lucidness;
       final Map<String,int> map = {};
+
       final isar = await db;
       final List<int> lucidnesses = isar.dreams.where().filter().dateGreaterThan(date).lucidnessProperty().findAllSync();
+
       for (var lucidness in lucidnesses) {
-        map[lucidness.toString()] = (map[lucidness.toString()] ?? 0) + 1;
+        final name = lucidnessMap[lucidness];
+        if (name == null) {
+          continue;
+        }
+        map[name] = (map[name] ?? 0) + 1;
+ 
       }
       return map;
     }
@@ -398,11 +406,18 @@ class IsarDatasource extends LocalStorageDatasource {
     @override
   Future<Map<String,int>?> dreamTypes(int bracket) async  {
     DateTime date = DateTime.now().subtract(Duration(days: bracket));
+      final Map<int,String> typesMap = Consts().types;
       final Map<String,int> map = {};
+
       final isar = await db;
       final List<int> types = isar.dreams.where().filter().dateGreaterThan(date).typeProperty().findAllSync();
+
       for (var type in types) {
-        map[type.toString()] = (map[type.toString()] ?? 0) + 1;
+        final name = typesMap[type];
+        if (name == null) {
+          continue;
+        }
+        map[name] = (map[name] ?? 0) + 1;
       }
       return map;
     }

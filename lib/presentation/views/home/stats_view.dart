@@ -1,10 +1,10 @@
-import 'package:dream_app/config/theme/app_theme.dart';
+import 'dart:math' as math;
+
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/blocs/dream_stats/dream_stats_bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dream_app/util/date_utils.dart' as DateUtils_;
 
 class StatsView extends StatefulWidget {
   static const name = 'stats_view';
@@ -81,17 +81,18 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
                     ),
                   Expanded(
                     child: TabBarView(
-                      children: tabs.map((Tab tab) { return Center(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                              CustomBarChart(data:state.names),
-                              CustomPieChart(data:state.types),
-                              CustomPieChart(data:state.lucidness),
-                              ]
+                      children: tabs.map((Tab tab) { 
+                        return Center(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                CustomPieChart(data:state.types),
+                                CustomPieChart(data:state.lucidness),
+                                CustomBarChart(data:state.names),
+                                ]
+                                )
                               )
-                            )
-                          );
+                            );
                         }).toList(),
                       ),
                     ),
@@ -264,50 +265,54 @@ class CustomPieChart extends StatelessWidget {
                     ),
                   sections: List.generate(entries.length, (i) {
                     final entry = entries[i];
+                    Color primary = Theme.of(context).colorScheme.primary;
+                    double mod = 0.05 + math.Random().nextDouble() * 0.35;
+                    Color modColor = mod % 2 == 0 ? Colors.white : Colors.black;
+                    Color color = Color.lerp(Theme.of(context).colorScheme.primary, modColor, mod) ?? primary;
                     return PieChartSectionData(
                         value: entry.value.toDouble(),
                         title: entry.key,
-                          color: Theme.of(context).colorScheme.primary,
+                        color:color,
                         );
                     }),
                   ),
-                )
+                  )
 
-                  ),
-                onDoubleTap: (){
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                      return AlertDialog(
-                          title: const Text("All data"),
-                          content: SingleChildScrollView(
-                            child: Column(
-                              children:data.entries.map((name) {
-                                return Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                    Text(name.key),
-                                    Text(name.value.toString())
-                                    ],
-                                    );
-                                }).toList(),
+                    ),
+                  onDoubleTap: (){
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                        return AlertDialog(
+                            title: const Text("All data"),
+                            content: SingleChildScrollView(
+                              child: Column(
+                                children:data.entries.map((name) {
+                                  return Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                      Text(name.key),
+                                      Text(name.value.toString())
+                                      ],
+                                      );
+                                  }).toList(),
+                                ),
                               ),
-                            ),
-                          actions: [
-                          TextButton(
-                            child: const Text("Close"),
-                            onPressed: () {
-                            Navigator.of(context).pop();
-                            return;
-                            },
-                            ),
-                          ],
-                          );
+                            actions: [
+                            TextButton(
+                              child: const Text("Close"),
+                              onPressed: () {
+                              Navigator.of(context).pop();
+                              return;
+                              },
+                              ),
+                            ],
+                            );
 
-                      },
+                        },
 
-                      );
-                }),
-                );
+                        );
+                  }),
+                  );
     }
 }
