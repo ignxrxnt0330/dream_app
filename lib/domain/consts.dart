@@ -2,7 +2,7 @@ class Consts {
   Map<int,String> types = {
    0: 'Dream',
    1: 'Nightmare',
-   3: 'Paralysis'
+   2: 'Paralysis'
   }; 
 
 
@@ -16,8 +16,8 @@ class Consts {
   Map<int,String> mood = {
    0: 'Bad',
    1: 'Meh',
-   3: 'Neutral',
-   4: 'Good',
-   5: 'Great'
+   2: 'Neutral',
+   3: 'Good',
+   4: 'Great'
   }; 
 }

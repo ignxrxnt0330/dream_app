@@ -79,9 +79,9 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
                       Row(
                         mainAxisAlignment:MainAxisAlignment.center,
                         children: [
-                        StatCard(number: (state.dreamCount/state.bracket * 100).round() / 100 ,text:"dreams / day"),
-                        StatCard(number: state.longestStreak.streak ,text:"longest streak"),
                         StatCard(number: state.currentStreak.streak ,text:"current streak"),
+                        StatCard(number: state.longestStreak.streak ,text:"longest streak"),
+                        StatCard(number: (state.dreamCount/state.bracket * 100).round() / 100 ,text:"dreams / day"),
                         ],
                         ),
                       ],
