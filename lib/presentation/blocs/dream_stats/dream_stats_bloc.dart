@@ -40,7 +40,16 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
   }
 
   Future<void> _bracketChanged(BracketChanged event, Emitter<DreamStatsState> emit) async {
-    emit(state.copyWith(bracket: event.bracket));
+    if(event.bracket != 99999){
+      emit(state.copyWith(bracket: event.bracket));
+    } else{
+      IsarDatasource().firstDate().then((date) {
+      final int bracket = DateTime.now().difference(date).inDays;
+      emit(state.copyWith(bracket: bracket));
+      });
+
+    }
+
     await _fetchStats(FetchStats(), emit);
 
   }

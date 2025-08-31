@@ -74,8 +74,16 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
                         StatCard(number: state.dreamCount ,text:"dreams"),
                         StatCard(number: state.wordCount ,text:"words"),
                         StatCard(number: state.charCount ,text:"characters"),
-                        ],),
-                      //Text("madotw ${DateUtils_.DateUtils().getDayName(state.mostActiveDotW)}"),
+                        ],
+                        ),
+                      Row(
+                        mainAxisAlignment:MainAxisAlignment.center,
+                        children: [
+                        StatCard(number: (state.dreamCount/state.bracket * 100).round() / 100 ,text:"dreams / day"),
+                        StatCard(number: state.longestStreak.streak ,text:"longest streak"),
+                        StatCard(number: state.currentStreak.streak ,text:"current streak"),
+                        ],
+                        ),
                       ],
                       ),
                     ),
@@ -86,9 +94,21 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
-                                CustomPieChart(data:state.types),
-                                CustomPieChart(data:state.lucidness),
-                                CustomBarChart(data:state.names),
+                                StatsSection(
+                                  children:[
+                                  StatsHeader(text: 'Types'),
+                                  CustomPieChart(data:state.types)
+                                  ]),
+                                StatsSection(
+                                  children:[
+                                  StatsHeader(text: 'Lucidness'),
+                                  CustomPieChart(data:state.lucidness),
+                                  ]),
+                                StatsSection(
+                                  children:[
+                                  Center(child: Text('Names')),
+                                  CustomBarChart(data:state.names),
+                                  ]),
                                 ]
                                 )
                               )
@@ -106,22 +126,52 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
     }
 }
 
+class StatsSection extends StatelessWidget {
+  final List<Widget> children;
+  const StatsSection({super.key, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return  Card(
+        child: Column(
+          children:  children,
+          ),
+        );
+  }
+}
+
+
+class StatsHeader extends StatelessWidget {
+  final String text;
+  const StatsHeader({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return  Center(
+    child: Text(text,
+    style: TextStyle(fontSize: 16),)
+    );
+  }
+}
+
 class StatCard extends StatelessWidget {
-  final int number;
+  final num number;
   final String text;
   const StatCard({super.key,required this.number,required this.text});
 
   @override
     Widget build(BuildContext context) {
-      return Card(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(children: [
-              Text(number.toString()),
-              Text(text),
-            ],),
+      return Expanded(
+        child: Card(
+            child: Padding(
+              padding: EdgeInsets.all(13),
+              child: Column(children: [
+                Text(number.toString()),
+                Text(text),
+              ],),
+              ),
             ),
-          );
+      );
     }
 }
 
