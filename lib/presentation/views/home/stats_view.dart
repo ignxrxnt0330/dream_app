@@ -24,7 +24,21 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
       super.initState();
 
       context.read<DreamStatsBloc>().add(const FetchStats());
-      scrollControllers = List.generate(4, (_) => ScrollController());
+      scrollControllers = List.generate(4, (_) {
+          final controller = ScrollController();
+
+          controller.addListener(() {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!controller.position.isScrollingNotifier.value) {
+                  context.read<DreamStatsBloc>().add(
+                      StatsScrollChange(scroll: controller.position.pixels),
+                      );
+                  }
+                  });
+              });
+
+          return controller;
+          });
     }
 
   void onChangeIndex (int index) {
@@ -53,7 +67,6 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         scrollController.position.isScrollingNotifier.addListener(() { 
             if(!scrollController.position.isScrollingNotifier.value) {
-            print(scrollController.position.pixels.toString());
             // scroll stopped
             context.read<DreamStatsBloc>().add(StatsScrollChange(scroll:scrollController.position.pixels));
             }            });
@@ -125,7 +138,6 @@ void dispose() {
                     child: TabBarView(
                       children: List.generate(tabs.length, (index) {
                       final scrollController = scrollControllers[index];
-                      trackScroll(state,scrollController);
                         return Center(
                             child: SingleChildScrollView(
                             controller: scrollController,
