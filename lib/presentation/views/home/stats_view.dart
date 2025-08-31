@@ -14,19 +14,28 @@ class StatsView extends StatefulWidget {
     State<StatsView> createState() => _StatsViewState();
 }
 
-class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
+class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
   late TabController tabBarController;
   late List<ScrollController> scrollControllers;
-
 
   @override
     void initState() {
       super.initState();
 
-      context.read<DreamStatsBloc>().add(const FetchStats());
+      // Init TabController once
+      tabBarController = TabController(length: 4, vsync: this);
+
+      // Add listener ONCE
+      tabBarController.addListener(() {
+          onChangeIndex(tabBarController.index);
+          });
+
+      // Trigger initial fetch
+      context.read<DreamStatsBloc>().add(const FetchStats(bracket: 30));
+
+      // Init scroll controllers
       scrollControllers = List.generate(4, (_) {
           final controller = ScrollController();
-
           controller.addListener(() {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (!controller.position.isScrollingNotifier.value) {
@@ -36,12 +45,22 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
                   }
                   });
               });
-
           return controller;
           });
+
+      @override
+        void dispose() {
+          for (final controller in scrollControllers) {
+            controller.dispose();
+          }
+          tabBarController.dispose();
+          super.dispose();
+        }
+
     }
 
   void onChangeIndex (int index) {
+    print("change");
     late int bracket;
     switch (index) {
       case 0: bracket = 7;
@@ -71,26 +90,20 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
             context.read<DreamStatsBloc>().add(StatsScrollChange(scroll:scrollController.position.pixels));
             }            });
         });
-        }
-
-@override
-void dispose() {
-  for (final controller in scrollControllers) {
-    controller.dispose();
   }
-  tabBarController.dispose();
-  super.dispose();
-}
+
+  @override
+    void dispose() {
+      for (final controller in scrollControllers) {
+        controller.dispose();
+      }
+      tabBarController.dispose();
+      super.dispose();
+    }
 
   @override
     Widget build(BuildContext context) {
-      tabBarController = TabController(vsync: this, length: 4);
-      tabBarController.addListener(() {
-          onChangeIndex(tabBarController.index);
-          });
-
-
-        final List<Tab> tabs = <Tab>[
+      final List<Tab> tabs = <Tab>[
         Tab(text: 'Weekly'),
         Tab(text: 'Monthly'), 
         Tab(text: 'Yearly'), 
@@ -103,9 +116,8 @@ void dispose() {
               child: Scaffold(
                 appBar: AppBar(
                   bottom: TabBar(
-                  controller: tabBarController,
+                    controller: tabBarController,
                     tabs: tabs,
-                    onTap: onChangeIndex,
                     ),
                   ),
                 body: 
@@ -134,41 +146,41 @@ void dispose() {
                       ],
                       ),
                     ),
-                  Expanded(
-                    child: TabBarView(
-                      children: List.generate(tabs.length, (index) {
-                      final scrollController = scrollControllers[index];
-                        return Center(
-                            child: SingleChildScrollView(
-                            controller: scrollController,
-                              child: Column(
-                                children: [
-                                StatsSection(
-                                  children:[
-                                  StatsHeader(text: 'Types'),
-                                  CustomPieChart(data:state.types)
-                                  ]),
-                                StatsSection(
-                                  children:[
-                                  StatsHeader(text: 'Lucidness'),
-                                  CustomPieChart(data:state.lucidness),
-                                  ]),
-                                StatsSection(
-                                  children:[
-                                  Center(child: Text('Names')),
-                                  CustomBarChart(data:state.names),
-                                  ]),
-                                ]
-                                )
-                              )
-                            );
-                        }).toList(),
+                    Expanded(
+                        child: TabBarView(
+                          children: List.generate(tabs.length, (index) {
+                            final scrollController = scrollControllers[index];
+                            return Center(
+                                child: SingleChildScrollView(
+                                  controller: scrollController,
+                                  child: Column(
+                                    children: [
+                                    StatsSection(
+                                      children:[
+                                      StatsHeader(text: 'Types'),
+                                      CustomPieChart(data:state.types)
+                                      ]),
+                                    StatsSection(
+                                      children:[
+                                      StatsHeader(text: 'Lucidness'),
+                                      CustomPieChart(data:state.lucidness),
+                                      ]),
+                                    StatsSection(
+                                      children:[
+                                      Center(child: Text('Names')),
+                                      CustomBarChart(data:state.names),
+                                      ]),
+                                    ]
+                                    )
+                                    )
+                                    );
+                          }).toList(),
+                    ),
+                    ),
+                    ]
                       ),
                     ),
-                  ]
-                    ),
-                  ),
-                  );  
+                    );  
 
           }
       );
@@ -180,13 +192,13 @@ class StatsSection extends StatelessWidget {
   const StatsSection({super.key, required this.children});
 
   @override
-  Widget build(BuildContext context) {
-    return  Card(
-        child: Column(
-          children:  children,
-          ),
-        );
-  }
+    Widget build(BuildContext context) {
+      return  Card(
+          child: Column(
+            children:  children,
+            ),
+          );
+    }
 }
 
 
@@ -195,12 +207,12 @@ class StatsHeader extends StatelessWidget {
   const StatsHeader({super.key, required this.text});
 
   @override
-  Widget build(BuildContext context) {
-    return  Center(
-    child: Text(text,
-    style: TextStyle(fontSize: 16),)
-    );
-  }
+    Widget build(BuildContext context) {
+      return  Center(
+          child: Text(text,
+            style: TextStyle(fontSize: 16),)
+          );
+    }
 }
 
 class StatCard extends StatelessWidget {
@@ -211,7 +223,7 @@ class StatCard extends StatelessWidget {
   @override
     Widget build(BuildContext context) {
       return Expanded(
-        child: Card(
+          child: Card(
             child: Padding(
               padding: EdgeInsets.all(13),
               child: Column(children: [
@@ -220,7 +232,7 @@ class StatCard extends StatelessWidget {
               ],),
               ),
             ),
-      );
+          );
     }
 }
 

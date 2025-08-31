@@ -8,7 +8,8 @@ abstract class DreamStatsEvent extends Equatable {
 }
 
 class FetchStats extends DreamStatsEvent {
-  const FetchStats();
+  final int bracket;
+  const FetchStats({required this.bracket});
 }
 class BracketChanged extends DreamStatsEvent {
   final int bracket;

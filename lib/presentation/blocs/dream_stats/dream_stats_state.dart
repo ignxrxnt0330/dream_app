@@ -43,5 +43,16 @@ class DreamStatsState extends Equatable {
       );
 
   @override
-    List<Object> get props => [bracket,dreamCount,wordCount,charCount,scroll];
+    List<Object> get props => [
+    bracket,
+    dreamCount,
+    wordCount,
+    charCount,
+    currentStreak,
+    longestStreak,
+    mostActiveDotW,
+    names,
+    lucidness,
+    types,
+    scroll];
 }

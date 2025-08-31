@@ -16,6 +16,7 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
   }
 
   Future<void> _fetchStats(FetchStats event, Emitter<DreamStatsState> emit) async {
+    print("fetch");
     int bracket = state.bracket;
     final dreamCount = await IsarDatasource().dreamCount(bracket);
     final wordCount = await IsarDatasource().wordCount(bracket);
@@ -37,19 +38,17 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
       names: names,
       types: types,
       lucidness: lucidness,
+      bracket: event.bracket,
     ));
   }
 
   Future<void> _bracketChanged(BracketChanged event, Emitter<DreamStatsState> emit) async {
     if(event.bracket != 99999){
-      emit(state.copyWith(bracket: event.bracket));
-      await _fetchStats(FetchStats(), emit);
+      await _fetchStats(FetchStats(bracket: event.bracket),emit);
     } else{
-      IsarDatasource().firstDate().then((date) async{
-          final int bracket = DateTime.now().difference(date).inDays;
-          emit(state.copyWith(bracket: bracket));
-          await _fetchStats(FetchStats(), emit);
-          });
+      DateTime date = await IsarDatasource().firstDate();
+      final int bracket = DateTime.now().difference(date).inDays;
+      await _fetchStats(FetchStats(bracket:bracket), emit);
 
     }
   }
