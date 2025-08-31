@@ -32,7 +32,7 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
       scrollController.position.isScrollingNotifier.addListener(() { 
           if(!scrollController.position.isScrollingNotifier.value) {
           // scroll stopped
-          context.read<DreamSearchBloc>().add(ScrollChange(scroll:scrollController.position.pixels));
+          context.read<DreamSearchBloc>().add(SearchScrollChange(scroll:scrollController.position.pixels));
           }            });
       });
 }

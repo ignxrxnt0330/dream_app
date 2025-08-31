@@ -11,8 +11,9 @@ class DreamStatsState extends Equatable {
   final Map<String,int> names;
   final Map<String,int> lucidness;
   final Map<String,int> types;
+  final double scroll;
 
-  const DreamStatsState({this.bracket = 7, this.dreamCount = 0, this.wordCount = 0, this.charCount = 0, required this.currentStreak, required this.longestStreak, required this.mostActiveDotW, required this.names,required this.lucidness, required this.types });
+  const DreamStatsState({this.bracket = 7, this.dreamCount = 0, this.wordCount = 0, this.charCount = 0, required this.currentStreak, required this.longestStreak, required this.mostActiveDotW, required this.names,required this.lucidness, required this.types, this.scroll = 0});
 
   DreamStatsState copyWith({
     int? bracket,
@@ -25,6 +26,7 @@ class DreamStatsState extends Equatable {
     Map<String,int>? names,
     Map<String,int>? lucidness,
     Map<String,int>? types,
+    double? scroll,
   }) =>
       DreamStatsState(
         bracket: bracket ?? this.bracket,
@@ -37,8 +39,9 @@ class DreamStatsState extends Equatable {
         names: names ?? this.names,
         lucidness: lucidness ?? this.lucidness,
         types: types ?? this.types,
+        scroll: scroll ?? this.scroll,
       );
 
   @override
-    List<Object> get props => [bracket,dreamCount,wordCount,charCount];
+    List<Object> get props => [bracket,dreamCount,wordCount,charCount,scroll];
 }

@@ -12,6 +12,7 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
             currentStreak: Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()), longestStreak: Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()), mostActiveDotW: 0, names: {}, types: {},lucidness: {})) {
     on<FetchStats>((_fetchStats));
     on<BracketChanged>((_bracketChanged));
+    on<StatsScrollChange>((_scrollChanged));
   }
 
   Future<void> _fetchStats(FetchStats event, Emitter<DreamStatsState> emit) async {
@@ -51,7 +52,11 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
           });
 
     }
+  }
 
-
+  Future<void> _scrollChanged(StatsScrollChange event, Emitter<DreamStatsState> emit) async {
+    emit(state.copyWith(
+          scroll: event.scroll,
+          ));
   }
 }

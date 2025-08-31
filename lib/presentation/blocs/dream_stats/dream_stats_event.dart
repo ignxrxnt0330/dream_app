@@ -11,6 +11,13 @@ class FetchStats extends DreamStatsEvent {
   const FetchStats();
 }
 class BracketChanged extends DreamStatsEvent {
-  int bracket;
-  BracketChanged({required this.bracket});
+  final int bracket;
+  const BracketChanged({required this.bracket});
+}
+
+class StatsScrollChange extends DreamStatsEvent {
+  final double scroll;
+  const StatsScrollChange({
+      required this.scroll,
+      });
 }

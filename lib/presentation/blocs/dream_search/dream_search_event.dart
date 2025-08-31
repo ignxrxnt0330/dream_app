@@ -31,9 +31,9 @@ class ScrollSearch extends DreamSearchEvent {
 
 }
 
-class ScrollChange extends DreamSearchEvent {
+class SearchScrollChange extends DreamSearchEvent {
   final double scroll;
-  const ScrollChange({
+  const SearchScrollChange({
       required this.scroll,
       });
 }

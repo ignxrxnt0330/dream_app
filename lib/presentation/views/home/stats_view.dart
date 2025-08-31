@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/blocs/dream_stats/dream_stats_bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +16,7 @@ class StatsView extends StatefulWidget {
 
 class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
   late TabController tabBarController;
+  late List<ScrollController> scrollControllers;
 
 
   @override
@@ -24,6 +24,7 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
       super.initState();
 
       context.read<DreamStatsBloc>().add(const FetchStats());
+      scrollControllers = List.generate(4, (_) => ScrollController());
     }
 
   void onChangeIndex (int index) {
@@ -35,7 +36,38 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
       case 3: bracket = 99999;
     }
     context.read<DreamStatsBloc>().add( BracketChanged(bracket: bracket));
+    final double savedScroll = context.read<DreamStatsBloc>().state.scroll;
+    restoreScroll(savedScroll, scrollControllers[index]);
   }
+
+  void restoreScroll(double savedScroll,scrollController) {
+    if (!scrollController.hasClients) return;
+
+    final maxScroll = scrollController.position.maxScrollExtent;
+    final offset = savedScroll.clamp(0.0, maxScroll);
+
+    scrollController.jumpTo(offset);
+  }
+
+  void trackScroll (DreamStatsState state,scrollController){
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        scrollController.position.isScrollingNotifier.addListener(() { 
+            if(!scrollController.position.isScrollingNotifier.value) {
+            print(scrollController.position.pixels.toString());
+            // scroll stopped
+            context.read<DreamStatsBloc>().add(StatsScrollChange(scroll:scrollController.position.pixels));
+            }            });
+        });
+        }
+
+@override
+void dispose() {
+  for (final controller in scrollControllers) {
+    controller.dispose();
+  }
+  tabBarController.dispose();
+  super.dispose();
+}
 
   @override
     Widget build(BuildContext context) {
@@ -44,7 +76,8 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
           onChangeIndex(tabBarController.index);
           });
 
-      final List<Tab> tabs = <Tab>[
+
+        final List<Tab> tabs = <Tab>[
         Tab(text: 'Weekly'),
         Tab(text: 'Monthly'), 
         Tab(text: 'Yearly'), 
@@ -57,6 +90,7 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
               child: Scaffold(
                 appBar: AppBar(
                   bottom: TabBar(
+                  controller: tabBarController,
                     tabs: tabs,
                     onTap: onChangeIndex,
                     ),
@@ -89,9 +123,12 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin{
                     ),
                   Expanded(
                     child: TabBarView(
-                      children: tabs.map((Tab tab) { 
+                      children: List.generate(tabs.length, (index) {
+                      final scrollController = scrollControllers[index];
+                      trackScroll(state,scrollController);
                         return Center(
                             child: SingleChildScrollView(
+                            controller: scrollController,
                               child: Column(
                                 children: [
                                 StatsSection(
