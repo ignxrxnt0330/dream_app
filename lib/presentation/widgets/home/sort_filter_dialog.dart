@@ -31,7 +31,6 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     fav = state.fav;
     hidden = state.hidden;
     type = state.type;
-    print(type);
   }
 
   List<Map<String, IconData>> sortOptions = [

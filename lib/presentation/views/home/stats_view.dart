@@ -31,7 +31,7 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
           });
 
       // Trigger initial fetch
-      context.read<DreamStatsBloc>().add(const FetchStats(bracket: 30));
+      context.read<DreamStatsBloc>().add(FetchStats(bracket: context.read<DreamStatsBloc>().state.bracket));
 
       // Init scroll controllers
       scrollControllers = List.generate(4, (_) {
@@ -60,7 +60,6 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
     }
 
   void onChangeIndex (int index) {
-    print("change");
     late int bracket;
     switch (index) {
       case 0: bracket = 7;

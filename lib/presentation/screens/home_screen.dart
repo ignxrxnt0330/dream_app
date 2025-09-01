@@ -77,7 +77,8 @@ class _HomeScreenState extends State<HomeScreen> {
       calendarBloc.add(FetchDreamsOnDate(calendarBloc.state.selectedDate));
     },
     (BuildContext context) {
-      context.read<DreamStatsBloc>().add(const FetchStats(bracket: 30));
+      final int bracket = context.read<DreamStatsBloc>().state.bracket;
+      context.read<DreamStatsBloc>().add(FetchStats(bracket: bracket));
     },
     (BuildContext context) {},
   ];

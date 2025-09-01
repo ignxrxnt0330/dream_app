@@ -16,8 +16,7 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
   }
 
   Future<void> _fetchStats(FetchStats event, Emitter<DreamStatsState> emit) async {
-    print("fetch");
-    int bracket = state.bracket;
+    int bracket = event.bracket;
     final dreamCount = await IsarDatasource().dreamCount(bracket);
     final wordCount = await IsarDatasource().wordCount(bracket);
     final charCount = await IsarDatasource().charCount(bracket);
@@ -38,7 +37,7 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
       names: names,
       types: types,
       lucidness: lucidness,
-      bracket: event.bracket,
+      bracket: bracket,
     ));
   }
 
