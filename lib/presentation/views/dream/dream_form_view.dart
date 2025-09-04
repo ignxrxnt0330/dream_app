@@ -78,6 +78,9 @@ class _TitleRow extends StatelessWidget {
       child: TextFormField(
         autofocus: autofocus,
         controller: controller,
+        onTapOutside:(event){
+        FocusScope.of(context).unfocus();
+        },
         decoration: InputDecoration(
           labelText: 'Title',
           hintText: context.read<AppConfigBloc>().state.defaultTitle != "" ? context.read<AppConfigBloc>().state.defaultTitle : null,
