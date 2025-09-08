@@ -30,6 +30,7 @@ abstract class LocalStorageDatasource {
   Future<Map<String,int>?> mostUsedNames(int bracket);
   Future<Map<String,int>?> dreamLucidness(int bracket);
   Future<Map<String,int>?> dreamTypes(int bracket);
+  Future<Map<String,int>?> dreamMood(int bracket);
 
   Future<Streak> currentStreak();
   Future<Streak> longestStreak();

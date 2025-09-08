@@ -9,7 +9,7 @@ part 'dream_stats_state.dart';
 class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
   DreamStatsBloc()
       : super(DreamStatsState(
-            currentStreak: Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()), longestStreak: Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()), mostActiveDotW: 0, names: {}, types: {},lucidness: {})) {
+            currentStreak: Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()), longestStreak: Streak(streak: 0, streakStart: DateTime.now(), streakEnd: DateTime.now()), mostActiveDotW: 0, names: {}, types: {},lucidness: {},mood:{})) {
     on<FetchStats>((_fetchStats));
     on<BracketChanged>((_bracketChanged));
     on<StatsScrollChange>((_scrollChanged));
@@ -26,6 +26,7 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
     final names = await IsarDatasource().mostUsedNames(bracket);
     final types = await IsarDatasource().dreamTypes(bracket);
     final lucidness = await IsarDatasource().dreamLucidness(bracket);
+    final mood = await IsarDatasource().dreamMood(bracket);
 
     emit(state.copyWith(
       dreamCount: dreamCount,
@@ -38,6 +39,7 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
       types: types,
       lucidness: lucidness,
       bracket: bracket,
+      mood: mood,
     ));
   }
 

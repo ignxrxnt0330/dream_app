@@ -156,8 +156,8 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
                                     children: [
                                     StatsSection(
                                       children:[
-                                      StatsHeader(text: 'Types'),
-                                      CustomPieChart(data:state.types)
+                                      Center(child: Text('Names')),
+                                      CustomBarChart(data:state.names),
                                       ]),
                                     StatsSection(
                                       children:[
@@ -166,8 +166,13 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
                                       ]),
                                     StatsSection(
                                       children:[
-                                      Center(child: Text('Names')),
-                                      CustomBarChart(data:state.names),
+                                      StatsHeader(text: 'Types'),
+                                      CustomPieChart(data:state.types)
+                                      ]),
+                                    StatsSection(
+                                      children:[
+                                      Center(child: Text('Mood')),
+                                      CustomPieChart(data:state.mood),
                                       ]),
                                     ]
                                     )

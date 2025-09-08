@@ -421,5 +421,24 @@ class IsarDatasource extends LocalStorageDatasource {
       }
       return map;
     }
+
+@override
+  Future<Map<String, int>?> dreamMood(int bracket) async{
+    DateTime date = DateTime.now().subtract(Duration(days: bracket));
+      final Map<int,String> moodsMap = Consts().mood;
+      final Map<String,int> map = {};
+
+      final isar = await db;
+      final List<int> moods = isar.dreams.where().filter().dateGreaterThan(date).moodProperty().findAllSync();
+
+      for (var mood in moods) {
+        final name = moodsMap[mood];
+        if (name == null) {
+          continue;
+        }
+        map[name] = (map[name] ?? 0) + 1;
+      }
+      return map;
+  }
   }
 
