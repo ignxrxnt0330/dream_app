@@ -114,7 +114,7 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
               length: tabs.length,
               child: Scaffold(
                 appBar: AppBar(
-                  bottom: TabBar(
+                  title: TabBar(
                     controller: tabBarController,
                     tabs: tabs,
                     ),
@@ -176,9 +176,8 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
                           }).toList(),
                     ),
                     ),
-                    ]
+                    ])
                       ),
-                    ),
                     );  
 
           }
