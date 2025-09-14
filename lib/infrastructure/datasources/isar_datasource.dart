@@ -109,10 +109,16 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<List<Dream>> getAllDreams() async {
+  Future<List<Dream>> getAllDreams({DateTime? start, DateTime? end}) async {
     final isar = await db;
-    final List<Dream> dreams = await isar.dreams.where().findAll();
-    return dreams;
+    final  dreams = await isar.dreams
+        .buildQuery(
+          filter: FilterGroup.and([
+            if (start != null && end != null) FilterCondition.greaterThan(property: 'date', value: start),
+            if (start != null && end != null) FilterCondition.lessThan(property: 'date', value: end),
+          ]),
+        ).findAll();
+    return dreams.cast<Dream>();
   }
 
   @override
@@ -303,10 +309,19 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<List<DateTime>> allDates() async {
+  Future<List<DateTime>> allDates({DateTime? start, DateTime? end}) async {
     final isar = await db;
     //TODO: next month
-    final dates = await isar.dreams.where(distinct: true).sortByDateDesc().dateProperty().findAll();
+    final dates = await isar.dreams
+        .buildQuery(
+        property: "date",
+          filter: FilterGroup.and([
+            if (start != null && end != null) FilterCondition.greaterThan(property: 'date', value: start),
+            if (start != null && end != null) FilterCondition.lessThan(property: 'date', value: end),
+          ]),
+          sortBy: [SortProperty(property: 'date', sort: Sort.asc)],
+        ).findAll();
+
     return dates.cast<DateTime>();
   }
 

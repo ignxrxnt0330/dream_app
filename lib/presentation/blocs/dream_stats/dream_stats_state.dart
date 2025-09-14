@@ -12,9 +12,10 @@ class DreamStatsState extends Equatable {
   final Map<String,int> lucidness;
   final Map<String,int> types;
   final Map<String,int> mood;
+  final Map<String,int> dreams;
   final double scroll;
 
-  const DreamStatsState({this.bracket = 7, this.dreamCount = 0, this.wordCount = 0, this.charCount = 0, required this.currentStreak, required this.longestStreak, required this.mostActiveDotW, required this.names,required this.lucidness, required this.types, this.scroll = 0, required this.mood});
+  const DreamStatsState({this.bracket = 7, this.dreamCount = 0, this.wordCount = 0, this.charCount = 0, required this.currentStreak, required this.longestStreak, required this.mostActiveDotW, required this.names,required this.lucidness, required this.types, this.scroll = 0, required this.mood,required this.dreams});
 
   DreamStatsState copyWith({
     int? bracket,
@@ -29,6 +30,7 @@ class DreamStatsState extends Equatable {
     Map<String,int>? types,
     double? scroll,
     Map<String,int>? mood,
+    Map<String,int>? dreams,
   }) =>
       DreamStatsState(
         bracket: bracket ?? this.bracket,
@@ -43,6 +45,7 @@ class DreamStatsState extends Equatable {
         types: types ?? this.types,
         scroll: scroll ?? this.scroll,
         mood: mood ?? this.mood,
+        dreams: dreams ?? this.dreams,
       );
 
   @override
@@ -57,5 +60,6 @@ class DreamStatsState extends Equatable {
     names,
     lucidness,
     types,
+    dreams,
     mood];
 }

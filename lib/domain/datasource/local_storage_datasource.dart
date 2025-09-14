@@ -10,13 +10,13 @@ abstract class LocalStorageDatasource {
   Future<Dream?> getDream(int id);
   Future<void> toggleFavDream(int id);
   Future<List<Dream?>> loadFavoriteDreams({int limit = 10, int offset = 0});
-  Future<List<Dream>> getAllDreams();
+  Future<List<Dream>> getAllDreams({DateTime? start, DateTime? end});
   Future<bool> exportDreams();
   Future<bool> importDreams();
   Future<List<String>>? getAllNames();
   Future<List<Dream>>? searchDreams(String query, {int limit = 10, int offset = 0, names = const [], bool newToOld = true});
   Future<int> searchDreamsResultCount(String query, {names = const []});
-  Future<List<DateTime>> allDates();
+  Future<List<DateTime>> allDates({DateTime? start, DateTime? end});
   Future<DateTime> firstDate();
   Future<DateTime> lastDate();
   Future<List<Dream>> dreamsOnDate(DateTime date);
