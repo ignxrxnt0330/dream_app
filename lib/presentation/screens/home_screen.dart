@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             var bloc = context.read<DreamCalendarBloc>();
             // showDatePicker(context: context, firstDate: bloc.state.firstDate ?? DateTime.now(), lastDate: bloc.state.lastDate ?? DateTime.now()).then(
-            showDatePicker(context: context,locale: Locale.fromSubtags(countryCode: "ES"), firstDate: DateTime(2020, 1, 1), lastDate: DateTime(2069, 4, 20)).then(
+            showDatePicker(context: context, firstDate: DateTime(2020, 1, 1), lastDate: DateTime(2069, 4, 20)).then(
               (value) {
                 if (value == null) {
                   return;
