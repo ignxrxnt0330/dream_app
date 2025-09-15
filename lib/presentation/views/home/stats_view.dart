@@ -2,6 +2,7 @@ import 'package:dream_app/presentation/blocs/dream_stats/dream_stats_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dream_app/presentation/widgets/stats/charts/charts.dart';
+import 'package:intl/intl.dart';
 
 class StatsView extends StatefulWidget {
   static const name = 'stats_view';
@@ -135,8 +136,16 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
                       Row(
                         mainAxisAlignment:MainAxisAlignment.center,
                         children: [
-                        StatCard(number: state.currentStreak.streak ,text:"current streak"),
-                        StatCard(number: state.longestStreak.streak ,text:"longest streak"),
+                        StatCard(
+                        number: state.currentStreak.streak,
+                        text:"current streak",
+                        tooltipText: "${DateFormat('dd/MM/yyyy').format(state.currentStreak.streakStart)} - ${DateFormat('dd/MM/yyyy').format(state.currentStreak.streakEnd)}",
+                        ),
+                        StatCard(
+                        number: state.longestStreak.streak,
+                        text:"longest streak",
+                        tooltipText: "${DateFormat('dd/MM/yyyy').format(state.longestStreak.streakStart)} - ${DateFormat('dd/MM/yyyy').format(state.longestStreak.streakEnd)}",
+                        ),
                         StatCard(number: (state.dreamCount/state.bracket * 100).round() / 100 ,text:"dreams / day",
 onTap: () {
   context.read<DreamStatsBloc>().add(FetchStatsDreams());
@@ -267,8 +276,9 @@ class StatsHeader extends StatelessWidget {
 class StatCard extends StatelessWidget {
   final num number;
   final String text;
+  final String? tooltipText;
   final GestureTapCallback? onTap;
-  const StatCard({super.key,required this.number,required this.text, this.onTap});
+  const StatCard({super.key,required this.number,required this.text,this.tooltipText, this.onTap});
 
   @override
     Widget build(BuildContext context) {
@@ -278,10 +288,14 @@ class StatCard extends StatelessWidget {
             child: Card(
               child: Padding(
                 padding: EdgeInsets.all(13),
-                child: Column(children: [
-                  Text(number.toString()),
-                  Text(text),
-                ],),
+                child:
+                Tooltip(
+                message: tooltipText ?? '',
+                  child: Column(children: [
+                    Text(number.toString()),
+                    Text(text),
+                  ],),
+                ),
                 ),
               ),
           ),
