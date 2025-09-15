@@ -114,8 +114,8 @@ class IsarDatasource extends LocalStorageDatasource {
     final  dreams = await isar.dreams
         .buildQuery(
           filter: FilterGroup.and([
-            if (start != null && end != null) FilterCondition.greaterThan(property: 'date', value: start),
-            if (start != null && end != null) FilterCondition.lessThan(property: 'date', value: end),
+            if (start != null && end != null) 
+            FilterCondition.between(property: 'date', lower: start,upper: end.add(Duration(days: 1)),includeLower: false),
           ]),
         ).findAll();
     return dreams.cast<Dream>();

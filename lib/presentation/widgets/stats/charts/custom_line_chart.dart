@@ -30,6 +30,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
   }
 
   FlLine getVerticalVerticalLine(double value) {
+    if (value != value.round()) return FlLine(strokeWidth: 0);
     if ((value - baselineX).abs() <= 0.1) {
       return const FlLine(
           color: Colors.white70,
@@ -68,6 +69,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
     );
   }
 Widget getHorizontalTitles(value, TitleMeta meta) {
+    if (value % 1 != 0) return const SizedBox.shrink();
     TextStyle style;
     if ((value - baselineX).abs() <= 0.1) {
       style = const TextStyle(
@@ -79,12 +81,25 @@ Widget getHorizontalTitles(value, TitleMeta meta) {
       style = const TextStyle(
         color: Colors.white60,
         fontSize: 14,
-      );
+        );
     }
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Text(meta.formattedValue, style: style),
-    );
+    final index = value.toInt();
+    if (index >= 0 && index < widget.data.entries.length) {
+      String key = widget.data.entries.toList()[index].key;
+      DateTime? date = DateTime.parse(key);
+      bool sameMonth = date.month == DateTime.now().month && date.year == DateTime.now().year;
+      bool sameYear = date.year == DateTime.now().year;
+
+      String text = date.day.toString();
+      if(!sameMonth) text+= "/${date.month.toString()}";
+      if(!sameYear) text+= "/${date.year.toString()}";
+      return Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(text, style: style),
+          );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 
     @override
@@ -129,15 +144,12 @@ dotData: FlDotData(
                 ),
               topTitles: AxisTitles(
                 sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: getHorizontalTitles,
-                  reservedSize: 32),
+                  showTitles: false
+                  ),
                 ),
               rightTitles: AxisTitles(
                 sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: getVerticalTitles,
-                  reservedSize: 36,
+                  showTitles: false,
                   ),
                 ),
               bottomTitles: AxisTitles(

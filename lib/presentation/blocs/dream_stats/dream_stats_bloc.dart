@@ -70,7 +70,7 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
     Map<String,int> map = {};
 
     for(Dream dream in dreams){
-      String formattedDate = DateFormat.yMd().format(dream.date!);
+      String formattedDate = DateFormat('yyyy-MM-dd').format(dream.date!);
       map[formattedDate] = (map[formattedDate] ?? 0) +1;
     }
 
