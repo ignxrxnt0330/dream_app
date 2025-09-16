@@ -13,6 +13,8 @@ class CustomLineChart extends StatefulWidget {
 class _CustomLineChartState extends State<CustomLineChart> {
   var baselineX = 0.0;
   var baselineY = 0.0;
+  late final List<String> formattedDates;
+  late final List<FlSpot> allSpots;
 
   FlLine getHorizontalVerticalLine(double value) {
     if ((value - baselineY).abs() <= 0.1) {
@@ -29,23 +31,14 @@ class _CustomLineChartState extends State<CustomLineChart> {
     }
   }
 
-  FlLine getVerticalVerticalLine(double value) {
-    if (value != value.round()) return FlLine(strokeWidth: 0);
-    if ((value - baselineX).abs() <= 0.1) {
-      return const FlLine(
-          color: Colors.white70,
-          strokeWidth: 1,
-          dashArray: [8, 4],
-          );
-    } else {
-      return FlLine(
-          color: Theme.of(context).colorScheme.primary,
-          strokeWidth: 0.4,
-          dashArray: [8, 4],
-          );
-    }
-  }
-
+FlLine getVerticalVerticalLine(double value) {
+  if (value % 7 != 0) return FlLine(strokeWidth: 0); // every 5th line only
+  return FlLine(
+    color: Theme.of(context).colorScheme.primary,
+    strokeWidth: 0.5,
+    dashArray: [4, 2],
+  );
+}
 
 
   Widget getVerticalTitles(value, TitleMeta meta) {
@@ -85,26 +78,43 @@ Widget getHorizontalTitles(value, TitleMeta meta) {
     }
     final index = value.toInt();
     if (index >= 0 && index < widget.data.entries.length) {
-      String key = widget.data.entries.toList()[index].key;
-      DateTime? date = DateTime.parse(key);
-      bool sameMonth = date.month == DateTime.now().month && date.year == DateTime.now().year;
-      bool sameYear = date.year == DateTime.now().year;
-
-      String text = date.day.toString();
-      if(!sameMonth) text+= "/${date.month.toString()}";
-      if(!sameYear) text+= "/${date.year.toString()}";
       return Padding(
           padding: const EdgeInsets.all(4.0),
-          child: Text(text, style: style),
+          child: Text(formattedDates[index], style: style),
           );
     } else {
       return const SizedBox.shrink();
     }
   }
 
+
+  @override
+    void initState() {
+      super.initState();
+      final now = DateTime.now();
+      formattedDates = widget.data.keys.map((key) {
+          final date = DateTime.parse(key);
+          String text = '${date.day}';
+          if (date.month != now.month || date.year != now.year) {
+          text += '/${date.month}';
+          }
+          if (date.year != now.year && date.day %5 == 0) {
+          text += '/${date.year.toString().substring(2,4)}';
+          }
+          return text;
+          }).toList();
+          
+          final entries = widget.data.entries.toList();
+
+        allSpots = List<FlSpot>.generate(entries.length, (i) {
+            return FlSpot(i.toDouble(), entries[i].value.toDouble());
+            });
+
+    }
+
     @override
       Widget build(BuildContext context) {
-        final entries = widget.data.entries.toList();
+        const double entryWidth = 50;
 
         final all = widget.data.entries.toList()
           ..sort((a, b) => b.value.compareTo(a.value));
@@ -112,36 +122,43 @@ Widget getHorizontalTitles(value, TitleMeta meta) {
         final theme = Theme.of(context);
         final primaryColor = theme.colorScheme.primary;
 
-        double width = widget.data.entries.length * 50;
+        double width = widget.data.entries.length * entryWidth;
         double deviceHeight = MediaQuery.of(context).size.height *.8;
         if(deviceHeight > width) width = deviceHeight;
 
-
-        return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-          child: SizedBox(
+        final scrollController = ScrollController();
+        final List<FlSpot> spots = allSpots;
+        return ListView(
+            scrollDirection: Axis.horizontal,
+            controller: scrollController,
+          children:[ SizedBox(
           height: MediaQuery.of(context).size.width,
           width: width,
             child: LineChart(
                 LineChartData(
                   lineBarsData: [
                   LineChartBarData(
-                    spots: List.generate(entries.length, (i) {
-                      final entry = entries[i];
-                      return FlSpot(i.toDouble(), entry.value.toDouble());
-                      }),
+                    spots: spots,
             color: primaryColor,
             barWidth: 2,
             dotData: FlDotData(
-              show: true,
-              getDotPainter: (spot, percent, barData, index) {
-              return FlDotCirclePainter(
-                  radius: 4,
-                  color: primaryColor,
-                  strokeWidth: 1.5,
-                  strokeColor: theme.colorScheme.onPrimary,
-                  );
-              },
+              show: false,
+//              getDotPainter: (spot, percent, barData, index) {
+//              final double scrollPercent = scrollController.position.maxScrollExtent / scrollController.position.pixels; if(scrollPercent + 5 > percent && scrollPercent -5 < percent){
+//              return FlDotCirclePainter(
+//                  strokeColor: primaryColor,
+//                  radius: 4,
+//                  color: primaryColor,
+//                  strokeWidth: 1.5,
+//                  );
+//              }
+//              return FlDotCirclePainter(
+//                  radius: 0,
+//                  color: Colors.transparent,
+//                  strokeWidth: 0,
+//                  strokeColor: Colors.transparent,
+//                  );
+//              },
               ),
             ),
               ],           titlesData: FlTitlesData(
@@ -186,6 +203,7 @@ Widget getHorizontalTitles(value, TitleMeta meta) {
             duration: Duration.zero,
             ),
           ),
+          ]
         );
     }
 }
