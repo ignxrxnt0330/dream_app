@@ -290,15 +290,18 @@ class StatCard extends StatelessWidget {
                 padding: EdgeInsets.all(13),
                 child:
                 Tooltip(
-                message: tooltipText ?? '',
-                  child: Column(children: [
+                  showDuration: Duration(seconds: 3),
+                  message: tooltipText ?? '',
+                  child: Column(
+                    children: [
                     Text(number.toString()),
                     Text(text),
-                  ],),
-                ),
+                    ],
+                    ),
+                  ),
                 ),
               ),
-          ),
+            ),
           );
     }
 }
