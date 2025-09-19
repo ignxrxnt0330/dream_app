@@ -4,6 +4,7 @@ class Streak {
   final DateTime streakEnd;
   const Streak({required this.streak, required this.streakStart, required this.streakEnd});
 
+  @override
   toString() {
     return "Streak(streak: $streak, streakStart: $streakStart, streakEnd: $streakEnd)";
   }

@@ -1,6 +1,5 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
-import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

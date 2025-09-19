@@ -9,7 +9,6 @@ class Biometrics {
       final bool didAuthenticate = await auth.authenticate(localizedReason: message, options: const AuthenticationOptions(stickyAuth: true));
       return didAuthenticate;
     } on PlatformException catch (err) {
-      print(err);
       switch (err.code) {
         case auth_error.notAvailable:
           break;

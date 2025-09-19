@@ -41,7 +41,7 @@ FlLine getVerticalVerticalLine(double value) {
 }
 
 
-  Widget getVerticalTitles(value, TitleMeta meta) {
+  Widget getVerticalTitles(double value, TitleMeta meta) {
     TextStyle style;
     if ((value - baselineY).abs() <= 0.1) {
       style = const TextStyle(
@@ -61,7 +61,7 @@ FlLine getVerticalVerticalLine(double value) {
       child: Text(meta.formattedValue, style: style),
     );
   }
-Widget getHorizontalTitles(value, TitleMeta meta) {
+Widget getHorizontalTitles(double value, TitleMeta meta) {
     if (value % 1 != 0) return const SizedBox.shrink();
     TextStyle style;
     if ((value - baselineX).abs() <= 0.1) {

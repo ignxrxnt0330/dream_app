@@ -13,12 +13,12 @@ class DreamCalendarBloc extends Bloc<DreamCalendarEvent, DreamCalendarState> {
     on<FetchBracket>(_onFetchBracket);
   }
 
-  _onFetchDates(FetchDates event, Emitter<DreamCalendarState> emit) async {
+  Future<void> _onFetchDates(FetchDates event, Emitter<DreamCalendarState> emit) async {
     List<DateTime> dates = await IsarDatasource().allDates();
     emit(state.copyWith(dates: dates));
   }
 
-  _onFetchDreams(FetchDreamsOnDate event, Emitter<DreamCalendarState> emit) async {
+  Future<void> _onFetchDreams(FetchDreamsOnDate event, Emitter<DreamCalendarState> emit) async {
     //FIXME: isLoading ¿?
     emit(state.copyWith(dreams: [], selectedDate: event.date));
     List<Dream> dreams = await IsarDatasource().dreamsOnDate(event.date);
@@ -28,7 +28,7 @@ class DreamCalendarBloc extends Bloc<DreamCalendarEvent, DreamCalendarState> {
     emit(state.copyWith(dreams: dreams));
   }
 
-  _onFetchBracket(FetchBracket event, Emitter<DreamCalendarState> emit) async {
+  Future<void> _onFetchBracket(FetchBracket event, Emitter<DreamCalendarState> emit) async {
     DateTime firstDate = await IsarDatasource().firstDate().then((value) => DateTime(value.year, value.month, value.day));
     DateTime lastDate = await IsarDatasource().lastDate().then((value) => DateTime(value.year, value.month, value.day));
     emit(state.copyWith(firstDate: firstDate, lastDate: lastDate));

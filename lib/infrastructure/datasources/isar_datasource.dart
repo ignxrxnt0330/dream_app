@@ -136,17 +136,13 @@ class IsarDatasource extends LocalStorageDatasource {
         await file.writeAsString(data);
         if (Platform.isAndroid) {
           final params = SaveFileDialogParams(sourceFilePath: filePath);
-          final finalPath = await FlutterFileDialog.saveFile(params: params).then((res) => saved = true);
-
-          print('Download path: $finalPath');
+          await FlutterFileDialog.saveFile(params: params).then((res) => saved = true);
         }
       } else {
-        print("Downloads directory not available");
         return saved;
       }
       return true;
     } catch (e) {
-      print("Error saving file: $e");
       return false;
     }
   }
@@ -175,7 +171,6 @@ class IsarDatasource extends LocalStorageDatasource {
         return false;
       }
     } catch (e) {
-      print("Error importing file: $e");
       return false;
     }
   }

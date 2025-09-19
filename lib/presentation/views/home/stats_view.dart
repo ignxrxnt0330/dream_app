@@ -47,6 +47,7 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
           return controller;
           });
 
+
       @override
         void dispose() {
           for (final controller in scrollControllers) {
