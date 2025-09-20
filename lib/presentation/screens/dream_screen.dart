@@ -1,8 +1,8 @@
-import 'package:card_swiper/card_swiper.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:go_router/go_router.dart';
 
 import '../views/views.dart';
@@ -20,7 +20,7 @@ class _DreamScreenState extends State<DreamScreen> {
   late final List<Widget> slides;
 
   final formKey = GlobalKey<FormState>();
-  final swiperController = SwiperController();
+  final swiperController = CardSwiperController();
   // bool scrollable = false;
 
   @override
@@ -42,7 +42,6 @@ class _DreamScreenState extends State<DreamScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
 
     return SafeArea(
       child: Scaffold(
@@ -104,25 +103,31 @@ child: const Text("ye"),
                 child: BlocBuilder<DreamFormBloc,DreamFormState>(
                   builder: (context,state) {
                   bool scrollable = state.valid;
-                  return Swiper(
+                  return CardSwiper(
+                      cardsCount: slides.length,
+                      cardBuilder: (context, index,a,b) => slides[index],
                       controller: swiperController,
-                      viewportFraction: 1,
-                      loop: false,
                       scale: 1,
-                      autoplay: false,
-                      physics: scrollable ? ScrollPhysics() : NeverScrollableScrollPhysics(), 
-                      pagination: SwiperPagination(
-                        margin: const EdgeInsets.only(top: 0),
-                        builder: RectSwiperPaginationBuilder(
-                          color: colors.primary,
-                          activeColor: colors.secondary,
-                          activeSize: const Size(20, 10),
-                          size: const Size(10, 10),
-                          )),
-                      allowImplicitScrolling: scrollable,
-                      onIndexChanged: (index) => context.read<DreamFormBloc>().add(IndexChanged(index)),
-                      itemCount: slides.length,
-                      itemBuilder: (context, index) => slides[index],
+                      isLoop: false,
+                      duration: Duration(milliseconds: 100),
+                      maxAngle: 0,
+                      threshold: 20,
+                      isDisabled: !scrollable,
+                      numberOfCardsDisplayed: 1,
+                      allowedSwipeDirection: AllowedSwipeDirection.only(right: true,left: true),
+                      onSwipe: (oldIndex, newIndex, direction) {
+                      if (formKey.currentState!.validate()) {
+                        context.read<DreamFormBloc>().add(IndexChanged(newIndex!));
+                        if (direction == CardSwiperDirection.right){
+                        swiperController.moveTo(oldIndex-1);
+                        } else {
+                        swiperController.moveTo(oldIndex+1);
+                        }
+                      } else {
+                        swiperController.undo();
+                      }
+                      return false;
+                      },
                       );
                   }
                 ),
@@ -148,7 +153,7 @@ child: const Text("ye"),
                   return;
                 }
                 FocusManager.instance.primaryFocus?.unfocus();
-                swiperController.next(animation: true);
+                swiperController.swipe(CardSwiperDirection.left);
               },
               child: Icon(
                 state.currentIndex >= (slides.length - 1) ? Icons.arrow_upward : (isKeyboardVisible ? Icons.arrow_downward : Icons.arrow_forward),

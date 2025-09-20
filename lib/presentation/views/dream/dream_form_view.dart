@@ -75,7 +75,7 @@ class _TitleRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: TextFormField(
-        autofocus: autofocus,
+        autofocus: controller.text.isEmpty ? autofocus : false,
         controller: controller,
         onTapOutside:(event){
         context.read<DreamFormBloc>().add(ValidChanged(valid: controller.text.isNotEmpty));
