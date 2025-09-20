@@ -136,7 +136,8 @@ class IsarDatasource extends LocalStorageDatasource {
         await file.writeAsString(data);
         if (Platform.isAndroid) {
           final params = SaveFileDialogParams(sourceFilePath: filePath);
-          await FlutterFileDialog.saveFile(params: params).then((res) => saved = true);
+          final finalPath = await FlutterFileDialog.saveFile(params: params).then((res) => saved = true);
+
         }
       } else {
         return saved;

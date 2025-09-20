@@ -101,24 +101,30 @@ child: const Text("ye"),
           child: Column(
             children: [
               Expanded(
-                child: Swiper(
-                  controller: swiperController,
-                  viewportFraction: 1,
-                  loop: false,
-                  scale: 1,
-                  autoplay: false,
-                  physics: (formKey.currentState?.validate() ?? false) ? const AlwaysScrollableScrollPhysics() : const NeverScrollableScrollPhysics(),
-                  pagination: SwiperPagination(
-                      margin: const EdgeInsets.only(top: 0),
-                      builder: RectSwiperPaginationBuilder(
-                        color: colors.primary,
-                        activeColor: colors.secondary,
-                        activeSize: const Size(20, 10),
-                        size: const Size(10, 10),
-                      )),
-                  onIndexChanged: (index) => context.read<DreamFormBloc>().add(IndexChanged(index)),
-                  itemCount: slides.length,
-                  itemBuilder: (context, index) => slides[index],
+                child: BlocBuilder<DreamFormBloc,DreamFormState>(
+                  builder: (context,state) {
+                  bool scrollable = state.valid;
+                  return Swiper(
+                      controller: swiperController,
+                      viewportFraction: 1,
+                      loop: false,
+                      scale: 1,
+                      autoplay: false,
+                      physics: scrollable ? ScrollPhysics() : NeverScrollableScrollPhysics(), 
+                      pagination: SwiperPagination(
+                        margin: const EdgeInsets.only(top: 0),
+                        builder: RectSwiperPaginationBuilder(
+                          color: colors.primary,
+                          activeColor: colors.secondary,
+                          activeSize: const Size(20, 10),
+                          size: const Size(10, 10),
+                          )),
+                      allowImplicitScrolling: scrollable,
+                      onIndexChanged: (index) => context.read<DreamFormBloc>().add(IndexChanged(index)),
+                      itemCount: slides.length,
+                      itemBuilder: (context, index) => slides[index],
+                      );
+                  }
                 ),
               ),
             ],

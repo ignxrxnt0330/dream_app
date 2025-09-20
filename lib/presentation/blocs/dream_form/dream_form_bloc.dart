@@ -14,6 +14,7 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
     on<FetchDream>(_onFetchDream);
     on<FormInit>(_onFormInit);
     on<DreamFetched>(_onDreamFetched);
+    on<ValidChanged>(_onValidChanged);
   }
 
   void _onDreamSubmitted(DreamSubmitted event, Emitter<DreamFormState> emit) async {
@@ -39,10 +40,15 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
   }
 
   void _onDreamFetched(DreamFetched event, Emitter<DreamFormState> emit) {
-    emit(state.copyWith(dream: event.dream));
+    bool valid = event.dream.title.isNotEmpty && event.dream.description.isNotEmpty;
+    emit(state.copyWith(dream: event.dream, valid: valid));
   }
 
   void _onFormInit(FormInit event, Emitter<DreamFormState> emit) {
     emit(DreamFormState(dream: Dream(mood: 2, type: 0, lucidness: 0, rating: 3, date: DateTime.now())));
+  }
+
+  void _onValidChanged(ValidChanged event, Emitter<DreamFormState> emit) {
+    emit(state.copyWith(valid: event.valid));
   }
 }

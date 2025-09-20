@@ -34,3 +34,8 @@ class DreamFetched extends DreamFormEvent {
 class FormInit extends DreamFormEvent {
   const FormInit();
 }
+
+class ValidChanged extends DreamFormEvent {
+  final bool valid;
+  const ValidChanged({required this.valid});
+}

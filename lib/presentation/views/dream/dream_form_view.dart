@@ -78,6 +78,7 @@ class _TitleRow extends StatelessWidget {
         autofocus: autofocus,
         controller: controller,
         onTapOutside:(event){
+        context.read<DreamFormBloc>().add(ValidChanged(valid: controller.text.isNotEmpty));
         FocusScope.of(context).unfocus();
         },
         decoration: InputDecoration(
@@ -91,8 +92,10 @@ class _TitleRow extends StatelessWidget {
         maxLines: 1,
         validator: (value) {
            if ((value == null || value.isEmpty) && context.read<AppConfigBloc>().state.defaultTitle.isEmpty) {
+             context.read<DreamFormBloc>().add(ValidChanged(valid: false));
              return "empty";
            }
+           context.read<DreamFormBloc>().add(ValidChanged(valid: true));
           return null;
         },
         onFieldSubmitted: (_) {
@@ -122,6 +125,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
         controller: widget.controller,
         focusNode: widget.descriptionFocusNode,
         onTapOutside:(event){
+        context.read<DreamFormBloc>().add(ValidChanged(valid: widget.controller.text.isNotEmpty));
         FocusScope.of(context).unfocus();
         },
         decoration: InputDecoration(
