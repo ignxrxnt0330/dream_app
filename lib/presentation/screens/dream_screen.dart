@@ -69,6 +69,7 @@ child: const Text("nah"),
 ),
                        TextButton(
                          onPressed: () {
+                         context.read<DreamHomeBloc>().add(RemoveDream(dreamId: state.dream.id));
                          Navigator.of(context).pop(); // close dialog
                          Navigator.of(context).pop(); // return to prev
                          },
