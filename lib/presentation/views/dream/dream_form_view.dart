@@ -82,7 +82,7 @@ class _TitleRow extends StatelessWidget {
         },
         decoration: InputDecoration(
           labelText: 'Title',
-          hintText: context.read<AppConfigBloc>().state.defaultTitle != "" ? context.read<AppConfigBloc>().state.defaultTitle : null,
+          hintText: context.read<AppConfigBloc>().state.defaultTitle.isNotEmpty ? context.read<AppConfigBloc>().state.defaultTitle : null,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -90,9 +90,9 @@ class _TitleRow extends StatelessWidget {
         maxLength: 40,
         maxLines: 1,
         validator: (value) {
-          // if (value == null || value.isEmpty) {
-          //   return "empty";
-          // }
+           if ((value == null || value.isEmpty) && context.read<AppConfigBloc>().state.defaultTitle.isEmpty) {
+             return "empty";
+           }
           return null;
         },
         onFieldSubmitted: (_) {
