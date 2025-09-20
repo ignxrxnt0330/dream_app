@@ -48,27 +48,53 @@ class _DreamScreenState extends State<DreamScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.dreamId == 0 ? 'new dream' : 'edit dream'),
-          //TODO:
-          // actions: [
-          // if (widget.dreamId != 0)
-          //   IconButton(
-          //     icon: const Icon(Icons.delete),
-          //     onPressed: () {
-          //       context.read<DreamHomeBloc>().add(RemoveDream(dreamId: widget.dreamId!));
-          //       context.pop();
-          //     },
-          //   ),
-          // BlocBuilder<DreamFormBloc, DreamFormState>(
-          //   builder: (context, state) {
-          //     return IconButton(
-          //       icon: state.dream.isFav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
-          //       onPressed: () {
-          //         context.read<DreamHomeBloc>().add(ToggleFavDream(dreamId: state.dream.id));
-          //       },
-          //     );
-          //   },
-          // ),
-          // ],
+           actions: [
+           if (widget.dreamId != 0)
+             IconButton(
+               icon: const Icon(Icons.delete),
+               onPressed: () {
+               // show dialog
+               showDialog(
+                   context: context,
+                   builder: (context) {
+                   final state = context.read<DreamFormBloc>().state;
+                   return AlertDialog(
+                       title: Text(state.dream.title),
+                       content: const Text("do you really wanna delete this dream ¿?"),
+                       actions: [
+                       TextButton(
+                         onPressed: () {
+                         Navigator.of(context).pop();
+                         },
+child: const Text("nah"),
+),
+                       TextButton(
+                         onPressed: () {
+                         Navigator.of(context).pop(); // close dialog
+                         Navigator.of(context).pop(); // return to prev
+                         },
+child: const Text("ye"),
+),
+                       ],
+                       );
+                   },
+                   );
+
+               },
+             ),
+           BlocBuilder<DreamFormBloc, DreamFormState>(
+             builder: (context, state) {
+               return IconButton(
+                 icon: state.dream.isFav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+                 onPressed: () {
+                   context.read<DreamHomeBloc>().add(ToggleFavDream(dreamId: state.dream.id));
+                   state.dream.isFav = !state.dream.isFav;
+                   setState(() { });
+                 },
+               );
+             },
+           ),
+           ],
         ),
         body: Form(
           key: formKey,
