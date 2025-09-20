@@ -104,6 +104,7 @@ child: const Text("ye"),
                   builder: (context,state) {
                   bool scrollable = state.valid;
                   return CardSwiper(
+                      padding: EdgeInsetsGeometry.all(15),
                       cardsCount: slides.length,
                       cardBuilder: (context, index,a,b) => slides[index],
                       controller: swiperController,
@@ -111,7 +112,6 @@ child: const Text("ye"),
                       isLoop: false,
                       duration: Duration(milliseconds: 100),
                       maxAngle: 0,
-                      threshold: 20,
                       isDisabled: !scrollable,
                       numberOfCardsDisplayed: 1,
                       allowedSwipeDirection: AllowedSwipeDirection.only(right: true,left: true),
