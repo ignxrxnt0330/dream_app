@@ -1,6 +1,7 @@
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/widgets/config/color_picker_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/default_title_dialog.dart';
+import 'package:dream_app/util/custom_date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import "package:dream_app/infrastructure/datasources/sp_config.dart";
@@ -97,17 +98,37 @@ class _ConfigViewState extends State<ConfigView> {
               subtitle: const Text("import your previously exported dreams"),
               trailing: const Icon(Icons.upload_file_rounded),
               onTap: () {
-                context.read<AppConfigBloc>().add(const ImportDreams());
+              context.read<AppConfigBloc>().add(const ImportDreams());
               },
-            ),
+              ),
             ListTile(
-              title: const Text("export dreams"),
-              subtitle: const Text("download your dreams as a json file so you can keep them safe"),
-              trailing: const Icon(Icons.download),
-              onTap: () {
+                title: Row (
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  Text("export dreams"),
+                  BlocBuilder<AppConfigBloc,AppConfigState>(
+                    builder: (context,state) {
+                    print(state.lastExported);
+                    String exportedText = "no export data";
+                    int lastExported = context.read<AppConfigBloc>().state.lastExported;
+                    if( lastExported != 0 ){
+                      DateTime lastExportedDate = DateTime.fromMillisecondsSinceEpoch(lastExported);
+                      exportedText = "last exported ${CustomDateUtils.formatDate(lastExportedDate)}";
+                    }
+
+                    return Text(
+                        exportedText,
+                        style: const TextStyle(fontSize: 11)
+                        );
+                    },
+                    ),
+                  ]),
+                subtitle:Text("download your dreams as a json file so you can keep them safe"),
+                trailing: const Icon(Icons.download),
+                onTap: () {
                 context.read<AppConfigBloc>().add(const ExportDreams());
-              },
-            ),
+                },
+                ),
             const ListTile(
               title: Text("restart app"),
               subtitle: Text("close and reopen the app"),

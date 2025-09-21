@@ -12,7 +12,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   SpConfig config = SpConfig();
   final datasource = IsarDatasource();
 
-  AppConfigBloc() : super(const AppConfigState(true, "", Color(0xFF9C27B0))) {
+  AppConfigBloc() : super(const AppConfigState(true, "", Color(0xFF9C27B0), 0)) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
@@ -21,6 +21,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     on<ImportDreams>(_importDreams);
     on<ExportDreams>(_exportDreams);
     on<DeleteAllDreams>(_deleteAllDreams);
+    on<SetLastExported>(_setLastExported);
   }
 
   void _initConfig() async {
@@ -30,6 +31,10 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       add(SetDefaultTitle(defTitle));
     }
     add(ChangeAppColor(await config.getAppColor()));
+    int? lastExported = await config.getLastExported();
+    if(lastExported != 0){
+      add(SetLastExported(lastExported));
+    }
   }
 
   void _setDarkMode(SetDarkMode event, Emitter<AppConfigState> emit) async {
@@ -47,6 +52,11 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     emit(state.copyWith(defaultTitle: event.title));
   }
 
+  void _setLastExported(SetLastExported event, Emitter<AppConfigState> emit) async {
+    await config.setLastExported(event.lastExported);
+    emit(state.copyWith(lastExported: event.lastExported));
+  }
+
   void _changeAppColor(ChangeAppColor event, Emitter<AppConfigState> emit) async {
     await config.changeAppColor(event.appColor);
     emit(state.copyWith(appColor: event.appColor));
@@ -54,6 +64,10 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
 
   void _exportDreams(ExportDreams event, Emitter<AppConfigState> emit) async {
     await datasource.exportDreams();
+    int lastExported = DateTime.now().millisecondsSinceEpoch;
+    print("export $lastExported");
+    SpConfig().setLastExported(lastExported);
+    emit(state.copyWith(lastExported: lastExported));
   }
 
   void _importDreams(ImportDreams event, Emitter<AppConfigState> emit) async {

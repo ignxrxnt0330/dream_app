@@ -34,3 +34,8 @@ class ImportDreams extends AppConfigEvent {
 class DeleteAllDreams extends AppConfigEvent {
   const DeleteAllDreams();
 }
+
+class SetLastExported extends AppConfigEvent {
+  final int lastExported;
+  const SetLastExported(this.lastExported);
+}

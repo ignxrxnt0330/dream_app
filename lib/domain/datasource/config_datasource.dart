@@ -8,4 +8,6 @@ abstract class ConfigDatasource {
   Future<void> setDefaultTitle(String title);
   Future<Color> getAppColor();
   Future<void> changeAppColor(Color appColor);
+  Future<int> getLastExported();
+  Future<void> setLastExported(int lastExported);
 }

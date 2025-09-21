@@ -80,7 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final int bracket = context.read<DreamStatsBloc>().state.bracket;
       context.read<DreamStatsBloc>().add(FetchStats(bracket: bracket));
     },
-    (BuildContext context) {},
+    (BuildContext context) {
+    },
   ];
 
   @override

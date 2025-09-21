@@ -4,16 +4,18 @@ class AppConfigState extends Equatable {
   final bool darkMode;
   final String defaultTitle;
   final Color appColor;
-  const AppConfigState(this.darkMode, this.defaultTitle, this.appColor);
+  final int lastExported;
+  const AppConfigState(this.darkMode, this.defaultTitle, this.appColor, this.lastExported);
 
-  AppConfigState copyWith({bool? darkMode, String? defaultTitle, Color? appColor}) {
+  AppConfigState copyWith({bool? darkMode, String? defaultTitle, Color? appColor, int? lastExported}) {
     return AppConfigState(
       darkMode ?? this.darkMode,
       defaultTitle ?? this.defaultTitle,
       appColor ?? this.appColor,
+      lastExported ?? this.lastExported,
     );
   }
 
   @override
-  List<Object> get props => [darkMode, defaultTitle, appColor];
+  List<Object> get props => [darkMode, defaultTitle, appColor, lastExported];
 }

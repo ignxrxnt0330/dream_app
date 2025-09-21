@@ -51,4 +51,20 @@ class SpConfig extends ConfigDatasource {
     String color = colorToHex(appColor);
     prefs.setString('appColor', color);
   }
+
+  @override
+  Future<void> setLastExported(int lastExported) async{
+    print("setLastExported $lastExported");
+    prefs = await SharedPreferences.getInstance();
+    prefs.setInt('lastExported', lastExported);
+  }
+
+  @override
+  Future<int> getLastExported() async {
+    prefs = await SharedPreferences.getInstance();
+    int lastExported = prefs.getInt('lastExported') ?? 0;
+    print("getLastExported $lastExported");
+    return lastExported;
+  }
+
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dream_app/infrastructure/datasources/sp_config.dart';
+import 'package:dream_app/util/custom_date_utils.dart';
 import 'package:isar/isar.dart';
 
 part 'dream.g.dart';
@@ -71,17 +72,7 @@ class Dream {
 
   // get year only if its not current, return d/m/y H:m
   String get formattedDate {
-    final now = DateTime.now();
-    final year = date?.year;
-    final month = date?.month.toString().padLeft(2, '0');
-    final day = date?.day.toString().padLeft(2, '0');
-    final hour = date?.hour.toString().padLeft(2, '0');
-    final minute = date?.minute.toString().padLeft(2, '0');
-    if (year == now.year) {
-      return "$day/$month $hour:$minute";
-    } else {
-      return "$day/$month/$year $hour:$minute";
-    }
+    return CustomDateUtils.formatDate(date);
   }
 
   void initNames() {
