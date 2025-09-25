@@ -122,7 +122,7 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<bool> exportDreams() async {
+  Future<bool> exportDreams({bool dialog = true}) async {
     try {
       final List<Dream> dreams = await getAllDreams();
       String data = "[${dreams.map((dream) => dream.toJson()).join(",\n")}]";
@@ -135,8 +135,15 @@ class IsarDatasource extends LocalStorageDatasource {
         final file = await File(filePath).create();
         await file.writeAsString(data);
         if (Platform.isAndroid) {
+        if (dialog) {
           final params = SaveFileDialogParams(sourceFilePath: filePath);
-          final finalPath = await FlutterFileDialog.saveFile(params: params).then((res) => saved = true);
+          await FlutterFileDialog.saveFile(params: params).then((res) => saved = true);
+        } else {
+          final destFile = File(filePath);
+          final bytes = await file.readAsBytes();
+          await destFile.writeAsBytes(bytes).then((res) => saved = true);
+          print("asd");
+        }
 
         }
       } else {
