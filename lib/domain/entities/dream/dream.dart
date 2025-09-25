@@ -13,7 +13,7 @@ class Dream {
   String description;
   DateTime? date;
   List<String> names;
-  int rating = 3; // 0-5
+  double rating = 3; // 0-5
   int lucidness = 0; // 0-3
   int type = 0; // 0-2
   int mood = 3; // 0-5
@@ -44,7 +44,7 @@ class Dream {
     final String? description,
     final DateTime? date,
     final List<String>? names,
-    final int? rating,
+    final double? rating,
     final int? lucidness,
     final int? type,
     final int? mood,

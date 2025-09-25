@@ -70,7 +70,7 @@ const DreamSchema = CollectionSchema(
     r'rating': PropertySchema(
       id: 10,
       name: r'rating',
-      type: IsarType.long,
+      type: IsarType.double,
     ),
     r'title': PropertySchema(
       id: 11,
@@ -132,7 +132,7 @@ void _dreamSerialize(
   writer.writeLong(offsets[7], object.mood);
   writer.writeLong(offsets[8], object.nameCount);
   writer.writeStringList(offsets[9], object.names);
-  writer.writeLong(offsets[10], object.rating);
+  writer.writeDouble(offsets[10], object.rating);
   writer.writeString(offsets[11], object.title);
   writer.writeLong(offsets[12], object.type);
 }
@@ -154,7 +154,7 @@ Dream _dreamDeserialize(
     mood: reader.readLongOrNull(offsets[7]) ?? 3,
     nameCount: reader.readLongOrNull(offsets[8]) ?? 0,
     names: reader.readStringList(offsets[9]) ?? const [],
-    rating: reader.readLongOrNull(offsets[10]) ?? 0,
+    rating: reader.readDoubleOrNull(offsets[10]) ?? 0,
     title: reader.readStringOrNull(offsets[11]) ?? "",
     type: reader.readLongOrNull(offsets[12]) ?? 0,
   );
@@ -189,7 +189,7 @@ P _dreamDeserializeProp<P>(
     case 9:
       return (reader.readStringList(offset) ?? const []) as P;
     case 10:
-      return (reader.readLongOrNull(offset) ?? 0) as P;
+      return (reader.readDoubleOrNull(offset) ?? 0) as P;
     case 11:
       return (reader.readStringOrNull(offset) ?? "") as P;
     case 12:
@@ -1111,46 +1111,55 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Dream, Dream, QAfterFilterCondition> ratingEqualTo(int value) {
+  QueryBuilder<Dream, Dream, QAfterFilterCondition> ratingEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'rating',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> ratingGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'rating',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> ratingLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'rating',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<Dream, Dream, QAfterFilterCondition> ratingBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1159,6 +1168,7 @@ extension DreamQueryFilter on QueryBuilder<Dream, Dream, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -1803,7 +1813,7 @@ extension DreamQueryProperty on QueryBuilder<Dream, Dream, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Dream, int, QQueryOperations> ratingProperty() {
+  QueryBuilder<Dream, double, QQueryOperations> ratingProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'rating');
     });

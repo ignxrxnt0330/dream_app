@@ -12,7 +12,7 @@ class DreamRatingView extends StatefulWidget {
 }
 
 class _DreamRatingViewState extends State<DreamRatingView> {
-  int rating = 3;
+  double rating = 3;
 
   @override
   void initState() {
@@ -46,11 +46,11 @@ class _DreamRatingViewState extends State<DreamRatingView> {
                   Slider(
                       min: 0,
                       max: 5,
-                      divisions: 5,
+                      divisions: 10,
                       allowedInteraction: SliderInteraction.tapAndSlide,
-                      value: rating.toDouble(),
+                      value: rating,
                       onChanged: (value) {
-                        rating = value.toInt();
+                        rating = value;
                         setState(() {});
                         save();
                       })
