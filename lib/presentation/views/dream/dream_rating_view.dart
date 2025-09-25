@@ -36,12 +36,20 @@ class _DreamRatingViewState extends State<DreamRatingView> {
           ),
           Expanded(
             child: FormField(
-              builder: (context) => Column(
+              builder: (formContext) => Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                Center(
+                  child: Wrap(
+                    children: [
+                    ...List.generate(rating.toInt(), (int val) => Icon(Icons.star_sharp, size: 50, color: Theme.of(context).colorScheme.primary)),
+                    rating.toInt() != rating ? Icon(Icons.star_half_sharp, size: 50, color: Theme.of(context).colorScheme.primary): SizedBox.shrink() // odd
+                    ]
+                  ),
+                ),
                   Text(
                     "$rating",
-                    style: const TextStyle(fontSize: 100),
+                    style: const TextStyle(fontSize: 40),
                   ),
                   Slider(
                       min: 0,
