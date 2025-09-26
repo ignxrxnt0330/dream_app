@@ -65,7 +65,6 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   void _exportDreams(ExportDreams event, Emitter<AppConfigState> emit) async {
     await datasource.exportDreams();
     int lastExported = DateTime.now().millisecondsSinceEpoch;
-    print("export $lastExported");
     SpConfig().setLastExported(lastExported);
     emit(state.copyWith(lastExported: lastExported));
   }

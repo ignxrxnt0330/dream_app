@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DreamRatingView extends StatefulWidget {
-  static const name = 'dream_rating_view';
+  static const name = 'dream_ratingview';
   const DreamRatingView({super.key});
 
   @override
@@ -17,7 +17,7 @@ class _DreamRatingViewState extends State<DreamRatingView> {
   @override
   void initState() {
     super.initState();
-    rating = context.read<DreamFormBloc>().state.dream.rating ;
+    rating = context.read<DreamFormBloc>().state.dream.rating;
   }
 
   void save() {
@@ -56,7 +56,7 @@ class _DreamRatingViewState extends State<DreamRatingView> {
                       max: 5,
                       divisions: 10,
                       allowedInteraction: SliderInteraction.tapAndSlide,
-                      value: rating,
+                      value: rating.toDouble(),
                       onChanged: (value) {
                         rating = value;
                         setState(() {});

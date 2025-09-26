@@ -142,7 +142,6 @@ class IsarDatasource extends LocalStorageDatasource {
           final destFile = File(filePath);
           final bytes = await file.readAsBytes();
           await destFile.writeAsBytes(bytes).then((res) => saved = true);
-          print("asd");
         }
 
         }
