@@ -11,7 +11,7 @@ abstract class LocalStorageDatasource {
   Future<void> toggleFavDream(int id);
   Future<List<Dream?>> loadFavoriteDreams({int limit = 10, int offset = 0});
   Future<List<Dream>> getAllDreams({DateTime? start, DateTime? end});
-  Future<bool> exportDreams({bool dialog = true});
+  Future<bool> exportDreams();
   Future<bool> importDreams();
   Future<List<String>>? getAllNames();
   Future<List<Dream>>? searchDreams(String query, {int limit = 10, int offset = 0, names = const [], bool newToOld = true});

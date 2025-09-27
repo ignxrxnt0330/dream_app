@@ -108,6 +108,7 @@ class _ConfigViewState extends State<ConfigView> {
                   Text("export dreams"),
                   BlocBuilder<AppConfigBloc,AppConfigState>(
                     builder: (context,state) {
+                    print(state.lastExported);
                     String exportedText = "no export data";
                     int lastExported = context.read<AppConfigBloc>().state.lastExported;
                     if( lastExported != 0 ){
