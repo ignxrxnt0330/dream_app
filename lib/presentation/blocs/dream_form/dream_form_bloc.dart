@@ -7,7 +7,7 @@ part 'dream_form_event.dart';
 part 'dream_form_state.dart';
 
 class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
-  DreamFormBloc() : super(DreamFormState(dream: Dream())) {
+  DreamFormBloc() : super(DreamFormState(dream: Dream(), allNames: [])) {
     on<DreamSubmitted>(_onDreamSubmitted);
     on<IndexChanged>(_onIndexChanged);
     on<FieldChanged>(_onFieldChanged);
@@ -44,8 +44,12 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
     emit(state.copyWith(dream: event.dream, valid: valid));
   }
 
-  void _onFormInit(FormInit event, Emitter<DreamFormState> emit) {
-    emit(DreamFormState(dream: Dream(mood: 2, type: 0, lucidness: 0, rating: 3, date: DateTime.now())));
+  void _onFormInit(FormInit event, Emitter<DreamFormState> emit) async{
+    emit(DreamFormState(
+          dream: Dream(mood: 2, type: 0, lucidness: 0, rating: 3, date: DateTime.now()),
+          allNames: []
+          ));
+    List<String> allNames = await IsarDatasource().getAllNames();
   }
 
   void _onValidChanged(ValidChanged event, Emitter<DreamFormState> emit) {

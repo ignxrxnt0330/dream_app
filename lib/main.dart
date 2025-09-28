@@ -5,13 +5,14 @@ import 'package:dream_app/config/router/app_router.dart';
 import 'package:dream_app/config/theme/app_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl_standalone.dart';
+import 'package:multi_trigger_autocomplete_plus/multi_trigger_autocomplete_plus.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //FIXME:
   await findSystemLocale();
 
-  runApp(const MainApp());
+  runApp(Portal(child: const MainApp()));
 }
 
 class MainApp extends StatelessWidget {

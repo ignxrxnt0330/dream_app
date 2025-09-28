@@ -1,10 +1,12 @@
 
 import 'package:date_field/date_field.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
+import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:multi_trigger_autocomplete_plus/multi_trigger_autocomplete_plus.dart';
 
 class DreamFormView extends StatefulWidget {
   static const name = 'dream_form_view';
@@ -20,6 +22,7 @@ class _DreamFormViewState extends State<DreamFormView> {
   final dateController = TextEditingController();
   final descriptionFocusNode = FocusNode();
   List<String> names = [];
+  List<String> allNames = [];
 
   @override
   void initState() {
@@ -28,6 +31,12 @@ class _DreamFormViewState extends State<DreamFormView> {
     titleController.text = dream.title ;
     descriptionController.text = dream.description;
     names = dream.names;
+
+    IsarDatasource().getAllNames().then((names){
+        allNames = names;
+        allNames.sort((a,b) => a.compareTo(b));
+        setState(() { });
+        });
   }
 
   void save() {
@@ -55,7 +64,7 @@ class _DreamFormViewState extends State<DreamFormView> {
             const SizedBox(height: 20),
             _TitleRow(titleController, descriptionFocusNode, context.read<DreamFormBloc>().state.dream.id == -9223372036854775808), // -9223372036854775808 is null
             const SizedBox(height: 20),
-            _DescriptionRow(descriptionController, save, descriptionFocusNode),
+            _DescriptionRow(descriptionController, save, descriptionFocusNode, allNames),
             const SizedBox(height: 20),
             _NamesRow(names),
           ],
@@ -110,7 +119,8 @@ class _DescriptionRow extends StatefulWidget {
   final TextEditingController controller;
   final Function save;
   final FocusNode descriptionFocusNode;
-  const _DescriptionRow(this.controller, this.save, this.descriptionFocusNode);
+  final List<String> allNames;
+  const _DescriptionRow(this.controller, this.save, this.descriptionFocusNode, this.allNames);
 
   @override
   State<_DescriptionRow> createState() => _DescriptionRowState();
@@ -120,32 +130,62 @@ class _DescriptionRowState extends State<_DescriptionRow> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: TextFormField(
-        controller: widget.controller,
-        focusNode: widget.descriptionFocusNode,
-        onTapOutside:(event){
-        context.read<DreamFormBloc>().add(ValidChanged(valid: widget.controller.text.isNotEmpty));
-        FocusScope.of(context).unfocus();
-        },
-        decoration: InputDecoration(
-          labelText: 'Description',
-          hintText: "asdasdasd...",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
+    return MultiTriggerAutocomplete(
+        optionsAlignment: OptionsAlignment.topStart,
+        autocompleteTriggers: [
+        AutocompleteTrigger(
+          trigger: '@',
+          triggerEnd: " ",
+          optionsViewBuilder: (context, autocompleteQuery, controller) {
+          List<String> names = widget.allNames.where((n) => n.toLowerCase().contains(autocompleteQuery.query.toLowerCase())).toList();
+          print(autocompleteQuery.query);
+          print(names);
+          return ListView.builder(
+              //TODO: custom class
+              itemBuilder: (context, index) {
+              final name = names[index];     
+              return ListTile(
+                  title: Text(name),
+                  onTap: () {
+                  final autocomplete = MultiTriggerAutocomplete.of(context);
+                  return autocomplete.acceptAutocompleteOption(name);
+                  });
+              },
+itemCount: names.length,
+);
+          },
           ),
-        ),
-        minLines: 5,
-        maxLines: 20,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "empty";
-          }
-          widget.save();
-          return null;
-        }
-      ),
-    );
+        ],
+        // Add the text field widget you want to use for autocomplete
+        fieldViewBuilder: (context, controller, focusNode) {
+        return TextFormField(
+                controller: controller,
+                focusNode: focusNode,
+                onTapOutside:(event){
+                context.read<DreamFormBloc>().add(ValidChanged(valid: controller.text.isNotEmpty));
+                FocusScope.of(context).unfocus();
+                },
+decoration: InputDecoration(
+              labelText: 'Description',
+              hintText: "asdasdasd...",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+minLines: 5,
+maxLines: 20,
+validator: (value) {
+if (value == null || value.isEmpty) {
+return "empty";
+}
+widget.controller.text = controller.text;
+widget.save();
+              return null;
+              }
+  );
+},
+  );
+
   }
 }
 

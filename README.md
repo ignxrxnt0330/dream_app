@@ -10,7 +10,7 @@ A simple dream journaling app.
 - [License](#license)
 - [Project status](#project_status)
 
-## Instalation
+## Installation
     
 ## Usage
 ## Features
