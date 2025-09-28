@@ -76,10 +76,9 @@ class Dream {
   }
 
   void initNames() {
-    const String excluded = ',.!?"()-';
-    final regex = RegExp('[$excluded]');
+    final regexp = RegExp(r'@(\w+)', multiLine: true);
 
-    names = description.split(RegExp(r'[\s\n]')).where((element) => element.startsWith("@")).toList().map((e) => e.substring(1).toLowerCase().replaceAll(regex, "")).toSet().toList();
+    names = regexp.allMatches(description).map((match) => match.group(1)).whereType<String>().toList();
   }
 
   void initHidden() async {
