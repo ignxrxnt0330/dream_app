@@ -47,16 +47,6 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
           return controller;
           });
 
-
-      @override
-        void dispose() {
-          for (final controller in scrollControllers) {
-            controller.dispose();
-          }
-          tabBarController.dispose();
-          super.dispose();
-        }
-
     }
 
   void onChangeIndex (int index) {

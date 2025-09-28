@@ -5,6 +5,7 @@ import 'package:dream_app/config/router/app_router.dart';
 import 'package:dream_app/config/theme/app_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl_standalone.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //FIXME:
