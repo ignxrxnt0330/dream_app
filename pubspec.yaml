@@ -52,6 +52,7 @@ dependencies:
   flutter_calendar_carousel: ^2.5.4
   fl_chart: ^1.0.0
   flutter_card_swiper: ^7.0.2
+  cursor_autocomplete_options: ^2.1.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,10 @@
 
+import 'dart:async';
+
+import 'package:cursor_autocomplete_options/cursor_autocomplete_options.dart';
 import 'package:date_field/date_field.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
+import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +24,7 @@ class _DreamFormViewState extends State<DreamFormView> {
   final dateController = TextEditingController();
   final descriptionFocusNode = FocusNode();
   List<String> names = [];
+  late final OptionsController<String,String> optionsController;  
 
   @override
   void initState() {
@@ -28,6 +33,14 @@ class _DreamFormViewState extends State<DreamFormView> {
     titleController.text = dream.title ;
     descriptionController.text = dream.description;
     names = dream.names;
+
+    optionsController = OptionsController(textfieldFocusNode: descriptionFocusNode, textEditingController: descriptionController,
+        context: context,
+        tileHeight: 100,
+        onTextAddedCallback: (option, value){
+        value.copyWith(text: value.text+option);
+        },
+        );
   }
 
   void save() {
@@ -53,9 +66,9 @@ class _DreamFormViewState extends State<DreamFormView> {
             const SizedBox(height: 10),
             const _DateTimeRow(),
             const SizedBox(height: 20),
-            _TitleRow(titleController, descriptionFocusNode, context.read<DreamFormBloc>().state.dream.id == -9223372036854775808), // -9223372036854775808 is null
+            _TitleRow(titleController, descriptionFocusNode, context.read<DreamFormBloc>().state.dream.id == -9223372036854775808),
             const SizedBox(height: 20),
-            _DescriptionRow(descriptionController, save, descriptionFocusNode),
+            _DescriptionRow(descriptionController, save, descriptionFocusNode, optionsController),
             const SizedBox(height: 20),
             _NamesRow(names),
           ],
@@ -101,8 +114,8 @@ class _TitleRow extends StatelessWidget {
         onFieldSubmitted: (_) {
           FocusScope.of(context).requestFocus(nextFocusNode);
         },
-      ),
-    );
+           ),
+           );
   }
 }
 
@@ -110,7 +123,8 @@ class _DescriptionRow extends StatefulWidget {
   final TextEditingController controller;
   final Function save;
   final FocusNode descriptionFocusNode;
-  const _DescriptionRow(this.controller, this.save, this.descriptionFocusNode);
+  final OptionsController optionsController;
+  const _DescriptionRow(this.controller, this.save, this.descriptionFocusNode, this.optionsController);
 
   @override
   State<_DescriptionRow> createState() => _DescriptionRowState();
@@ -120,9 +134,12 @@ class _DescriptionRowState extends State<_DescriptionRow> {
 
   @override
   Widget build(BuildContext context) {
+    widget.optionsController.updateContext(context); // update suggestions widget's state
+
     return Material(
       child: TextFormField(
         controller: widget.controller,
+        style: const TextStyle(height: 1,fontSize: 14),
         focusNode: widget.descriptionFocusNode,
         onTapOutside:(event){
         context.read<DreamFormBloc>().add(ValidChanged(valid: widget.controller.text.isNotEmpty));
@@ -143,9 +160,25 @@ class _DescriptionRowState extends State<_DescriptionRow> {
           }
           widget.save();
           return null;
-        }
-      ),
-    );
+        },
+onChanged: (value) async{
+             if (value.isEmpty) return;
+             final cursorPositionIndex =
+               widget.controller.selection.base.offset;
+
+             final typedValue = value[cursorPositionIndex - 1];
+
+             final isTypedCaracterHashtag = typedValue == '@';
+             List<String> allNames = await IsarDatasource().getAllNames() ?? [];
+             if (isTypedCaracterHashtag) {
+               final List<FileStructureOptions<dynamic, String>> suggestions = 
+                 allNames.map((n) => FileStructureOptions<String,String>(item: n)).toList();
+
+               widget.optionsController.showSimpleOptions(children: suggestions);
+             }
+           },
+             ),
+             );
   }
 }
 
