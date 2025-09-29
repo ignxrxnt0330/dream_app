@@ -133,26 +133,34 @@ class _DescriptionRowState extends State<_DescriptionRow> {
     return MultiTriggerAutocomplete(
         optionsAlignment: OptionsAlignment.topStart,
         autocompleteTriggers: [
+        //TODO: AutocompleteTrigger space, hide open option ¿?
         AutocompleteTrigger(
           trigger: '@',
           triggerEnd: " ",
           optionsViewBuilder: (context, autocompleteQuery, controller) {
           List<String> names = widget.allNames.where((n) => n.toLowerCase().contains(autocompleteQuery.query.toLowerCase())).toList();
-          print(autocompleteQuery.query);
-          print(names);
-          return ListView.builder(
-              //TODO: custom class
-              itemBuilder: (context, index) {
-              final name = names[index];     
-              return ListTile(
-                  title: Text(name),
-                  onTap: () {
-                  final autocomplete = MultiTriggerAutocomplete.of(context);
-                  return autocomplete.acceptAutocompleteOption(name);
-                  });
-              },
-itemCount: names.length,
-);
+          return Opacity(
+          opacity: 0.75,
+            child: Container(
+                color: Colors.black,
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.15,
+                  ),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                    final name = names[index];     
+                    return ListTile(
+                        title: Text(name),
+                        onTap: () {
+                        final autocomplete = MultiTriggerAutocomplete.of(context);
+                        return autocomplete.acceptAutocompleteOption(name);
+                        });
+                    },
+                itemCount: names.length,
+              ),
+            ),
+          );
           },
           ),
         ],
