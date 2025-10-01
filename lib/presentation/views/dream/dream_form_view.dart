@@ -3,7 +3,6 @@ import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_trigger_autocomplete_plus/multi_trigger_autocomplete_plus.dart';
@@ -152,6 +151,7 @@ class _DescriptionRow extends StatefulWidget {
 
 class _DescriptionRowState extends State<_DescriptionRow> {
   FocusNode? descriptionFocusNode;
+  TextEditingController? _lastController;
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +162,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
           AutocompleteTrigger(
             trigger: '@',
             triggerEnd: " ",
-            optionsViewBuilder: (context, autocompleteQuery, controller) {
+            optionsViewBuilder: (context, autocompleteQuery, _) {
               List<String> names = widget.allNames
                   .where((n) => n
                       .toLowerCase()
@@ -196,19 +196,36 @@ class _DescriptionRowState extends State<_DescriptionRow> {
         ],
         fieldViewBuilder: (context, controller, focusNode) {
           descriptionFocusNode = focusNode;
+          if (_lastController != controller) {
+            _lastController = controller;
+
+            if (controller.text != widget.controller.text) {
+              controller.text = widget.controller.text;
+              controller.selection = TextSelection.fromPosition(
+                  TextPosition(offset: controller.text.length),
+                  );
+            }
+
+            controller.addListener(() {
+                if (widget.controller.text != controller.text) {
+                widget.controller.text = controller.text;
+                widget.save();
+                }
+                });
+          }
 
           return TextFormField(
-            controller: controller,
-            focusNode: focusNode,
-            onTapOutside: (event) {
+              controller: controller,
+              focusNode: focusNode,
+              onTapOutside: (event) {
               context
-                  .read<DreamFormBloc>()
-                  .add(ValidChanged(valid: controller.text.isNotEmpty));
+              .read<DreamFormBloc>()
+              .add(ValidChanged(valid: widget.controller.text.isNotEmpty));
               FocusScope.of(context).unfocus();
             },
             decoration: InputDecoration(
               labelText: 'Description',
-              hintText: 'Write your dream...',
+              hintText: 'asdasdasd...',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -219,7 +236,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
               if (value == null || value.isEmpty) {
                 return 'empty';
               }
-              widget.controller.text = controller.text;
+              widget.controller.text = widget.controller.text;
               widget.save();
               return null;
             },
