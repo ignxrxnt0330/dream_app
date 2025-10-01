@@ -7,7 +7,8 @@ class BiometricsValidator extends StatefulWidget {
   final String obj;
   final String redirUrl;
 
-  const BiometricsValidator({super.key, required this.redirUrl, required this.obj});
+  const BiometricsValidator(
+      {super.key, required this.redirUrl, required this.obj});
 
   @override
   State<BiometricsValidator> createState() => _BiometricsValidatorState();

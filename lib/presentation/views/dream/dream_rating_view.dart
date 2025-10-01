@@ -21,7 +21,8 @@ class _DreamRatingViewState extends State<DreamRatingView> {
   }
 
   void save() {
-    Dream dream = context.read<DreamFormBloc>().state.dream.copyWith(rating: rating);
+    Dream dream =
+        context.read<DreamFormBloc>().state.dream.copyWith(rating: rating);
     context.read<DreamFormBloc>().add(FieldChanged(dream));
   }
 
@@ -39,14 +40,20 @@ class _DreamRatingViewState extends State<DreamRatingView> {
               builder: (formContext) => Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                Center(
-                  child: Wrap(
-                    children: [
-                    ...List.generate(rating.toInt(), (int val) => Icon(Icons.star_sharp, size: 50, color: Theme.of(context).colorScheme.primary)),
-                    rating.toInt() != rating ? Icon(Icons.star_half_sharp, size: 50, color: Theme.of(context).colorScheme.primary): SizedBox.shrink() // odd
-                    ]
+                  Center(
+                    child: Wrap(children: [
+                      ...List.generate(
+                          rating.toInt(),
+                          (int val) => Icon(Icons.star_sharp,
+                              size: 50,
+                              color: Theme.of(context).colorScheme.primary)),
+                      rating.toInt() != rating
+                          ? Icon(Icons.star_half_sharp,
+                              size: 50,
+                              color: Theme.of(context).colorScheme.primary)
+                          : SizedBox.shrink() // odd
+                    ]),
                   ),
-                ),
                   Text(
                     "$rating",
                     style: const TextStyle(fontSize: 40),

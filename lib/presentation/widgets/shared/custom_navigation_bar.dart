@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 class CustomBottomNavigation extends StatelessWidget {
   final int selectedIndex;
   final List<Function> actions;
-  const CustomBottomNavigation({super.key, required this.selectedIndex, required this.actions});
+  const CustomBottomNavigation(
+      {super.key, required this.selectedIndex, required this.actions});
 
   void onItemTapped(BuildContext context, int index) {
     if (selectedIndex == index) {

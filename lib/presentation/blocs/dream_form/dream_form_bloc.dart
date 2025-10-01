@@ -17,9 +17,10 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
     on<ValidChanged>(_onValidChanged);
   }
 
-  void _onDreamSubmitted(DreamSubmitted event, Emitter<DreamFormState> emit) async {
+  void _onDreamSubmitted(
+      DreamSubmitted event, Emitter<DreamFormState> emit) async {
     // upload dream
-     state.dream.initMiscFields();
+    state.dream.initMiscFields();
     final id = await IsarDatasource().saveDream(state.dream);
     emit(state.copyWith(dream: state.dream.copyWith(id: id)));
   }
@@ -32,7 +33,8 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
     emit(state.copyWith(dream: event.dream));
   }
 
-  Future<void> _onFetchDream(FetchDream event, Emitter<DreamFormState> emit) async {
+  Future<void> _onFetchDream(
+      FetchDream event, Emitter<DreamFormState> emit) async {
     Dream? dream = await IsarDatasource().getDream(event.dreamId);
     if (dream == null) return;
     emit(state.copyWith(dream: dream, currentIndex: 0));
@@ -40,15 +42,16 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
   }
 
   void _onDreamFetched(DreamFetched event, Emitter<DreamFormState> emit) {
-    bool valid = event.dream.title.isNotEmpty && event.dream.description.isNotEmpty;
+    bool valid =
+        event.dream.title.isNotEmpty && event.dream.description.isNotEmpty;
     emit(state.copyWith(dream: event.dream, valid: valid));
   }
 
-  void _onFormInit(FormInit event, Emitter<DreamFormState> emit) async{
+  void _onFormInit(FormInit event, Emitter<DreamFormState> emit) async {
     emit(DreamFormState(
-          dream: Dream(mood: 2, type: 0, lucidness: 0, rating: 3, date: DateTime.now()),
-          allNames: []
-          ));
+        dream: Dream(
+            mood: 2, type: 0, lucidness: 0, rating: 3, date: DateTime.now()),
+        allNames: []));
     List<String> allNames = await IsarDatasource().getAllNames();
   }
 

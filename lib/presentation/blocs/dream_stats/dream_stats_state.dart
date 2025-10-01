@@ -8,14 +8,27 @@ class DreamStatsState extends Equatable {
   final Streak currentStreak;
   final Streak longestStreak;
   final int mostActiveDotW;
-  final Map<String,int> names;
-  final Map<String,int> lucidness;
-  final Map<String,int> types;
-  final Map<String,int> mood;
-  final Map<String,int> dreams;
+  final Map<String, int> names;
+  final Map<String, int> lucidness;
+  final Map<String, int> types;
+  final Map<String, int> mood;
+  final Map<String, int> dreams;
   final double scroll;
 
-  const DreamStatsState({this.bracket = 7, this.dreamCount = 0, this.wordCount = 0, this.charCount = 0, required this.currentStreak, required this.longestStreak, required this.mostActiveDotW, required this.names,required this.lucidness, required this.types, this.scroll = 0, required this.mood,required this.dreams});
+  const DreamStatsState(
+      {this.bracket = 7,
+      this.dreamCount = 0,
+      this.wordCount = 0,
+      this.charCount = 0,
+      required this.currentStreak,
+      required this.longestStreak,
+      required this.mostActiveDotW,
+      required this.names,
+      required this.lucidness,
+      required this.types,
+      this.scroll = 0,
+      required this.mood,
+      required this.dreams});
 
   DreamStatsState copyWith({
     int? bracket,
@@ -25,12 +38,12 @@ class DreamStatsState extends Equatable {
     Streak? currentStreak,
     Streak? longestStreak,
     int? mostActiveDotW,
-    Map<String,int>? names,
-    Map<String,int>? lucidness,
-    Map<String,int>? types,
+    Map<String, int>? names,
+    Map<String, int>? lucidness,
+    Map<String, int>? types,
     double? scroll,
-    Map<String,int>? mood,
-    Map<String,int>? dreams,
+    Map<String, int>? mood,
+    Map<String, int>? dreams,
   }) =>
       DreamStatsState(
         bracket: bracket ?? this.bracket,
@@ -49,17 +62,18 @@ class DreamStatsState extends Equatable {
       );
 
   @override
-    List<Object> get props => [
-    bracket,
-    dreamCount,
-    wordCount,
-    charCount,
-    currentStreak,
-    longestStreak,
-    mostActiveDotW,
-    names,
-    lucidness,
-    types,
-    dreams,
-    mood];
+  List<Object> get props => [
+        bracket,
+        dreamCount,
+        wordCount,
+        charCount,
+        currentStreak,
+        longestStreak,
+        mostActiveDotW,
+        names,
+        lucidness,
+        types,
+        dreams,
+        mood
+      ];
 }

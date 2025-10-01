@@ -8,7 +8,13 @@ class CustomListTile extends StatefulWidget {
   final int value;
   final bool selected;
   final VoidCallback onTap;
-  const CustomListTile({super.key, required this.icon, required this.title, required this.value, required this.selected, required this.onTap});
+  const CustomListTile(
+      {super.key,
+      required this.icon,
+      required this.title,
+      required this.value,
+      required this.selected,
+      required this.onTap});
   //TODO: on tap => next view
 
   @override
@@ -23,7 +29,9 @@ class CustomListTileState extends State<CustomListTile> {
     return ListTile(
       leading: Icon(widget.icon),
       title: Text(widget.title),
-      tileColor: widget.selected ? (state.darkMode ? Colors.grey.shade900 : Colors.grey.shade300) : Colors.transparent,
+      tileColor: widget.selected
+          ? (state.darkMode ? Colors.grey.shade900 : Colors.grey.shade300)
+          : Colors.transparent,
       onTap: widget.onTap,
     );
   }

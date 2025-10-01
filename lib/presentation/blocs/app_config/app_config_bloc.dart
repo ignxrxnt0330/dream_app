@@ -12,7 +12,8 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   SpConfig config = SpConfig();
   final datasource = IsarDatasource();
 
-  AppConfigBloc() : super(const AppConfigState(true, "", Color(0xFF9C27B0), 0)) {
+  AppConfigBloc()
+      : super(const AppConfigState(true, "", Color(0xFF9C27B0), 0)) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
@@ -32,7 +33,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     }
     add(ChangeAppColor(await config.getAppColor()));
     int? lastExported = await config.getLastExported();
-    if(lastExported != 0){
+    if (lastExported != 0) {
       add(SetLastExported(lastExported));
     }
   }
@@ -42,22 +43,26 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     emit(state.copyWith(darkMode: event.darkMode));
   }
 
-  void _toggleDarkMode(ToggleDarkMode event, Emitter<AppConfigState> emit) async {
+  void _toggleDarkMode(
+      ToggleDarkMode event, Emitter<AppConfigState> emit) async {
     await config.toggleDarkMode();
     emit(state.copyWith(darkMode: !state.darkMode));
   }
 
-  void _setDefaultTitle(SetDefaultTitle event, Emitter<AppConfigState> emit) async {
+  void _setDefaultTitle(
+      SetDefaultTitle event, Emitter<AppConfigState> emit) async {
     await config.setDefaultTitle(event.title);
     emit(state.copyWith(defaultTitle: event.title));
   }
 
-  void _setLastExported(SetLastExported event, Emitter<AppConfigState> emit) async {
+  void _setLastExported(
+      SetLastExported event, Emitter<AppConfigState> emit) async {
     await config.setLastExported(event.lastExported);
     emit(state.copyWith(lastExported: event.lastExported));
   }
 
-  void _changeAppColor(ChangeAppColor event, Emitter<AppConfigState> emit) async {
+  void _changeAppColor(
+      ChangeAppColor event, Emitter<AppConfigState> emit) async {
     await config.changeAppColor(event.appColor);
     emit(state.copyWith(appColor: event.appColor));
   }
@@ -74,7 +79,8 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     if (res) Restart.restartApp();
   }
 
-  void _deleteAllDreams(DeleteAllDreams event, Emitter<AppConfigState> emit) async {
+  void _deleteAllDreams(
+      DeleteAllDreams event, Emitter<AppConfigState> emit) async {
     await datasource.deleteAllDreams();
     Restart.restartApp();
   }

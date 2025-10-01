@@ -22,7 +22,8 @@ class _DreamMoodViewState extends State<DreamMoodView> {
   }
 
   void save() {
-    Dream dream = context.read<DreamFormBloc>().state.dream.copyWith(mood: mood);
+    Dream dream =
+        context.read<DreamFormBloc>().state.dream.copyWith(mood: mood);
     context.read<DreamFormBloc>().add(FieldChanged(dream));
   }
 

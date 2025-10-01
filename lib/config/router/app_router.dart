@@ -33,7 +33,7 @@ final appRouter = GoRouter(
         final obj = state.pathParameters['obj'] ?? "";
         final finalUrl = state.pathParameters['finalUrl'] ?? "";
         return BiometricsValidator(
-          obj:obj,
+          obj: obj,
           redirUrl: finalUrl,
         );
       },

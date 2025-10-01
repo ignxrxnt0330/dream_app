@@ -70,16 +70,27 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<List<Dream>> loadDreams({int limit = 10, int offset = 0, String order = "date", bool asc = false, bool fav = false, bool hidden = false, int type = 3}) async {
+  Future<List<Dream>> loadDreams(
+      {int limit = 10,
+      int offset = 0,
+      String order = "date",
+      bool asc = false,
+      bool fav = false,
+      bool hidden = false,
+      int type = 3}) async {
     final isar = await db;
     final dreams = await isar.dreams
         .buildQuery(
           filter: FilterGroup.and([
             if (fav) FilterCondition.equalTo(property: 'isFav', value: true),
-            if (hidden) FilterCondition.equalTo(property: 'hidden', value: true),
-            if (type != 3) FilterCondition.equalTo(property: 'type', value: type),
+            if (hidden)
+              FilterCondition.equalTo(property: 'hidden', value: true),
+            if (type != 3)
+              FilterCondition.equalTo(property: 'type', value: type),
           ]),
-          sortBy: [SortProperty(property: order, sort: asc ? Sort.asc : Sort.desc)],
+          sortBy: [
+            SortProperty(property: order, sort: asc ? Sort.asc : Sort.desc)
+          ],
           offset: offset,
           limit: limit,
         )
@@ -88,36 +99,53 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<int> homeDreamCount({ bool fav = false, bool hidden = false, int type = 3}) async {
+  Future<int> homeDreamCount(
+      {bool fav = false, bool hidden = false, int type = 3}) async {
     final isar = await db;
     final count = await isar.dreams
-      .buildQuery(
+        .buildQuery(
           filter: FilterGroup.and([
             if (fav) FilterCondition.equalTo(property: 'isFav', value: true),
-            if (hidden) FilterCondition.equalTo(property: 'hidden', value: true),
-            if (type != 3) FilterCondition.equalTo(property: 'type', value: type),
+            if (hidden)
+              FilterCondition.equalTo(property: 'hidden', value: true),
+            if (type != 3)
+              FilterCondition.equalTo(property: 'type', value: type),
           ]),
-          ).count();
+        )
+        .count();
     return count;
   }
 
   @override
-  Future<List<Dream?>> loadFavoriteDreams({int limit = 10, int offset = 0}) async {
+  Future<List<Dream?>> loadFavoriteDreams(
+      {int limit = 10, int offset = 0}) async {
     final isar = await db;
-    final List<Dream> dreams = await isar.dreams.where().filter().isFavEqualTo(true).sortByDateDesc().offset(offset).limit(limit).findAll();
+    final List<Dream> dreams = await isar.dreams
+        .where()
+        .filter()
+        .isFavEqualTo(true)
+        .sortByDateDesc()
+        .offset(offset)
+        .limit(limit)
+        .findAll();
     return dreams;
   }
 
   @override
   Future<List<Dream>> getAllDreams({DateTime? start, DateTime? end}) async {
     final isar = await db;
-    final  dreams = await isar.dreams
+    final dreams = await isar.dreams
         .buildQuery(
           filter: FilterGroup.and([
-            if (start != null && end != null) 
-            FilterCondition.between(property: 'date', lower: start,upper: end.add(Duration(days: 1)),includeLower: false),
+            if (start != null && end != null)
+              FilterCondition.between(
+                  property: 'date',
+                  lower: start,
+                  upper: end.add(Duration(days: 1)),
+                  includeLower: false),
           ]),
-        ).findAll();
+        )
+        .findAll();
     return dreams.cast<Dream>();
   }
 
@@ -136,7 +164,8 @@ class IsarDatasource extends LocalStorageDatasource {
         await file.writeAsString(data);
         if (Platform.isAndroid) {
           final params = SaveFileDialogParams(sourceFilePath: filePath);
-          await FlutterFileDialog.saveFile(params: params).then((res) => saved = true);
+          await FlutterFileDialog.saveFile(params: params)
+              .then((res) => saved = true);
         }
       } else {
         return saved;
@@ -178,23 +207,48 @@ class IsarDatasource extends LocalStorageDatasource {
   @override
   Future<List<String>> getAllNames() async {
     final isar = await db;
-    final List<String> allNames = await isar.dreams.where().findAll().then((dreams) {
-      return dreams.map((dream) => dream.names).expand((element) => element).toSet().toList();
+    final List<String> allNames =
+        await isar.dreams.where().findAll().then((dreams) {
+      return dreams
+          .map((dream) => dream.names)
+          .expand((element) => element)
+          .toSet()
+          .toList();
     });
     return allNames;
   }
 
   @override
-  Future<List<Dream>>? searchDreams(String query, {int limit = 10, int offset = 0, names = const <String>[], newToOld = true}) async {
+  Future<List<Dream>>? searchDreams(String query,
+      {int limit = 10,
+      int offset = 0,
+      names = const <String>[],
+      newToOld = true}) async {
     final isar = await db;
-    final dreams = await isar.dreams.where().filter().descriptionContains(query, caseSensitive: false).or().titleContains(query, caseSensitive: false).sortByDateDesc().offset(offset).limit(limit).findAll();
+    final dreams = await isar.dreams
+        .where()
+        .filter()
+        .descriptionContains(query, caseSensitive: false)
+        .or()
+        .titleContains(query, caseSensitive: false)
+        .sortByDateDesc()
+        .offset(offset)
+        .limit(limit)
+        .findAll();
     return dreams;
   }
 
   @override
-  Future<int> searchDreamsResultCount(String query, {names = const <String>[]}) async {
+  Future<int> searchDreamsResultCount(String query,
+      {names = const <String>[]}) async {
     final isar = await db;
-    final int dreamCount = await isar.dreams.where().filter().descriptionContains(query, caseSensitive: false).or().titleContains(query, caseSensitive: false).count();
+    final int dreamCount = await isar.dreams
+        .where()
+        .filter()
+        .descriptionContains(query, caseSensitive: false)
+        .or()
+        .titleContains(query, caseSensitive: false)
+        .count();
     return dreamCount;
   }
 
@@ -202,7 +256,8 @@ class IsarDatasource extends LocalStorageDatasource {
   Future<int> dreamCount(int bracket) async {
     DateTime date = DateTime.now().subtract(Duration(days: bracket));
     final isar = await db;
-    final int dreamCount = await isar.dreams.where().filter().dateGreaterThan(date).count();
+    final int dreamCount =
+        await isar.dreams.where().filter().dateGreaterThan(date).count();
     return dreamCount;
   }
 
@@ -211,10 +266,22 @@ class IsarDatasource extends LocalStorageDatasource {
     int streak = 0;
 
     final isar = await db;
-    List<DateTime?> dates = await isar.dreams.where(distinct: true).sortByDateDesc().dateProperty().findAll();
-    if (dates.isEmpty) return Streak(streak: streak, streakStart: DateTime.now(), streakEnd: DateTime.now());
+    List<DateTime?> dates = await isar.dreams
+        .where(distinct: true)
+        .sortByDateDesc()
+        .dateProperty()
+        .findAll();
+    if (dates.isEmpty)
+      return Streak(
+          streak: streak,
+          streakStart: DateTime.now(),
+          streakEnd: DateTime.now());
 
-    dates = dates.where((date) => date != null).map((date) => DateTime(date!.year, date.month, date.day)).toSet().toList();
+    dates = dates
+        .where((date) => date != null)
+        .map((date) => DateTime(date!.year, date.month, date.day))
+        .toSet()
+        .toList();
 
     DateTime streakEnd = dates.last ?? DateTime.now();
     DateTime streakStart = dates.last ?? DateTime.now();
@@ -223,9 +290,12 @@ class IsarDatasource extends LocalStorageDatasource {
       final currentDate = dates[i];
       final previousDate = dates[i - 1 != -1 ? i - 1 : i];
       if (currentDate == null || previousDate == null) continue;
-      if (currentDate.day == previousDate.day && currentDate.month == previousDate.month && currentDate.year == previousDate.year) continue;
+      if (currentDate.day == previousDate.day &&
+          currentDate.month == previousDate.month &&
+          currentDate.year == previousDate.year) continue;
 
-      final isNextDay = previousDate.day == currentDate.add(const Duration(days: 1)).day;
+      final isNextDay =
+          previousDate.day == currentDate.add(const Duration(days: 1)).day;
 
       if (isNextDay) {
         streak++;
@@ -236,17 +306,30 @@ class IsarDatasource extends LocalStorageDatasource {
         streakEnd = previousDate;
       }
     }
-    return Streak(streak: streak, streakStart: streakStart, streakEnd: streakEnd);
+    return Streak(
+        streak: streak, streakStart: streakStart, streakEnd: streakEnd);
   }
 
   @override
   Future<Streak> longestStreak() async {
     int streak = 0;
     final isar = await db;
-    List<DateTime?> dates = await isar.dreams.where(distinct: true).sortByDateDesc().dateProperty().findAll();
-    if (dates.isEmpty) return Streak(streak: streak, streakStart: DateTime.now(), streakEnd: DateTime.now());
+    List<DateTime?> dates = await isar.dreams
+        .where(distinct: true)
+        .sortByDateDesc()
+        .dateProperty()
+        .findAll();
+    if (dates.isEmpty)
+      return Streak(
+          streak: streak,
+          streakStart: DateTime.now(),
+          streakEnd: DateTime.now());
 
-    dates = dates.where((date) => date != null).map((date) => DateTime(date!.year, date.month, date.day)).toSet().toList();
+    dates = dates
+        .where((date) => date != null)
+        .map((date) => DateTime(date!.year, date.month, date.day))
+        .toSet()
+        .toList();
 
     DateTime streakEnd = dates.last ?? DateTime.now();
     DateTime streakStart = dates.last ?? DateTime.now();
@@ -261,7 +344,8 @@ class IsarDatasource extends LocalStorageDatasource {
 
       if (currentDate == null || previousDate == null) continue;
 
-      final isNextDay = previousDate.day == currentDate.add(const Duration(days: 1)).day;
+      final isNextDay =
+          previousDate.day == currentDate.add(const Duration(days: 1)).day;
 
       if (isNextDay) {
         streak++;
@@ -277,17 +361,36 @@ class IsarDatasource extends LocalStorageDatasource {
       }
     }
 
-    return Streak(streak: longestStreak, streakStart: streakStart, streakEnd: streakEnd);
+    return Streak(
+        streak: longestStreak, streakStart: streakStart, streakEnd: streakEnd);
   }
 
   @override
   Future<int> charCount(int bracket) async {
     DateTime date = DateTime.now().subtract(Duration(days: bracket));
     final isar = await db;
-    final descriptions = await isar.dreams.where().filter().dateGreaterThan(date).descriptionProperty().findAll();
-    final descCount = descriptions.isEmpty ? 0 : descriptions.map((e) => e != "" ? e.length : 0).reduce((value, element) => value + element);
-    final titles = await isar.dreams.where().filter().dateGreaterThan(date).titleProperty().findAll();
-    final titleCount = titles.isEmpty ? 0 : titles.map((e) => e != "" && e != null ? e.length : 0).reduce((value, element) => value + element);
+    final descriptions = await isar.dreams
+        .where()
+        .filter()
+        .dateGreaterThan(date)
+        .descriptionProperty()
+        .findAll();
+    final descCount = descriptions.isEmpty
+        ? 0
+        : descriptions
+            .map((e) => e != "" ? e.length : 0)
+            .reduce((value, element) => value + element);
+    final titles = await isar.dreams
+        .where()
+        .filter()
+        .dateGreaterThan(date)
+        .titleProperty()
+        .findAll();
+    final titleCount = titles.isEmpty
+        ? 0
+        : titles
+            .map((e) => e != "" && e != null ? e.length : 0)
+            .reduce((value, element) => value + element);
     return descCount + titleCount;
   }
 
@@ -295,11 +398,26 @@ class IsarDatasource extends LocalStorageDatasource {
   Future<int> wordCount(int bracket) async {
     DateTime date = DateTime.now().subtract(Duration(days: bracket));
     final isar = await db;
-    final descriptions = await isar.dreams.where().filter().dateGreaterThan(date).descriptionProperty().findAll();
+    final descriptions = await isar.dreams
+        .where()
+        .filter()
+        .dateGreaterThan(date)
+        .descriptionProperty()
+        .findAll();
     if (descriptions.isEmpty) return 0;
-    final descCount = descriptions.map((e) => e.split(" ").where((e) => e != "").toList().length).reduce((value, element) => value + element);
-    final titles = await isar.dreams.where().filter().dateGreaterThan(date).titleProperty().findAll();
-    final titleCount = titles.map((e) => e != null ? e.split(" ").where((e) => e != "").toList().length : 0).reduce((value, element) => value + element);
+    final descCount = descriptions
+        .map((e) => e.split(" ").where((e) => e != "").toList().length)
+        .reduce((value, element) => value + element);
+    final titles = await isar.dreams
+        .where()
+        .filter()
+        .dateGreaterThan(date)
+        .titleProperty()
+        .findAll();
+    final titleCount = titles
+        .map((e) =>
+            e != null ? e.split(" ").where((e) => e != "").toList().length : 0)
+        .reduce((value, element) => value + element);
     return descCount + titleCount;
   }
 
@@ -307,15 +425,16 @@ class IsarDatasource extends LocalStorageDatasource {
   Future<List<DateTime>> allDates({DateTime? start, DateTime? end}) async {
     final isar = await db;
     //TODO: next month
-    final dates = await isar.dreams
-        .buildQuery(
-        property: "date",
-          filter: FilterGroup.and([
-            if (start != null && end != null) FilterCondition.greaterThan(property: 'date', value: start),
-            if (start != null && end != null) FilterCondition.lessThan(property: 'date', value: end),
-          ]),
-          sortBy: [SortProperty(property: 'date', sort: Sort.asc)],
-        ).findAll();
+    final dates = await isar.dreams.buildQuery(
+      property: "date",
+      filter: FilterGroup.and([
+        if (start != null && end != null)
+          FilterCondition.greaterThan(property: 'date', value: start),
+        if (start != null && end != null)
+          FilterCondition.lessThan(property: 'date', value: end),
+      ]),
+      sortBy: [SortProperty(property: 'date', sort: Sort.asc)],
+    ).findAll();
 
     return dates.cast<DateTime>();
   }
@@ -323,24 +442,32 @@ class IsarDatasource extends LocalStorageDatasource {
   @override
   Future<DateTime> firstDate() async {
     final isar = await db;
-    final date = await isar.dreams.where().sortByDate().dateProperty().findFirst();
+    final date =
+        await isar.dreams.where().sortByDate().dateProperty().findFirst();
     return date ?? DateTime.now();
   }
 
   @override
   Future<DateTime> lastDate() async {
     final isar = await db;
-    final date = await isar.dreams.where().sortByDateDesc().dateProperty().findFirst();
+    final date =
+        await isar.dreams.where().sortByDateDesc().dateProperty().findFirst();
     return date ?? DateTime.now();
   }
 
   @override
   Future<List<Dream>> dreamsOnDate(DateTime date) async {
     final DateTime dayStart = DateTime(date.year, date.month, date.day);
-    final DateTime dayEnd = DateTime(date.year, date.month, date.day, 23, 59, 59);
+    final DateTime dayEnd =
+        DateTime(date.year, date.month, date.day, 23, 59, 59);
 
     final isar = await db;
-    final dreams = await isar.dreams.where().filter().dateBetween(dayStart, dayEnd).sortByDate().findAll();
+    final dreams = await isar.dreams
+        .where()
+        .filter()
+        .dateBetween(dayStart, dayEnd)
+        .sortByDate()
+        .findAll();
     return dreams;
   }
 
@@ -350,9 +477,16 @@ class IsarDatasource extends LocalStorageDatasource {
     final isar = await db;
     final Map<int, int> daysOfTheWeek = {};
 
-    await isar.dreams.where().filter().dateGreaterThan(date).dateProperty().findAll().then((dates) {
+    await isar.dreams
+        .where()
+        .filter()
+        .dateGreaterThan(date)
+        .dateProperty()
+        .findAll()
+        .then((dates) {
       // ignore: avoid_function_literals_in_foreach_calls
-      dates.forEach((e) => daysOfTheWeek[e!.weekday] = daysOfTheWeek[e.weekday] ?? 0 + 1);
+      dates.forEach(
+          (e) => daysOfTheWeek[e!.weekday] = daysOfTheWeek[e.weekday] ?? 0 + 1);
     });
 
     final daysOfTheWeekList = daysOfTheWeek.entries.toList();
@@ -371,12 +505,18 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<Map<String,int>?> mostUsedNames(int bracket) async {
+  Future<Map<String, int>?> mostUsedNames(int bracket) async {
     DateTime date = DateTime.now().subtract(Duration(days: bracket));
     final isar = await db;
     final Map<String, int> allNames = {};
 
-    await isar.dreams.where().filter().dateGreaterThan(date).namesProperty().findAll().then((dream) {
+    await isar.dreams
+        .where()
+        .filter()
+        .dateGreaterThan(date)
+        .namesProperty()
+        .findAll()
+        .then((dream) {
       for (List<String>? names in dream) {
         if (names != null) {
           for (String name in names) {
@@ -394,61 +534,74 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-    Future<Map<String,int>?> dreamLucidness(int bracket) async{
-      DateTime date = DateTime.now().subtract(Duration(days: bracket));
-      final Map<int,String> lucidnessMap = Consts().lucidness;
-      final Map<String,int> map = {};
-
-      final isar = await db;
-      final List<int> lucidnesses = isar.dreams.where().filter().dateGreaterThan(date).lucidnessProperty().findAllSync();
-
-      for (var lucidness in lucidnesses) {
-        final name = lucidnessMap[lucidness];
-        if (name == null) {
-          continue;
-        }
-        map[name] = (map[name] ?? 0) + 1;
- 
-      }
-      return map;
-    }
-
-    @override
-  Future<Map<String,int>?> dreamTypes(int bracket) async  {
+  Future<Map<String, int>?> dreamLucidness(int bracket) async {
     DateTime date = DateTime.now().subtract(Duration(days: bracket));
-      final Map<int,String> typesMap = Consts().types;
-      final Map<String,int> map = {};
+    final Map<int, String> lucidnessMap = Consts().lucidness;
+    final Map<String, int> map = {};
 
-      final isar = await db;
-      final List<int> types = isar.dreams.where().filter().dateGreaterThan(date).typeProperty().findAllSync();
+    final isar = await db;
+    final List<int> lucidnesses = isar.dreams
+        .where()
+        .filter()
+        .dateGreaterThan(date)
+        .lucidnessProperty()
+        .findAllSync();
 
-      for (var type in types) {
-        final name = typesMap[type];
-        if (name == null) {
-          continue;
-        }
-        map[name] = (map[name] ?? 0) + 1;
+    for (var lucidness in lucidnesses) {
+      final name = lucidnessMap[lucidness];
+      if (name == null) {
+        continue;
       }
-      return map;
+      map[name] = (map[name] ?? 0) + 1;
     }
-
-@override
-  Future<Map<String, int>?> dreamMood(int bracket) async{
-    DateTime date = DateTime.now().subtract(Duration(days: bracket));
-      final Map<int,String> moodsMap = Consts().mood;
-      final Map<String,int> map = {};
-
-      final isar = await db;
-      final List<int> moods = isar.dreams.where().filter().dateGreaterThan(date).moodProperty().findAllSync();
-
-      for (var mood in moods) {
-        final name = moodsMap[mood];
-        if (name == null) {
-          continue;
-        }
-        map[name] = (map[name] ?? 0) + 1;
-      }
-      return map;
-  }
+    return map;
   }
 
+  @override
+  Future<Map<String, int>?> dreamTypes(int bracket) async {
+    DateTime date = DateTime.now().subtract(Duration(days: bracket));
+    final Map<int, String> typesMap = Consts().types;
+    final Map<String, int> map = {};
+
+    final isar = await db;
+    final List<int> types = isar.dreams
+        .where()
+        .filter()
+        .dateGreaterThan(date)
+        .typeProperty()
+        .findAllSync();
+
+    for (var type in types) {
+      final name = typesMap[type];
+      if (name == null) {
+        continue;
+      }
+      map[name] = (map[name] ?? 0) + 1;
+    }
+    return map;
+  }
+
+  @override
+  Future<Map<String, int>?> dreamMood(int bracket) async {
+    DateTime date = DateTime.now().subtract(Duration(days: bracket));
+    final Map<int, String> moodsMap = Consts().mood;
+    final Map<String, int> map = {};
+
+    final isar = await db;
+    final List<int> moods = isar.dreams
+        .where()
+        .filter()
+        .dateGreaterThan(date)
+        .moodProperty()
+        .findAllSync();
+
+    for (var mood in moods) {
+      final name = moodsMap[mood];
+      if (name == null) {
+        continue;
+      }
+      map[name] = (map[name] ?? 0) + 1;
+    }
+    return map;
+  }
+}

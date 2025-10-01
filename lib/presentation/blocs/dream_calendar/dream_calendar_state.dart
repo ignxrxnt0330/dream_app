@@ -8,9 +8,17 @@ class DreamCalendarState extends Equatable {
   final DateTime targetDate;
   final List<Dream> dreams;
 
-  const DreamCalendarState(this.dates, this.dreams, this.firstDate, this.lastDate, this.targetDate, this.selectedDate);
+  const DreamCalendarState(this.dates, this.dreams, this.firstDate,
+      this.lastDate, this.targetDate, this.selectedDate);
 
-  DreamCalendarState copyWith({List<DateTime>? dates, List<Dream>? dreams, DateTime? firstDate, DateTime? lastDate, DateTime? targetDate, DateTime? selectedDate}) => DreamCalendarState(
+  DreamCalendarState copyWith(
+          {List<DateTime>? dates,
+          List<Dream>? dreams,
+          DateTime? firstDate,
+          DateTime? lastDate,
+          DateTime? targetDate,
+          DateTime? selectedDate}) =>
+      DreamCalendarState(
         dates ?? this.dates,
         dreams ?? this.dreams,
         firstDate ?? this.firstDate,

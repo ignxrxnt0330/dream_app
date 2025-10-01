@@ -5,9 +5,14 @@ class AppConfigState extends Equatable {
   final String defaultTitle;
   final Color appColor;
   final int lastExported;
-  const AppConfigState(this.darkMode, this.defaultTitle, this.appColor, this.lastExported);
+  const AppConfigState(
+      this.darkMode, this.defaultTitle, this.appColor, this.lastExported);
 
-  AppConfigState copyWith({bool? darkMode, String? defaultTitle, Color? appColor, int? lastExported}) {
+  AppConfigState copyWith(
+      {bool? darkMode,
+      String? defaultTitle,
+      Color? appColor,
+      int? lastExported}) {
     return AppConfigState(
       darkMode ?? this.darkMode,
       defaultTitle ?? this.defaultTitle,

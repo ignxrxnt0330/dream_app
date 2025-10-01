@@ -11,9 +11,23 @@ class DreamSearchState extends Equatable {
 
   //TODO: states factory ¿?
 
-  const DreamSearchState({this.dreams = const [], this.isLoading = false, this.count = 0, this.offset = 0, this.endReached = false, this.query = "",this.scroll = 0});
+  const DreamSearchState(
+      {this.dreams = const [],
+      this.isLoading = false,
+      this.count = 0,
+      this.offset = 0,
+      this.endReached = false,
+      this.query = "",
+      this.scroll = 0});
 
-  DreamSearchState copyWith({List<Dream>? dreams, bool? isLoading, int? count, int? offset, bool? endReached, String? query,double? scroll}) {
+  DreamSearchState copyWith(
+      {List<Dream>? dreams,
+      bool? isLoading,
+      int? count,
+      int? offset,
+      bool? endReached,
+      String? query,
+      double? scroll}) {
     return DreamSearchState(
       dreams: dreams ?? this.dreams,
       isLoading: isLoading ?? this.isLoading,
@@ -27,8 +41,9 @@ class DreamSearchState extends Equatable {
 
   @override
   @override
-  String toString() => 'DreamSearchState { dreams: $dreams, isLoading: $isLoading, count: $count, offset: $offset, endReached: $endReached, query: $query }';
+  String toString() =>
+      'DreamSearchState { dreams: $dreams, isLoading: $isLoading, count: $count, offset: $offset, endReached: $endReached, query: $query }';
 
   @override
-  List<Object> get props => [dreams,isLoading,endReached,query,scroll];
+  List<Object> get props => [dreams, isLoading, endReached, query, scroll];
 }

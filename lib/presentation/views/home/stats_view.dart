@@ -8,9 +8,8 @@ class StatsView extends StatefulWidget {
   static const name = 'stats_view';
   const StatsView({super.key});
 
-
   @override
-    State<StatsView> createState() => _StatsViewState();
+  State<StatsView> createState() => _StatsViewState();
 }
 
 class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
@@ -18,51 +17,56 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
   late List<ScrollController> scrollControllers;
 
   @override
-    void initState() {
-      super.initState();
+  void initState() {
+    super.initState();
 
-      // Init TabController once
-      tabBarController = TabController(length: 4, vsync: this);
+    // Init TabController once
+    tabBarController = TabController(length: 4, vsync: this);
 
-      // Add listener ONCE
-      tabBarController.addListener(() {
-          onChangeIndex(tabBarController.index);
-          });
+    // Add listener ONCE
+    tabBarController.addListener(() {
+      onChangeIndex(tabBarController.index);
+    });
 
-      // Trigger initial fetch
-      context.read<DreamStatsBloc>().add(FetchStats(bracket: context.read<DreamStatsBloc>().state.bracket));
+    // Trigger initial fetch
+    context
+        .read<DreamStatsBloc>()
+        .add(FetchStats(bracket: context.read<DreamStatsBloc>().state.bracket));
 
-      // Init scroll controllers
-      scrollControllers = List.generate(4, (_) {
-          final controller = ScrollController();
-          controller.addListener(() {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (!controller.position.isScrollingNotifier.value) {
-                  context.read<DreamStatsBloc>().add(
-                      StatsScrollChange(scroll: controller.position.pixels),
-                      );
-                  }
-                  });
-              });
-          return controller;
-          });
+    // Init scroll controllers
+    scrollControllers = List.generate(4, (_) {
+      final controller = ScrollController();
+      controller.addListener(() {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!controller.position.isScrollingNotifier.value) {
+            context.read<DreamStatsBloc>().add(
+                  StatsScrollChange(scroll: controller.position.pixels),
+                );
+          }
+        });
+      });
+      return controller;
+    });
+  }
 
-    }
-
-  void onChangeIndex (int index) {
+  void onChangeIndex(int index) {
     late int bracket;
     switch (index) {
-      case 0: bracket = 7;
-      case 1: bracket = 30;
-      case 2: bracket = 365;
-      case 3: bracket = 99999;
+      case 0:
+        bracket = 7;
+      case 1:
+        bracket = 30;
+      case 2:
+        bracket = 365;
+      case 3:
+        bracket = 99999;
     }
-    context.read<DreamStatsBloc>().add( BracketChanged(bracket: bracket));
+    context.read<DreamStatsBloc>().add(BracketChanged(bracket: bracket));
     final double savedScroll = context.read<DreamStatsBloc>().state.scroll;
     restoreScroll(savedScroll, scrollControllers[index]);
   }
 
-  void restoreScroll(double savedScroll,scrollController) {
+  void restoreScroll(double savedScroll, scrollController) {
     if (!scrollController.hasClients) return;
 
     final maxScroll = scrollController.position.maxScrollExtent;
@@ -71,169 +75,168 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
     scrollController.jumpTo(offset);
   }
 
-  void trackScroll (DreamStatsState state,scrollController){
+  void trackScroll(DreamStatsState state, scrollController) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        scrollController.position.isScrollingNotifier.addListener(() { 
-            if(!scrollController.position.isScrollingNotifier.value) {
-            // scroll stopped
-            context.read<DreamStatsBloc>().add(StatsScrollChange(scroll:scrollController.position.pixels));
-            }            });
-        });
+      scrollController.position.isScrollingNotifier.addListener(() {
+        if (!scrollController.position.isScrollingNotifier.value) {
+          // scroll stopped
+          context
+              .read<DreamStatsBloc>()
+              .add(StatsScrollChange(scroll: scrollController.position.pixels));
+        }
+      });
+    });
   }
 
   @override
-    void dispose() {
-      for (final controller in scrollControllers) {
-        controller.dispose();
-      }
-      tabBarController.dispose();
-      super.dispose();
+  void dispose() {
+    for (final controller in scrollControllers) {
+      controller.dispose();
     }
+    tabBarController.dispose();
+    super.dispose();
+  }
 
   @override
-    Widget build(BuildContext context) {
-      final List<Tab> tabs = <Tab>[
-        Tab(text: 'Weekly'),
-        Tab(text: 'Monthly'), 
-        Tab(text: 'Yearly'), 
-        Tab(text: 'All time')];
+  Widget build(BuildContext context) {
+    final List<Tab> tabs = <Tab>[
+      Tab(text: 'Weekly'),
+      Tab(text: 'Monthly'),
+      Tab(text: 'Yearly'),
+      Tab(text: 'All time')
+    ];
 
-      return BlocBuilder<DreamStatsBloc, DreamStatsState>(
-          builder:(context,state){
-          return DefaultTabController(
-              length: tabs.length,
-              child: Scaffold(
-                appBar: AppBar(
-                  title: TabBar(
-                    controller: tabBarController,
-                    tabs: tabs,
-                    ),
-                  ),
-                body: 
-                Column(
-                  children: [
-                  Card(
-                    color: Theme.of(context).cardColor,
-                    child: Column(
-                      children: [
-                      Row(
-                        mainAxisAlignment:MainAxisAlignment.center,
-                        children: [
-                        StatCard(number: state.dreamCount ,text:"dreams"),
-                        StatCard(number: state.wordCount ,text:"words"),
-                        StatCard(number: state.charCount ,text:"characters"),
-                        ],
-                        ),
-                      Row(
-                        mainAxisAlignment:MainAxisAlignment.center,
-                        children: [
-                        StatCard(
-                        number: state.currentStreak.streak,
-                        text:"current streak",
-                        tooltipText: "${DateFormat('dd/MM/yyyy').format(state.currentStreak.streakStart)} - ${DateFormat('dd/MM/yyyy').format(state.currentStreak.streakEnd)}",
-                        ),
-                        StatCard(
-                        number: state.longestStreak.streak,
-                        text:"longest streak",
-                        tooltipText: "${DateFormat('dd/MM/yyyy').format(state.longestStreak.streakStart)} - ${DateFormat('dd/MM/yyyy').format(state.longestStreak.streakEnd)}",
-                        ),
-                        StatCard(number: (state.dreamCount/state.bracket * 100).round() / 100 ,text:"dreams / day",
-onTap: () {
-  context.read<DreamStatsBloc>().add(FetchStatsDreams());
-
-  showDialog(
-    context: context,
-    builder: (context) {
-      return BlocBuilder<DreamStatsBloc, DreamStatsState>(
+    return BlocBuilder<DreamStatsBloc, DreamStatsState>(
         builder: (context, state) {
-          if (state.dreams.entries.isEmpty) {
-            return const Dialog(
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Center(child: CircularProgressIndicator()),
+      return DefaultTabController(
+        length: tabs.length,
+        child: Scaffold(
+            appBar: AppBar(
+              title: TabBar(
+                controller: tabBarController,
+                tabs: tabs,
               ),
-            );
-          }
-
-          return Dialog(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Center(
-                child: RotatedBox(
-                  quarterTurns: 1,
-                  child: Column(
-                    children: [
-                    const Text("Dreams per day"),
-                    Expanded(
-                      child: 
-                      BlocBuilder<DreamStatsBloc, DreamStatsState>(
-                        builder:(context,state){
-                        return CustomLineChart(data: state.dreams);
-                        })
-
-
-                      ),
-                    ],
+            ),
+            body: Column(children: [
+              Card(
+                color: Theme.of(context).cardColor,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        StatCard(number: state.dreamCount, text: "dreams"),
+                        StatCard(number: state.wordCount, text: "words"),
+                        StatCard(number: state.charCount, text: "characters"),
+                      ],
                     ),
-                  ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        StatCard(
+                          number: state.currentStreak.streak,
+                          text: "current streak",
+                          tooltipText:
+                              "${DateFormat('dd/MM/yyyy').format(state.currentStreak.streakStart)} - ${DateFormat('dd/MM/yyyy').format(state.currentStreak.streakEnd)}",
+                        ),
+                        StatCard(
+                          number: state.longestStreak.streak,
+                          text: "longest streak",
+                          tooltipText:
+                              "${DateFormat('dd/MM/yyyy').format(state.longestStreak.streakStart)} - ${DateFormat('dd/MM/yyyy').format(state.longestStreak.streakEnd)}",
+                        ),
+                        StatCard(
+                            number: (state.dreamCount / state.bracket * 100)
+                                    .round() /
+                                100,
+                            text: "dreams / day",
+                            onTap: () {
+                              context
+                                  .read<DreamStatsBloc>()
+                                  .add(FetchStatsDreams());
+
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return BlocBuilder<DreamStatsBloc,
+                                      DreamStatsState>(
+                                    builder: (context, state) {
+                                      if (state.dreams.entries.isEmpty) {
+                                        return const Dialog(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(20),
+                                            child: Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                          ),
+                                        );
+                                      }
+
+                                      return Dialog(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Center(
+                                            child: RotatedBox(
+                                              quarterTurns: 1,
+                                              child: Column(
+                                                children: [
+                                                  const Text("Dreams per day"),
+                                                  Expanded(child: BlocBuilder<
+                                                          DreamStatsBloc,
+                                                          DreamStatsState>(
+                                                      builder:
+                                                          (context, state) {
+                                                    return CustomLineChart(
+                                                        data: state.dreams);
+                                                  })),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            })
+                      ],
+                    ),
+                  ],
                 ),
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-          )
-            ],
-            ),
-            ],
-            ),
-            ),
-            Expanded(
+              ),
+              Expanded(
                 child: TabBarView(
                   children: List.generate(tabs.length, (index) {
                     final scrollController = scrollControllers[index];
                     return Center(
-                                child: SingleChildScrollView(
-                                  controller: scrollController,
-                                  child: Column(
-                                    children: [
-                                    StatsSection(
-                                      children:[
-                                      Center(child: Text('Names')),
-                                      CustomBarChart(data:state.names),
-                                      ]),
-                                    StatsSection(
-                                      children:[
-                                      StatsHeader(text: 'Lucidness'),
-                                      CustomPieChart(data:state.lucidness),
-                                      ]),
-                                    StatsSection(
-                                      children:[
-                                      StatsHeader(text: 'Types'),
-                                      CustomPieChart(data:state.types)
-                                      ]),
-                                    StatsSection(
-                                      children:[
-                                      Center(child: Text('Mood')),
-                                      CustomPieChart(data:state.mood),
-                                      ]),
-                                    ]
-                                    )
-                                    )
-                                    );
-                          }).toList(),
-                    ),
-                    ),
-                    ])
-                      ),
-                    );  
-
-          }
+                        child: SingleChildScrollView(
+                            controller: scrollController,
+                            child: Column(children: [
+                              StatsSection(children: [
+                                Center(child: Text('Names')),
+                                CustomBarChart(data: state.names),
+                              ]),
+                              StatsSection(children: [
+                                StatsHeader(text: 'Lucidness'),
+                                CustomPieChart(data: state.lucidness),
+                              ]),
+                              StatsSection(children: [
+                                StatsHeader(text: 'Types'),
+                                CustomPieChart(data: state.types)
+                              ]),
+                              StatsSection(children: [
+                                Center(child: Text('Mood')),
+                                CustomPieChart(data: state.mood),
+                              ]),
+                            ])));
+                  }).toList(),
+                ),
+              ),
+            ])),
       );
-    }
-
+    });
+  }
 }
 
 class StatsSection extends StatelessWidget {
@@ -241,27 +244,27 @@ class StatsSection extends StatelessWidget {
   const StatsSection({super.key, required this.children});
 
   @override
-    Widget build(BuildContext context) {
-      return  Card(
-          child: Column(
-            children:  children,
-            ),
-          );
-    }
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: children,
+      ),
+    );
+  }
 }
-
 
 class StatsHeader extends StatelessWidget {
   final String text;
   const StatsHeader({super.key, required this.text});
 
   @override
-    Widget build(BuildContext context) {
-      return  Center(
-          child: Text(text,
-            style: TextStyle(fontSize: 16),)
-          );
-    }
+  Widget build(BuildContext context) {
+    return Center(
+        child: Text(
+      text,
+      style: TextStyle(fontSize: 16),
+    ));
+  }
 }
 
 class StatCard extends StatelessWidget {
@@ -269,32 +272,36 @@ class StatCard extends StatelessWidget {
   final String text;
   final String? tooltipText;
   final GestureTapCallback? onTap;
-  const StatCard({super.key,required this.number,required this.text,this.tooltipText, this.onTap});
+  const StatCard(
+      {super.key,
+      required this.number,
+      required this.text,
+      this.tooltipText,
+      this.onTap});
 
   @override
-    Widget build(BuildContext context) {
-      return Expanded(
-          child: GestureDetector(
-          onTap: onTap,
-            child: Card(
-              child: Padding(
-                padding: EdgeInsets.all(13),
-                child:
-                Tooltip(
-                  showDuration: Duration(seconds: 3),
-                  message: tooltipText ?? '',
-                  child: Column(
-                    children: [
-                    Text(number.toString()),
-                    Text(text),
-                    ],
-                    ),
-                  ),
-                ),
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.all(13),
+            child: Tooltip(
+              showDuration: Duration(seconds: 3),
+              message: tooltipText ?? '',
+              child: Column(
+                children: [
+                  Text(number.toString()),
+                  Text(text),
+                ],
               ),
             ),
-          );
-    }
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class StatBigText extends StatelessWidget {
@@ -303,7 +310,6 @@ class StatBigText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-    );
+    return const Center();
   }
 }

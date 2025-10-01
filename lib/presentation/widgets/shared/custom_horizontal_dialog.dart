@@ -6,8 +6,6 @@ class CustomHorizontalDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-    child: content
-    );
+    return Dialog(child: content);
   }
 }

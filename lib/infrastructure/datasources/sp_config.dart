@@ -53,7 +53,7 @@ class SpConfig extends ConfigDatasource {
   }
 
   @override
-  Future<void> setLastExported(int lastExported) async{
+  Future<void> setLastExported(int lastExported) async {
     prefs = await SharedPreferences.getInstance();
     prefs.setInt('lastExported', lastExported);
   }
@@ -64,5 +64,4 @@ class SpConfig extends ConfigDatasource {
     int lastExported = prefs.getInt('lastExported') ?? 0;
     return lastExported;
   }
-
 }

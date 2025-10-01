@@ -22,21 +22,31 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
   void _fetchMoreDreams(FetchDreams event, Emitter<DreamHomeState> emit) async {
     if (state.isLoading || state.endReached) return;
     emit(state.copyWith(isLoading: true));
-    final dreams = await datasource.loadDreams(offset: state.offset, order: state.order, asc: state.asc, fav: state.fav, hidden: state.hidden, type: state.type);
-    final count = await datasource.homeDreamCount(fav: state.fav, hidden: state.hidden, type: state.type);
+    final dreams = await datasource.loadDreams(
+        offset: state.offset,
+        order: state.order,
+        asc: state.asc,
+        fav: state.fav,
+        hidden: state.hidden,
+        type: state.type);
+    final count = await datasource.homeDreamCount(
+        fav: state.fav, hidden: state.hidden, type: state.type);
     emit(state.copyWith(
-      isLoading: false,
-      endReached: dreams.length < 10,
-      offset: state.offset + 10,
-      dreams: [...state.dreams, ...dreams],
-      count: count
-      ));
+        isLoading: false,
+        endReached: dreams.length < 10,
+        offset: state.offset + 10,
+        dreams: [...state.dreams, ...dreams],
+        count: count));
   }
 
-  void _toggleFavDream(ToggleFavDream event, Emitter<DreamHomeState> emit) async {
+  void _toggleFavDream(
+      ToggleFavDream event, Emitter<DreamHomeState> emit) async {
     final isFav = await datasource.toggleFavDream(event.dreamId);
 
-    List<Dream> dreams = state.dreams.map((dream) => dream.id == event.dreamId ? dream.copyWith(isFav: isFav) : dream).toList();
+    List<Dream> dreams = state.dreams
+        .map((dream) =>
+            dream.id == event.dreamId ? dream.copyWith(isFav: isFav) : dream)
+        .toList();
 
     emit(state.copyWith(
       dreams: dreams,
@@ -54,10 +64,15 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
   }
 
   void _handleDream(HandleDream event, Emitter<DreamHomeState> emit) async {
-    if (event.dream.id != -9223372036854775808 && 
-        state.dreams.where((dream) => dream.id == event.dream.id).toList().isNotEmpty) {
+    if (event.dream.id != -9223372036854775808 &&
+        state.dreams
+            .where((dream) => dream.id == event.dream.id)
+            .toList()
+            .isNotEmpty) {
       // updating
-      final updatedDreams = state.dreams.map((dream) => dream.id == event.dream.id ? event.dream : dream).toList();
+      final updatedDreams = state.dreams
+          .map((dream) => dream.id == event.dream.id ? event.dream : dream)
+          .toList();
       emit(state.copyWith(dreams: updatedDreams));
     } else {
       emit(state.copyWith(dreams: [event.dream, ...state.dreams]));
@@ -66,13 +81,19 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
   }
 
   void _removeDream(RemoveDream event, Emitter<DreamHomeState> emit) async {
-    List<Dream> updatedDreams = state.dreams.where((dream) => dream.id != event.dreamId).toList();
+    List<Dream> updatedDreams =
+        state.dreams.where((dream) => dream.id != event.dreamId).toList();
     await datasource.deleteDream(event.dreamId);
     emit(state.copyWith(dreams: updatedDreams));
   }
 
   void _orderChanged(OrderChanged event, Emitter<DreamHomeState> emit) async {
-    emit(state.copyWith(order: event.order, asc: event.asc, fav: event.fav, hidden: event.hidden, type: event.type));
+    emit(state.copyWith(
+        order: event.order,
+        asc: event.asc,
+        fav: event.fav,
+        hidden: event.hidden,
+        type: event.type));
     add(const RefreshDreams());
   }
 }

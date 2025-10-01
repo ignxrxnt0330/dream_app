@@ -13,13 +13,16 @@ class DreamSearchBloc extends Bloc<DreamSearchEvent, DreamSearchState> {
     on<SearchScrollChange>(_scrollChanged);
   }
 
-  Future<void> _searchDreams(SearchDreams event, Emitter<DreamSearchState> emit) async {
+  Future<void> _searchDreams(
+      SearchDreams event, Emitter<DreamSearchState> emit) async {
     try {
       if (state.isLoading) return;
-      emit(state.copyWith(isLoading: true, dreams: [], count: 0, query: event.query));
+      emit(state.copyWith(
+          isLoading: true, dreams: [], count: 0, query: event.query));
 
       final dreams = await IsarDatasource().searchDreams(event.query) ?? [];
-      final int count = await IsarDatasource().searchDreamsResultCount(event.query);
+      final int count =
+          await IsarDatasource().searchDreamsResultCount(event.query);
 
       emit(state.copyWith(
         dreams: dreams,
@@ -33,12 +36,15 @@ class DreamSearchBloc extends Bloc<DreamSearchEvent, DreamSearchState> {
     }
   }
 
-  Future<void> _scrollSearch(ScrollSearch event, Emitter<DreamSearchState> emit) async {
+  Future<void> _scrollSearch(
+      ScrollSearch event, Emitter<DreamSearchState> emit) async {
     try {
       if (state.isLoading || state.endReached) return;
       emit(state.copyWith(isLoading: true));
 
-      final dreams = await IsarDatasource().searchDreams(event.query, offset: state.offset) ?? [];
+      final dreams = await IsarDatasource()
+              .searchDreams(event.query, offset: state.offset) ??
+          [];
       emit(state.copyWith(
         dreams: [...state.dreams, ...dreams],
         isLoading: false,
@@ -50,9 +56,10 @@ class DreamSearchBloc extends Bloc<DreamSearchEvent, DreamSearchState> {
     }
   }
 
-  Future<void> _scrollChanged(SearchScrollChange event, Emitter<DreamSearchState> emit) async {
+  Future<void> _scrollChanged(
+      SearchScrollChange event, Emitter<DreamSearchState> emit) async {
     emit(state.copyWith(
-          scroll: event.scroll,
-          ));
+      scroll: event.scroll,
+    ));
   }
 }

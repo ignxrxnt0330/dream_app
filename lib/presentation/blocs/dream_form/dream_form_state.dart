@@ -6,7 +6,11 @@ class DreamFormState extends Equatable {
   final bool valid;
   final List<String> allNames;
 
-  const DreamFormState({required this.dream, this.currentIndex = 0, this.valid = false, required this.allNames});
+  const DreamFormState(
+      {required this.dream,
+      this.currentIndex = 0,
+      this.valid = false,
+      required this.allNames});
 
   DreamFormState copyWith({
     Dream? dream,

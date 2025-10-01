@@ -27,19 +27,22 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
     scrollController.jumpTo(offset);
   }
 
-  void trackScroll (DreamSearchState state){
+  void trackScroll(DreamSearchState state) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      scrollController.position.isScrollingNotifier.addListener(() { 
-          if(!scrollController.position.isScrollingNotifier.value) {
+      scrollController.position.isScrollingNotifier.addListener(() {
+        if (!scrollController.position.isScrollingNotifier.value) {
           // scroll stopped
-          context.read<DreamSearchBloc>().add(SearchScrollChange(scroll:scrollController.position.pixels));
-          }            });
+          context.read<DreamSearchBloc>().add(
+              SearchScrollChange(scroll: scrollController.position.pixels));
+        }
       });
-}
+    });
+  }
 
   DreamSearchDelegate(this.context) : super() {
     scrollController.addListener(() {
-      if (scrollController.position.pixels + 400 >= scrollController.position.maxScrollExtent) {
+      if (scrollController.position.pixels + 400 >=
+          scrollController.position.maxScrollExtent) {
         context.read<DreamSearchBloc>().add(ScrollSearch(query: query.trim()));
       }
     });
@@ -71,23 +74,24 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
   Widget buildResults(BuildContext context) {
     trackScroll(context.read<DreamSearchBloc>().state);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-        restoreScroll(context.read<DreamSearchBloc>().state.scroll);
-        });
+      restoreScroll(context.read<DreamSearchBloc>().state.scroll);
+    });
     return BlocBuilder<DreamSearchBloc, DreamSearchState>(
       builder: (context, dreamsState) {
-      return Column(children: [
+        return Column(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text('${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
+            child: Text(
+                '${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
           ),
           Expanded(
-              child: ListView.builder(
+            child: ListView.builder(
                 controller: scrollController,
                 itemBuilder: (context, index) {
-                return CustomDreamListTile(dream: dreamsState.dreams[index]);
+                  return CustomDreamListTile(dream: dreamsState.dreams[index]);
                 },
-itemCount: dreamsState.dreams.length),
-              )
+                itemCount: dreamsState.dreams.length),
+          )
         ]);
       },
     );
@@ -100,19 +104,23 @@ itemCount: dreamsState.dreams.length),
         if (timeout?.isActive ?? false) timeout?.cancel();
         timeout = Timer(const Duration(milliseconds: 500), () async {
           if (query != dreamsState.query) {
-            context.read<DreamSearchBloc>().add(SearchDreams(query: query.trim()));
+            context
+                .read<DreamSearchBloc>()
+                .add(SearchDreams(query: query.trim()));
           }
         });
 
         return Column(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text('${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
+            child: Text(
+                '${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
           ),
           Expanded(
               child: ListView.builder(
                   itemBuilder: (context, index) {
-                    return CustomDreamListTile(dream: dreamsState.dreams[index]);
+                    return CustomDreamListTile(
+                        dream: dreamsState.dreams[index]);
                   },
                   itemCount: dreamsState.dreams.length))
         ]);

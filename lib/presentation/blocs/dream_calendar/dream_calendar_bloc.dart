@@ -7,29 +7,38 @@ part 'dream_calendar_event.dart';
 part 'dream_calendar_state.dart';
 
 class DreamCalendarBloc extends Bloc<DreamCalendarEvent, DreamCalendarState> {
-  DreamCalendarBloc() : super(DreamCalendarState(const [], const [], null, null,DateTime.now(), DateTime.now())) {
+  DreamCalendarBloc()
+      : super(DreamCalendarState(
+            const [], const [], null, null, DateTime.now(), DateTime.now())) {
     on<FetchDates>(_onFetchDates);
     on<FetchDreamsOnDate>(_onFetchDreams);
     on<FetchBracket>(_onFetchBracket);
   }
 
-  Future<void> _onFetchDates(FetchDates event, Emitter<DreamCalendarState> emit) async {
+  Future<void> _onFetchDates(
+      FetchDates event, Emitter<DreamCalendarState> emit) async {
     List<DateTime> dates = await IsarDatasource().allDates();
     emit(state.copyWith(dates: dates));
   }
 
-  Future<void> _onFetchDreams(FetchDreamsOnDate event, Emitter<DreamCalendarState> emit) async {
+  Future<void> _onFetchDreams(
+      FetchDreamsOnDate event, Emitter<DreamCalendarState> emit) async {
     emit(state.copyWith(dreams: [], selectedDate: event.date));
     List<Dream> dreams = await IsarDatasource().dreamsOnDate(event.date);
-    if(event.date.month != state.targetDate.month){
-        emit(state.copyWith(targetDate: event.date));
+    if (event.date.month != state.targetDate.month) {
+      emit(state.copyWith(targetDate: event.date));
     }
     emit(state.copyWith(dreams: dreams));
   }
 
-  Future<void> _onFetchBracket(FetchBracket event, Emitter<DreamCalendarState> emit) async {
-    DateTime firstDate = await IsarDatasource().firstDate().then((value) => DateTime(value.year, value.month, value.day));
-    DateTime lastDate = await IsarDatasource().lastDate().then((value) => DateTime(value.year, value.month, value.day));
+  Future<void> _onFetchBracket(
+      FetchBracket event, Emitter<DreamCalendarState> emit) async {
+    DateTime firstDate = await IsarDatasource()
+        .firstDate()
+        .then((value) => DateTime(value.year, value.month, value.day));
+    DateTime lastDate = await IsarDatasource()
+        .lastDate()
+        .then((value) => DateTime(value.year, value.month, value.day));
     emit(state.copyWith(firstDate: firstDate, lastDate: lastDate));
   }
 }

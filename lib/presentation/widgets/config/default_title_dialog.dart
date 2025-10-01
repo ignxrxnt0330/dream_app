@@ -15,7 +15,8 @@ class _DefaultTitleDialogState extends State<DefaultTitleDialog> {
   @override
   void initState() {
     super.initState();
-    defaultTitleController.text = context.read<AppConfigBloc>().state.defaultTitle;
+    defaultTitleController.text =
+        context.read<AppConfigBloc>().state.defaultTitle;
     setState(() {});
   }
 
@@ -36,7 +37,9 @@ class _DefaultTitleDialogState extends State<DefaultTitleDialog> {
         ),
         TextButton(
           onPressed: () {
-            context.read<AppConfigBloc>().add(SetDefaultTitle(defaultTitleController.text));
+            context
+                .read<AppConfigBloc>()
+                .add(SetDefaultTitle(defaultTitleController.text));
             Navigator.of(context).pop();
           },
           child: const Text("confirm"),

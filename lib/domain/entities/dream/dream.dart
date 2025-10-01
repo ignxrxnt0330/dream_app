@@ -78,12 +78,18 @@ class Dream {
   void initNames() {
     final regexp = RegExp(r'@(\w+)', multiLine: true);
 
-    names = regexp.allMatches(description).map((match) => match.group(1)).whereType<String>().toList();
+    names = regexp
+        .allMatches(description)
+        .map((match) => match.group(1))
+        .whereType<String>()
+        .toList();
   }
 
   void initHidden() async {
     hidden = title.startsWith(".");
-    title = title == "." ? ".${await SpConfig().getDefaultTitle() ?? title}" : title;
+    title = title == "."
+        ? ".${await SpConfig().getDefaultTitle() ?? title}"
+        : title;
   }
 
   void initDescLength() {

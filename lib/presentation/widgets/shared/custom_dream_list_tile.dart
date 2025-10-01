@@ -12,42 +12,44 @@ class CustomDreamListTile extends StatelessWidget {
 
   final Dream dream;
 
-Widget getNamesChips(Dream dream) {
-  var names = dream.names;
-  if (names.isEmpty) return const SizedBox(height: 0);
-  
-  if (dream.hidden) {
-    return Wrap(spacing: 5, children: [Chip(label: Text("${names.length} people"))]);
-  }
+  Widget getNamesChips(Dream dream) {
+    var names = dream.names;
+    if (names.isEmpty) return const SizedBox(height: 0);
 
-  int shownNamesLength = 0;
-  int totalLength = 0;
-
-  for (int i = 0; i < names.length; i++) {
-    totalLength += names[i].length;
-    if (totalLength <= 20) {
-      shownNamesLength = i + 1;
-    } else {
-      break;
+    if (dream.hidden) {
+      return Wrap(
+          spacing: 5, children: [Chip(label: Text("${names.length} people"))]);
     }
-  }
 
+    int shownNamesLength = 0;
+    int totalLength = 0;
 
-  if (shownNamesLength != names.length) {
+    for (int i = 0; i < names.length; i++) {
+      totalLength += names[i].length;
+      if (totalLength <= 20) {
+        shownNamesLength = i + 1;
+      } else {
+        break;
+      }
+    }
+
+    if (shownNamesLength != names.length) {
+      return Wrap(
+        spacing: 5,
+        children: [
+          ...names
+              .take(shownNamesLength)
+              .map((name) => Chip(label: Text(name))),
+          Chip(label: Text("${names.length - shownNamesLength} more"))
+        ],
+      );
+    }
+
     return Wrap(
       spacing: 5,
-      children: [
-        ...names.take(shownNamesLength).map((name) => Chip(label: Text(name))),
-        Chip(label: Text("${names.length - shownNamesLength} more"))
-      ],
+      children: names.map((name) => Chip(label: Text(name))).toList(),
     );
   }
-  
-  return Wrap(
-    spacing: 5,
-    children: names.map((name) => Chip(label: Text(name))).toList(),
-  );
-}
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +65,13 @@ Widget getNamesChips(Dream dream) {
         const Spacer(),
         Text(dream.formattedDate),
         IconButton(
-          icon: dream.isFav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+          icon: dream.isFav
+              ? const Icon(Icons.favorite)
+              : const Icon(Icons.favorite_border),
           onPressed: () {
-            context.read<DreamHomeBloc>().add(ToggleFavDream(dreamId: dream.id));
+            context
+                .read<DreamHomeBloc>()
+                .add(ToggleFavDream(dreamId: dream.id));
           },
         ),
       ]),
@@ -84,16 +90,20 @@ Widget getNamesChips(Dream dream) {
       ),
       onTap: () async {
         context.read<DreamFormBloc>().add(FetchDream(dream.id));
-        context.read<DreamFormBloc>().stream.firstWhere((state) => state.dream.id == dream.id).then((state) {
-            if (!context.mounted) return;
-            if (dream.hidden) {
+        context
+            .read<DreamFormBloc>()
+            .stream
+            .firstWhere((state) => state.dream.id == dream.id)
+            .then((state) {
+          if (!context.mounted) return;
+          if (dream.hidden) {
             context.push("/bio_validate/dream/${dream.id}");
             return;
-            }
-            context.push("/dream/${dream.id}");
-            });
+          }
+          context.push("/dream/${dream.id}");
+        });
       },
-onLongPress: () {
+      onLongPress: () {
         // show dialog
         showDialog(
           context: context,
@@ -110,7 +120,9 @@ onLongPress: () {
                 ),
                 TextButton(
                   onPressed: () {
-                    context.read<DreamHomeBloc>().add(RemoveDream(dreamId: dream.id));
+                    context
+                        .read<DreamHomeBloc>()
+                        .add(RemoveDream(dreamId: dream.id));
                     Navigator.of(context).pop();
                   },
                   child: const Text("ye"),

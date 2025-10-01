@@ -62,7 +62,12 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     setState(() {});
     if (timeout?.isActive ?? false) timeout?.cancel();
     timeout = Timer(const Duration(milliseconds: 500), () async {
-      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav, hidden: hidden, type: type));
+      context.read<DreamHomeBloc>().add(OrderChanged(
+          order: sortOptions[sort].keys.first,
+          asc: asc,
+          fav: fav,
+          hidden: hidden,
+          type: type));
     });
   }
 
@@ -75,7 +80,12 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     setState(() {});
     if (timeout?.isActive ?? false) timeout?.cancel();
     timeout = Timer(const Duration(milliseconds: 500), () async {
-      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav, hidden: hidden, type: type));
+      context.read<DreamHomeBloc>().add(OrderChanged(
+          order: sortOptions[sort].keys.first,
+          asc: asc,
+          fav: fav,
+          hidden: hidden,
+          type: type));
     });
   }
 
@@ -84,7 +94,12 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     setState(() {});
     if (timeout?.isActive ?? false) timeout?.cancel();
     timeout = Timer(const Duration(milliseconds: 500), () async {
-      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav, hidden: hidden, type: type));
+      context.read<DreamHomeBloc>().add(OrderChanged(
+          order: sortOptions[sort].keys.first,
+          asc: asc,
+          fav: fav,
+          hidden: hidden,
+          type: type));
     });
   }
 
@@ -93,7 +108,12 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     setState(() {});
     if (timeout?.isActive ?? false) timeout?.cancel();
     timeout = Timer(const Duration(milliseconds: 500), () async {
-      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav, hidden: hidden, type: type));
+      context.read<DreamHomeBloc>().add(OrderChanged(
+          order: sortOptions[sort].keys.first,
+          asc: asc,
+          fav: fav,
+          hidden: hidden,
+          type: type));
     });
   }
 
@@ -106,7 +126,12 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     setState(() {});
     if (timeout?.isActive ?? false) timeout?.cancel();
     timeout = Timer(const Duration(milliseconds: 500), () async {
-      context.read<DreamHomeBloc>().add(OrderChanged(order: sortOptions[sort].keys.first, asc: asc, fav: fav, hidden: hidden, type: type));
+      context.read<DreamHomeBloc>().add(OrderChanged(
+          order: sortOptions[sort].keys.first,
+          asc: asc,
+          fav: fav,
+          hidden: hidden,
+          type: type));
     });
   }
 
@@ -115,41 +140,45 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     final configState = context.watch<AppConfigBloc>().state;
     final color = configState.darkMode ? null : Colors.white;
     return Opacity(
-      opacity: 0.8,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        opacity: 0.8,
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           TextButton.icon(
             onPressed: cycleOrder,
-            label: Text(sortOptions[sort].keys.first, style: TextStyle(color: color)),
+            label: Text(sortOptions[sort].keys.first,
+                style: TextStyle(color: color)),
             icon: Icon(sortOptions[sort].values.first, color: color),
           ),
           TextButton.icon(
             onPressed: toggleSort,
             label: Text(asc ? "asc" : "desc", style: TextStyle(color: color)),
-            icon: asc ? Icon(Icons.north_rounded, color: color) : Icon(Icons.south_rounded, color: color),
+            icon: asc
+                ? Icon(Icons.north_rounded, color: color)
+                : Icon(Icons.south_rounded, color: color),
           ),
           TextButton.icon(
             onPressed: toggleFav,
             label: Text("fav", style: TextStyle(color: color)),
-            icon: fav ? Icon(Icons.favorite, color: color) : Icon(Icons.favorite_border_outlined, color: color),
+            icon: fav
+                ? Icon(Icons.favorite, color: color)
+                : Icon(Icons.favorite_border_outlined, color: color),
           ),
           TextButton.icon(
             onPressed: toggleHidden,
             label: Text("hidden", style: TextStyle(color: color)),
-            icon: hidden ? Icon(Icons.remove_red_eye, color: color) : Icon(Icons.lock, color: color),
+            icon: hidden
+                ? Icon(Icons.remove_red_eye, color: color)
+                : Icon(Icons.lock, color: color),
           ),
           TextButton.icon(
             onPressed: cycleType,
-            label: Text(types[type].values.first.entries.first.key, style: TextStyle(color: color)),
-            icon: Icon(types[type].values.first.entries.first.value, color: color),
-            ),
-          BlocBuilder<DreamHomeBloc, DreamHomeState>(
-              builder: (context,state) {
-              return Text("(${state.count})");
-              })
-    ]
-      )
-      );
+            label: Text(types[type].values.first.entries.first.key,
+                style: TextStyle(color: color)),
+            icon: Icon(types[type].values.first.entries.first.value,
+                color: color),
+          ),
+          BlocBuilder<DreamHomeBloc, DreamHomeState>(builder: (context, state) {
+            return Text("(${state.count})");
+          })
+        ]));
   }
 }

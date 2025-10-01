@@ -42,102 +42,111 @@ class _DreamScreenState extends State<DreamScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.dreamId == 0 ? 'new dream' : 'edit dream'),
-           actions: [
-           if (widget.dreamId != 0)
-             IconButton(
-               icon: const Icon(Icons.delete),
-               onPressed: () {
-               // show dialog
-               showDialog(
-                   context: context,
-                   builder: (context) {
-                   final state = context.read<DreamFormBloc>().state;
-                   return AlertDialog(
-                       title: Text(state.dream.title),
-                       content: const Text("do you really wanna delete this dream ¿?"),
-                       actions: [
-                       TextButton(
-                         onPressed: () {
-                         Navigator.of(context).pop();
-                         },
-child: const Text("nah"),
-),
-                       TextButton(
-                         onPressed: () {
-                         context.read<DreamHomeBloc>().add(RemoveDream(dreamId: state.dream.id));
-                         Navigator.of(context).pop(); // close dialog
-                         Navigator.of(context).pop(); // return to prev
-                         },
-child: const Text("ye"),
-),
-                       ],
-                       );
-                   },
-                   );
-
-               },
-             ),
-           BlocBuilder<DreamFormBloc, DreamFormState>(
-             builder: (context, state) {
-               return IconButton(
-                 icon: state.dream.isFav ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
-                 onPressed: () {
-                   context.read<DreamHomeBloc>().add(ToggleFavDream(dreamId: state.dream.id));
-                   state.dream.isFav = !state.dream.isFav;
-                   setState(() { });
-                 },
-               );
-             },
-           ),
-           ],
+          actions: [
+            if (widget.dreamId != 0)
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  // show dialog
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      final state = context.read<DreamFormBloc>().state;
+                      return AlertDialog(
+                        title: Text(state.dream.title),
+                        content: const Text(
+                            "do you really wanna delete this dream ¿?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("nah"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              context
+                                  .read<DreamHomeBloc>()
+                                  .add(RemoveDream(dreamId: state.dream.id));
+                              Navigator.of(context).pop(); // close dialog
+                              Navigator.of(context).pop(); // return to prev
+                            },
+                            child: const Text("ye"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+            BlocBuilder<DreamFormBloc, DreamFormState>(
+              builder: (context, state) {
+                return IconButton(
+                  icon: state.dream.isFav
+                      ? const Icon(Icons.favorite)
+                      : const Icon(Icons.favorite_border),
+                  onPressed: () {
+                    context
+                        .read<DreamHomeBloc>()
+                        .add(ToggleFavDream(dreamId: state.dream.id));
+                    state.dream.isFav = !state.dream.isFav;
+                    setState(() {});
+                  },
+                );
+              },
+            ),
+          ],
         ),
         body: Form(
           key: formKey,
           child: Column(
             children: [
               Expanded(
-                child: BlocBuilder<DreamFormBloc,DreamFormState>(
-                  builder: (context,state) {
+                child: BlocBuilder<DreamFormBloc, DreamFormState>(
+                    builder: (context, state) {
                   bool scrollable = state.valid;
                   return CardSwiper(
-                      padding: EdgeInsetsGeometry.all(15),
-                      cardsCount: slides.length,
-                      cardBuilder: (context, index,a,b) => slides[index],
-                      controller: swiperController,
-                      scale: 1,
-                      isLoop: false,
-                      duration: Duration(milliseconds: 100),
-                      maxAngle: 0,
-                      isDisabled: !scrollable,
-                      numberOfCardsDisplayed: 1,
-                      allowedSwipeDirection: AllowedSwipeDirection.only(right: true,left: true),
-                      onSwipe: (oldIndex, newIndex, direction) {
+                    padding: EdgeInsetsGeometry.all(15),
+                    cardsCount: slides.length,
+                    cardBuilder: (context, index, a, b) => slides[index],
+                    controller: swiperController,
+                    scale: 1,
+                    isLoop: false,
+                    duration: Duration(milliseconds: 100),
+                    maxAngle: 0,
+                    isDisabled: !scrollable,
+                    numberOfCardsDisplayed: 1,
+                    allowedSwipeDirection:
+                        AllowedSwipeDirection.only(right: true, left: true),
+                    onSwipe: (oldIndex, newIndex, direction) {
                       if (formKey.currentState!.validate()) {
-                        context.read<DreamFormBloc>().add(IndexChanged(newIndex!));
-                        if (direction == CardSwiperDirection.right){
-                        swiperController.moveTo(oldIndex-1);
+                        context
+                            .read<DreamFormBloc>()
+                            .add(IndexChanged(newIndex!));
+                        if (direction == CardSwiperDirection.right) {
+                          swiperController.moveTo(oldIndex - 1);
                         } else {
-                        swiperController.moveTo(oldIndex+1);
+                          swiperController.moveTo(oldIndex + 1);
                         }
                       } else {
                         swiperController.undo();
                       }
                       return false;
-                      },
-                      );
-                  }
-                ),
+                    },
+                  );
+                }),
               ),
             ],
           ),
         ),
-        floatingActionButton: BlocBuilder<DreamFormBloc, DreamFormState>(builder: (context, state) {
-          final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+        floatingActionButton: BlocBuilder<DreamFormBloc, DreamFormState>(
+            builder: (context, state) {
+          final isKeyboardVisible =
+              MediaQuery.of(context).viewInsets.bottom != 0;
           return Visibility(
             visible: state.currentIndex == 0 ? !isKeyboardVisible : true,
             child: FloatingActionButton(
@@ -150,14 +159,20 @@ child: const Text("ye"),
                 if (state.currentIndex == slides.length - 1) {
                   context.read<DreamFormBloc>().add(const DreamSubmitted());
                   context.pop();
-                  context.read<DreamHomeBloc>().add(HandleDream(dream: state.dream));
+                  context
+                      .read<DreamHomeBloc>()
+                      .add(HandleDream(dream: state.dream));
                   return;
                 }
                 FocusManager.instance.primaryFocus?.unfocus();
                 swiperController.swipe(CardSwiperDirection.left);
               },
               child: Icon(
-                state.currentIndex >= (slides.length - 1) ? Icons.arrow_upward : (isKeyboardVisible ? Icons.arrow_downward : Icons.arrow_forward),
+                state.currentIndex >= (slides.length - 1)
+                    ? Icons.arrow_upward
+                    : (isKeyboardVisible
+                        ? Icons.arrow_downward
+                        : Icons.arrow_forward),
               ),
             ),
           );

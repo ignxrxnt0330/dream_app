@@ -36,5 +36,10 @@ class OrderChanged extends DreamHomeEvent {
   final bool fav;
   final bool hidden;
   final int type;
-  const OrderChanged({required this.order, required this.asc, required this.fav, required this.hidden, required this.type});
+  const OrderChanged(
+      {required this.order,
+      required this.asc,
+      required this.fav,
+      required this.hidden,
+      required this.type});
 }

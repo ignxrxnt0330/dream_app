@@ -29,7 +29,6 @@ class AppTheme {
         textColor: bloc.state.darkMode ? Colors.white : Colors.black,
         selectedTileColor: bloc.state.darkMode ? Colors.black : Colors.white,
       ),
-      
     );
   }
 }

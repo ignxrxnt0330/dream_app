@@ -20,8 +20,8 @@ class BracketChanged extends DreamStatsEvent {
 class StatsScrollChange extends DreamStatsEvent {
   final double scroll;
   const StatsScrollChange({
-      required this.scroll,
-      });
+    required this.scroll,
+  });
 }
 
 class FetchStatsDreams extends DreamStatsEvent {

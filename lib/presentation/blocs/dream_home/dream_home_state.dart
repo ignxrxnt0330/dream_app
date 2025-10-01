@@ -51,7 +51,8 @@ class DreamHomeState extends Equatable {
       );
 
   @override
-  List<Object> get props => [dreams, isLoading, endReached, order, asc, fav, hidden, type, count];
+  List<Object> get props =>
+      [dreams, isLoading, endReached, order, asc, fav, hidden, type, count];
 
   @override
   String toString() {

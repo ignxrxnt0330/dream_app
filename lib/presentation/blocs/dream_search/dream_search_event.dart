@@ -28,12 +28,11 @@ class ScrollSearch extends DreamSearchEvent {
     this.offset = 0,
     this.names,
   });
-
 }
 
 class SearchScrollChange extends DreamSearchEvent {
   final double scroll;
   const SearchScrollChange({
-      required this.scroll,
-      });
+    required this.scroll,
+  });
 }

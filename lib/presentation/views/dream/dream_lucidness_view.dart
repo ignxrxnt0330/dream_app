@@ -22,7 +22,11 @@ class _DreamLucidnessViewState extends State<DreamLucidnessView> {
   }
 
   void save() {
-    Dream dream = context.read<DreamFormBloc>().state.dream.copyWith(lucidness: lucidness);
+    Dream dream = context
+        .read<DreamFormBloc>()
+        .state
+        .dream
+        .copyWith(lucidness: lucidness);
     context.read<DreamFormBloc>().add(FieldChanged(dream));
   }
 

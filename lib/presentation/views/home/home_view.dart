@@ -19,13 +19,18 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<DreamHomeBloc>().add(const FetchDreams(offset: 0, limit: 10));
+      context
+          .read<DreamHomeBloc>()
+          .add(const FetchDreams(offset: 0, limit: 10));
     });
 
     scrollController.addListener(() {
       //TODO: offset variable ¿?
-      if (scrollController.position.pixels + 400 >= scrollController.position.maxScrollExtent) {
-        context.read<DreamHomeBloc>().add(const FetchDreams(offset: 0, limit: 10));
+      if (scrollController.position.pixels + 400 >=
+          scrollController.position.maxScrollExtent) {
+        context
+            .read<DreamHomeBloc>()
+            .add(const FetchDreams(offset: 0, limit: 10));
       }
     });
   }
@@ -45,17 +50,17 @@ class _HomeViewState extends State<HomeView> {
             SliverAppBar(
               floating: true,
               flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
+                  centerTitle: true,
                   title: TextButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const SortFilterDialog();
-                        });
-                  },
-                  child: const Text("filter dreams"),
-              )),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const SortFilterDialog();
+                          });
+                    },
+                    child: const Text("filter dreams"),
+                  )),
               expandedHeight: 50.0,
             ),
             SliverList.builder(

@@ -3,10 +3,13 @@ import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 
 class Biometrics {
-  static Future<bool> authenticate({String message = "Authenticate to continue"}) async {
+  static Future<bool> authenticate(
+      {String message = "Authenticate to continue"}) async {
     final LocalAuthentication auth = LocalAuthentication();
     try {
-      final bool didAuthenticate = await auth.authenticate(localizedReason: message, options: const AuthenticationOptions(stickyAuth: true));
+      final bool didAuthenticate = await auth.authenticate(
+          localizedReason: message,
+          options: const AuthenticationOptions(stickyAuth: true));
       return didAuthenticate;
     } on PlatformException catch (err) {
       switch (err.code) {

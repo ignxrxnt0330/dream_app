@@ -21,36 +21,38 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        actions: [
-          TextButton(
-            onPressed: () {
-              context.read<AppConfigBloc>().add(const ChangeAppColor(Color(0xFF9C27B0)));
-              Navigator.of(context).pop();
-            },
-            child: const Text("reset default"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("cancel"),
-          ),
-          TextButton(
-            onPressed: () {
-              context.read<AppConfigBloc>().add(ChangeAppColor(color));
-              Navigator.of(context).pop();
-            },
-            child: const Text("confirm"),
-          ),
-        ],
-        content: SingleChildScrollView(
-          child: ColorPicker(
-            pickerColor: color,
-            onColorChanged: (value) {
-              color = value;
-            },
-          ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            context
+                .read<AppConfigBloc>()
+                .add(const ChangeAppColor(Color(0xFF9C27B0)));
+            Navigator.of(context).pop();
+          },
+          child: const Text("reset default"),
         ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text("cancel"),
+        ),
+        TextButton(
+          onPressed: () {
+            context.read<AppConfigBloc>().add(ChangeAppColor(color));
+            Navigator.of(context).pop();
+          },
+          child: const Text("confirm"),
+        ),
+      ],
+      content: SingleChildScrollView(
+        child: ColorPicker(
+          pickerColor: color,
+          onColorChanged: (value) {
+            color = value;
+          },
+        ),
+      ),
     );
   }
 }
