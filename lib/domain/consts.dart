@@ -9,8 +9,8 @@ class Consts {
   Map<int,String> lucidness = {
    0: 'None',
    1: 'Mild',
-   3: 'High',
-   4: 'Extreme'
+   2: 'High',
+   3: 'Extreme'
   }; 
 
   Map<int,String> mood = {
