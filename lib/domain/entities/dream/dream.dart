@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dream_app/infrastructure/datasources/sp_config.dart';
 import 'package:dream_app/util/custom_date_utils.dart';
+import 'package:dream_app/util/custom_string_utils.dart';
 import 'package:isar/isar.dart';
 
 part 'dream.g.dart';
@@ -72,7 +73,7 @@ class Dream {
 
   // get year only if its not current, return d/m/y H:m
   String get formattedDate {
-    return CustomDateUtils.formatDate(date);
+    return date!.formatDate;
   }
 
   void initNames() {
@@ -80,7 +81,7 @@ class Dream {
 
     names = regexp
         .allMatches(description)
-        .map((match) => match.group(1))
+        .map((match) => match.group(1)?.normalize.toUpperCase())
         .whereType<String>()
         .toList();
   }

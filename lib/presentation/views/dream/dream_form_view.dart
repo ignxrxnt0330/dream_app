@@ -202,25 +202,25 @@ class _DescriptionRowState extends State<_DescriptionRow> {
             if (controller.text != widget.controller.text) {
               controller.text = widget.controller.text;
               controller.selection = TextSelection.fromPosition(
-                  TextPosition(offset: controller.text.length),
-                  );
+                TextPosition(offset: controller.text.length),
+              );
             }
 
             controller.addListener(() {
-                if (widget.controller.text != controller.text) {
+              if (widget.controller.text != controller.text) {
                 widget.controller.text = controller.text;
                 widget.save();
-                }
-                });
+              }
+            });
           }
 
           return TextFormField(
-              controller: controller,
-              focusNode: focusNode,
-              onTapOutside: (event) {
+            controller: controller,
+            focusNode: focusNode,
+            onTapOutside: (event) {
               context
-              .read<DreamFormBloc>()
-              .add(ValidChanged(valid: widget.controller.text.isNotEmpty));
+                  .read<DreamFormBloc>()
+                  .add(ValidChanged(valid: widget.controller.text.isNotEmpty));
               FocusScope.of(context).unfocus();
             },
             decoration: InputDecoration(

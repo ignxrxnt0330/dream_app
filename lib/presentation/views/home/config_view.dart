@@ -117,7 +117,7 @@ class _ConfigViewState extends State<ConfigView> {
                           DateTime lastExportedDate =
                               DateTime.fromMillisecondsSinceEpoch(lastExported);
                           exportedText =
-                              "last exported ${CustomDateUtils.formatDate(lastExportedDate)}";
+                              "last exported ${lastExportedDate.formatDate}";
                         }
 
                         return Text(exportedText,
