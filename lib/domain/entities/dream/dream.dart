@@ -76,7 +76,7 @@ class Dream {
   }
 
   void initNames() {
-    final regexp = RegExp(r'@(\w+)', multiLine: true);
+    final regexp = RegExp(r'@([\wáéíóúÁÉÍÓÚñÑüÜ]+)', multiLine: true);
 
     names = regexp
         .allMatches(description)
