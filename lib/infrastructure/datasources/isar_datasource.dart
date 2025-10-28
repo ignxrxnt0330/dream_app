@@ -295,9 +295,9 @@ class IsarDatasource extends LocalStorageDatasource {
           currentDate.year == previousDate.year) continue;
 
       final isNextDay =
-          previousDate.day == currentDate.add(const Duration(days: 1)).day;
-
+          currentDate.difference(previousDate).inDays.abs() == 1;
       if (isNextDay) {
+        print("$previousDate $currentDate");
         streak++;
         streakEnd = previousDate;
       } else {
@@ -345,7 +345,7 @@ class IsarDatasource extends LocalStorageDatasource {
       if (currentDate == null || previousDate == null) continue;
 
       final isNextDay =
-          previousDate.day == currentDate.add(const Duration(days: 1)).day;
+          currentDate.difference(previousDate).inDays.abs() == 1;
 
       if (isNextDay) {
         streak++;
