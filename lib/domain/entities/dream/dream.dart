@@ -81,7 +81,7 @@ class Dream {
 
     names = regexp
         .allMatches(description)
-        .map((match) => match.group(1)?.normalize.toUpperCase())
+        .map((match) => match.group(1)?.normalize.toLowerCase())
         .whereType<String>()
         .toList();
   }
