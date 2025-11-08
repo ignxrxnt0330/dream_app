@@ -1,4 +1,5 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +30,11 @@ class _DreamMoodViewState extends State<DreamMoodView> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         children: [
-          const Text('Dream mood'),
+          Text(localizations.dreamMood),
           const SizedBox(
             height: 20,
           ),
@@ -42,7 +44,7 @@ class _DreamMoodViewState extends State<DreamMoodView> {
                 children: [
                   CustomListTile(
                     icon: Icons.signal_cellular_nodata,
-                    title: "bad",
+                    title: localizations.bad,
                     selected: mood == 0,
                     value: 0,
                     onTap: () {
@@ -53,7 +55,7 @@ class _DreamMoodViewState extends State<DreamMoodView> {
                   ),
                   CustomListTile(
                     icon: Icons.signal_cellular_alt_1_bar_outlined,
-                    title: "meh",
+                    title: localizations.meh,
                     selected: mood == 1,
                     value: 1,
                     onTap: () {
@@ -64,7 +66,7 @@ class _DreamMoodViewState extends State<DreamMoodView> {
                   ),
                   CustomListTile(
                     icon: Icons.signal_cellular_alt_2_bar_outlined,
-                    title: "neutral",
+                    title: localizations.neutral,
                     selected: mood == 2,
                     value: 2,
                     onTap: () {
@@ -75,7 +77,7 @@ class _DreamMoodViewState extends State<DreamMoodView> {
                   ),
                   CustomListTile(
                     icon: Icons.signal_cellular_alt_rounded,
-                    title: "good",
+                    title: localizations.good,
                     selected: mood == 3,
                     value: 3,
                     onTap: () {
@@ -86,7 +88,7 @@ class _DreamMoodViewState extends State<DreamMoodView> {
                   ),
                   CustomListTile(
                     icon: Icons.signal_cellular_4_bar_outlined,
-                    title: "great",
+                    title: localizations.great,
                     selected: mood == 5,
                     value: 5,
                     onTap: () {
@@ -99,7 +101,7 @@ class _DreamMoodViewState extends State<DreamMoodView> {
               ),
               validator: (_) {
                 if (mood == null) {
-                  return 'required';
+                  return localizations.required;
                 }
                 save();
                 return null;

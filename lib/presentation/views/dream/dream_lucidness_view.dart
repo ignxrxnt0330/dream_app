@@ -1,4 +1,5 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -32,10 +33,11 @@ class _DreamLucidnessViewState extends State<DreamLucidnessView> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         children: [
-          const Text('Dream lucidness'),
+          Text(localizations.dreamLucidness),
           const SizedBox(
             height: 20,
           ),
@@ -45,7 +47,7 @@ class _DreamLucidnessViewState extends State<DreamLucidnessView> {
                 children: [
                   CustomListTile(
                     icon: Icons.blind,
-                    title: "none",
+                    title: localizations.none,
                     selected: lucidness == 0,
                     value: 0,
                     onTap: () {
@@ -56,7 +58,7 @@ class _DreamLucidnessViewState extends State<DreamLucidnessView> {
                   ),
                   CustomListTile(
                     icon: Icons.panorama_fish_eye_sharp,
-                    title: "mild",
+                    title: localizations.mild,
                     selected: lucidness == 1,
                     value: 1,
                     onTap: () {
@@ -67,7 +69,7 @@ class _DreamLucidnessViewState extends State<DreamLucidnessView> {
                   ),
                   CustomListTile(
                     icon: Icons.remove_red_eye_outlined,
-                    title: "high",
+                    title: localizations.high,
                     selected: lucidness == 2,
                     value: 2,
                     onTap: () {
@@ -78,7 +80,7 @@ class _DreamLucidnessViewState extends State<DreamLucidnessView> {
                   ),
                   CustomListTile(
                     icon: Icons.remove_red_eye,
-                    title: "extreme",
+                    title: localizations.extreme,
                     selected: lucidness == 3,
                     value: 3,
                     onTap: () {

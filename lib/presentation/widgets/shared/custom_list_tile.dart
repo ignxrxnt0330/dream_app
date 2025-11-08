@@ -2,10 +2,10 @@ import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CustomListTile extends StatefulWidget {
+class CustomListTile<T> extends StatefulWidget {
   final IconData icon;
   final String title;
-  final int value;
+  final T value;
   final bool selected;
   final VoidCallback onTap;
   const CustomListTile(

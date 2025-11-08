@@ -1,3 +1,4 @@
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,8 +23,9 @@ class _DefaultTitleDialogState extends State<DefaultTitleDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text("set default title"),
+      title: Text(localizations.setDefaultTitle),
       content: TextField(
         controller: defaultTitleController,
         autofocus: true,
@@ -33,7 +35,7 @@ class _DefaultTitleDialogState extends State<DefaultTitleDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text("cancel"),
+          child: Text(localizations.cancel),
         ),
         TextButton(
           onPressed: () {
@@ -42,7 +44,7 @@ class _DefaultTitleDialogState extends State<DefaultTitleDialog> {
                 .add(SetDefaultTitle(defaultTitleController.text));
             Navigator.of(context).pop();
           },
-          child: const Text("confirm"),
+          child: Text(localizations.confirm),
         ),
       ],
     );

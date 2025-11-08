@@ -1,6 +1,8 @@
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/widgets/config/color_picker_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/default_title_dialog.dart';
+import 'package:dream_app/presentation/widgets/config/set_language_dialog.dart';
 import 'package:dream_app/util/custom_date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +26,7 @@ class _ConfigViewState extends State<ConfigView> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       body: CustomScrollView(
         physics: const RangeMaintainingScrollPhysics(),
@@ -31,24 +34,24 @@ class _ConfigViewState extends State<ConfigView> {
           SliverToBoxAdapter(
               child: Column(children: [
             SwitchListTile(
-              title: const Text("dark mode"),
-              subtitle: const Text("swtich between dark and light mode"),
+              title: Text(localizations.darkMode),
+              subtitle: Text(localizations.toggleDarkMode),
               value: context.watch<AppConfigBloc>().state.darkMode,
               onChanged: (value) {
                 if (value == false) {
                   AlertDialog dialog = AlertDialog(
-                    title: const Text("are you sure¿"),
-                    content: const Text("you are making a really bad choice"),
+                    title: Text(localizations.areYouSure),
+                    content: Text(localizations.badChoide),
                     actions: [
                       TextButton(
-                        child: const Text("na"),
+                        child: Text(localizations.no),
                         onPressed: () {
                           Navigator.of(context).pop();
                           return;
                         },
                       ),
                       TextButton(
-                        child: const Text("ye"),
+                        child: Text(localizations.yes),
                         onPressed: () {
                           Navigator.of(context).pop();
                           context
@@ -70,8 +73,8 @@ class _ConfigViewState extends State<ConfigView> {
               },
             ),
             ListTile(
-              title: const Text("colors"),
-              subtitle: const Text("change the app colors"),
+              title: Text(localizations.colors),
+              subtitle: Text(localizations.changeColors),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 showDialog(
@@ -82,8 +85,8 @@ class _ConfigViewState extends State<ConfigView> {
               },
             ),
             ListTile(
-              title: const Text("default title"),
-              subtitle: const Text("set a default title for your dreams"),
+              title: Text(localizations.defaultTitle),
+              subtitle: Text(localizations.setDefaultTitle),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
                 setState(() {});
@@ -96,8 +99,8 @@ class _ConfigViewState extends State<ConfigView> {
               },
             ),
             ListTile(
-              title: const Text("import dreams"),
-              subtitle: const Text("import your previously exported dreams"),
+              title: Text(localizations.importDreams),
+              subtitle: Text(localizations.importDreamsDesc),
               trailing: const Icon(Icons.upload_file_rounded),
               onTap: () {
                 context.read<AppConfigBloc>().add(const ImportDreams());
@@ -107,17 +110,17 @@ class _ConfigViewState extends State<ConfigView> {
               title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("export dreams"),
+                    Text(localizations.exportDreams),
                     BlocBuilder<AppConfigBloc, AppConfigState>(
                       builder: (context, state) {
-                        String exportedText = "no export data";
+                        String exportedText = localizations.noExportData;
                         int lastExported =
                             context.read<AppConfigBloc>().state.lastExported;
                         if (lastExported != 0) {
                           DateTime lastExportedDate =
                               DateTime.fromMillisecondsSinceEpoch(lastExported);
-                          exportedText =
-                              "last exported ${lastExportedDate.formatDate}";
+                          exportedText = localizations
+                              .lastExportedDate(lastExportedDate.formatDate);
                         }
 
                         return Text(exportedText,
@@ -125,30 +128,43 @@ class _ConfigViewState extends State<ConfigView> {
                       },
                     ),
                   ]),
-              subtitle: Text(
-                  "download your dreams as a json file so you can keep them safe"),
+              subtitle: Text(localizations.exportDreamsDesc),
               trailing: const Icon(Icons.download),
               onTap: () {
                 context.read<AppConfigBloc>().add(const ExportDreams());
               },
             ),
-            const ListTile(
-              title: Text("restart app"),
-              subtitle: Text("close and reopen the app"),
+            ListTile(
+              title: Text(localizations.appLang),
+              subtitle: Text(localizations.appLangDesc),
+              trailing: const Icon(Icons.language),
+              onTap: () {
+                setState(() {});
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const SetLanguageDialog();
+                  },
+                );
+              },
+            ),
+            ListTile(
+              title: Text(localizations.restart),
+              subtitle: Text(localizations.reopen),
               trailing: Icon(Icons.refresh),
               onTap: Restart.restartApp,
             ),
             ListTile(
-              title: const Text("about"),
-              subtitle: const Text("about the app"),
+              title: Text(localizations.about),
+              subtitle: Text(localizations.aboutTheApp),
               onTap: () => {
                 showAboutDialog(
                   context: context,
-                  applicationName: "dream_app",
+                  applicationName: localizations.appTitle,
                   applicationVersion: "0.0.1",
                   // applicationIcon: const Icon(Icons.), //TODO:
-                  children: const [
-                    Text("dream journaling app"),
+                  children: [
+                    Text(localizations.dreamJournalingApp),
                   ],
                 )
               },
@@ -162,23 +178,23 @@ class _ConfigViewState extends State<ConfigView> {
           ),
           SliverToBoxAdapter(
               child: ListTile(
-            title: const Text("delete all dreams"),
-            subtitle: const Text("delete all of your dreams"),
+            title: Text(localizations.deleteAll),
+            subtitle: Text(localizations.deleteAllDesc),
             trailing: const Icon(Icons.warning),
             onTap: () {
               showDialog(
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: const Text("delete all dreams"),
+                    title: Text(localizations.deleteAll),
                     content:
-                        const Text("do you really wanna delete all dreams ¿?"),
+                        Text(localizations.confirmAction("delete all dreams")),
                     actions: [
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: const Text("nah"),
+                        child: Text(localizations.no),
                       ),
                       TextButton(
                         onPressed: () {
@@ -187,7 +203,7 @@ class _ConfigViewState extends State<ConfigView> {
                               .add(const DeleteAllDreams());
                           Navigator.of(context).pop();
                         },
-                        child: const Text("ye"),
+                        child: Text(localizations.yes),
                       ),
                     ],
                   );

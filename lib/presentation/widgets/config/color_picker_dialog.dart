@@ -1,3 +1,4 @@
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return AlertDialog(
       actions: [
         TextButton(
@@ -29,20 +31,20 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
                 .add(const ChangeAppColor(Color(0xFF9C27B0)));
             Navigator.of(context).pop();
           },
-          child: const Text("reset default"),
+          child: Text(localizations.resetDefault),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text("cancel"),
+          child: Text(localizations.cancel),
         ),
         TextButton(
           onPressed: () {
             context.read<AppConfigBloc>().add(ChangeAppColor(color));
             Navigator.of(context).pop();
           },
-          child: const Text("confirm"),
+          child: Text(localizations.confirm),
         ),
       ],
       content: SingleChildScrollView(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
@@ -135,8 +136,29 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     });
   }
 
+  String getSortLabel(String key) {
+    final localizations = AppLocalizations.of(context)!;
+    switch (key) {
+      case "date":
+        return localizations.date;
+      case "descLength":
+        return localizations.descLength;
+      case "nameCount":
+        return localizations.nameCount;
+      case "rating":
+        return localizations.rating;
+      case "lucidness":
+        return localizations.lucidness;
+      case "mood":
+        return localizations.mood;
+      default:
+        return key;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final configState = context.watch<AppConfigBloc>().state;
     final color = configState.darkMode ? null : Colors.white;
     return Opacity(
@@ -144,27 +166,28 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           TextButton.icon(
             onPressed: cycleOrder,
-            label: Text(sortOptions[sort].keys.first,
+            label: Text(getSortLabel(sortOptions[sort].keys.first),
                 style: TextStyle(color: color)),
             icon: Icon(sortOptions[sort].values.first, color: color),
           ),
           TextButton.icon(
             onPressed: toggleSort,
-            label: Text(asc ? "asc" : "desc", style: TextStyle(color: color)),
+            label: Text(asc ? localizations.asc : localizations.desc,
+                style: TextStyle(color: color)),
             icon: asc
                 ? Icon(Icons.north_rounded, color: color)
                 : Icon(Icons.south_rounded, color: color),
           ),
           TextButton.icon(
             onPressed: toggleFav,
-            label: Text("fav", style: TextStyle(color: color)),
+            label: Text(localizations.fav, style: TextStyle(color: color)),
             icon: fav
                 ? Icon(Icons.favorite, color: color)
                 : Icon(Icons.favorite_border_outlined, color: color),
           ),
           TextButton.icon(
             onPressed: toggleHidden,
-            label: Text("hidden", style: TextStyle(color: color)),
+            label: Text(localizations.hidden, style: TextStyle(color: color)),
             icon: hidden
                 ? Icon(Icons.remove_red_eye, color: color)
                 : Icon(Icons.lock, color: color),

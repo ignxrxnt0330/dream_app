@@ -1,3 +1,4 @@
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:dream_app/presentation/widgets/home/sort_filter_dialog.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_dream_list_tile.dart';
@@ -37,6 +38,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final dreamsState = context.watch<DreamHomeBloc>().state;
 
     return RefreshIndicator(
@@ -59,7 +61,7 @@ class _HomeViewState extends State<HomeView> {
                             return const SortFilterDialog();
                           });
                     },
-                    child: const Text("filter dreams"),
+                    child: Text(localizations.filterDreams),
                   )),
               expandedHeight: 50.0,
             ),

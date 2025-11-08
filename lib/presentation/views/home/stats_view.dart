@@ -1,3 +1,4 @@
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/dream_stats/dream_stats_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -99,11 +100,12 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final List<Tab> tabs = <Tab>[
-      Tab(text: 'Weekly'),
-      Tab(text: 'Monthly'),
-      Tab(text: 'Yearly'),
-      Tab(text: 'All time')
+      Tab(text: localizations.weekly),
+      Tab(text: localizations.monthly),
+      Tab(text: localizations.yearly),
+      Tab(text: localizations.allTime)
     ];
 
     return BlocBuilder<DreamStatsBloc, DreamStatsState>(
@@ -125,9 +127,14 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        StatCard(number: state.dreamCount, text: "dreams"),
-                        StatCard(number: state.wordCount, text: "words"),
-                        StatCard(number: state.charCount, text: "characters"),
+                        StatCard(
+                            number: state.dreamCount,
+                            text: localizations.dreams),
+                        StatCard(
+                            number: state.wordCount, text: localizations.words),
+                        StatCard(
+                            number: state.charCount,
+                            text: localizations.characters),
                       ],
                     ),
                     Row(
@@ -135,21 +142,21 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
                       children: [
                         StatCard(
                           number: state.currentStreak.streak,
-                          text: "current streak",
+                          text: localizations.currentStreak,
                           tooltipText:
-                              "${DateFormat('dd/MM/yyyy').format(state.currentStreak.streakStart)} - ${DateFormat('dd/MM/yyyy').format(state.currentStreak.streakEnd)}",
+                              "${DateFormat(localizations.dateFormat).format(state.currentStreak.streakStart)} - ${DateFormat(localizations.dmY).format(state.currentStreak.streakEnd)}",
                         ),
                         StatCard(
                           number: state.longestStreak.streak,
-                          text: "longest streak",
+                          text: localizations.longestStreak,
                           tooltipText:
-                              "${DateFormat('dd/MM/yyyy').format(state.longestStreak.streakStart)} - ${DateFormat('dd/MM/yyyy').format(state.longestStreak.streakEnd)}",
+                              "${DateFormat(localizations.dmY).format(state.longestStreak.streakStart)} - ${DateFormat(localizations.dmY).format(state.longestStreak.streakEnd)}",
                         ),
                         StatCard(
                             number: (state.dreamCount / state.bracket * 100)
                                     .round() /
                                 100,
-                            text: "dreams / day",
+                            text: localizations.dreamsPerDay,
                             onTap: () {
                               context
                                   .read<DreamStatsBloc>()
@@ -180,7 +187,8 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
                                               quarterTurns: 1,
                                               child: Column(
                                                 children: [
-                                                  const Text("Dreams per day"),
+                                                  Text(localizations
+                                                      .dreamsPerDay),
                                                   Expanded(child: BlocBuilder<
                                                           DreamStatsBloc,
                                                           DreamStatsState>(
@@ -214,19 +222,19 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
                             controller: scrollController,
                             child: Column(children: [
                               StatsSection(children: [
-                                Center(child: Text('Names')),
+                                Center(child: Text(localizations.names)),
                                 CustomBarChart(data: state.names),
                               ]),
                               StatsSection(children: [
-                                StatsHeader(text: 'Lucidness'),
+                                StatsHeader(text: localizations.lucidness),
                                 CustomPieChart(data: state.lucidness),
                               ]),
                               StatsSection(children: [
-                                StatsHeader(text: 'Types'),
+                                StatsHeader(text: localizations.types),
                                 CustomPieChart(data: state.types)
                               ]),
                               StatsSection(children: [
-                                Center(child: Text('Mood')),
+                                Center(child: Text(localizations.mood)),
                                 CustomPieChart(data: state.mood),
                               ]),
                             ])));

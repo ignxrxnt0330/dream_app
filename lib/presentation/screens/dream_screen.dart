@@ -1,3 +1,4 @@
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
@@ -42,10 +43,13 @@ class _DreamScreenState extends State<DreamScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.dreamId == 0 ? 'new dream' : 'edit dream'),
+          title: Text(widget.dreamId == 0
+              ? localizations.newDream
+              : localizations.editDream),
           actions: [
             if (widget.dreamId != 0)
               IconButton(
@@ -58,14 +62,14 @@ class _DreamScreenState extends State<DreamScreen> {
                       final state = context.read<DreamFormBloc>().state;
                       return AlertDialog(
                         title: Text(state.dream.title),
-                        content: const Text(
-                            "do you really wanna delete this dream ¿?"),
+                        content: Text(
+                            localizations.confirmAction('delete this dream')),
                         actions: [
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
-                            child: const Text("nah"),
+                            child: Text(localizations.no),
                           ),
                           TextButton(
                             onPressed: () {
@@ -75,7 +79,7 @@ class _DreamScreenState extends State<DreamScreen> {
                               Navigator.of(context).pop(); // close dialog
                               Navigator.of(context).pop(); // return to prev
                             },
-                            child: const Text("ye"),
+                            child: Text(localizations.yes),
                           ),
                         ],
                       );
@@ -120,8 +124,11 @@ class _DreamScreenState extends State<DreamScreen> {
                     maxAngle: 0,
                     isDisabled: !scrollable,
                     numberOfCardsDisplayed: 1,
-                    allowedSwipeDirection:
-                        AllowedSwipeDirection.only(right: true, left: true),
+                    allowedSwipeDirection: AllowedSwipeDirection.only(
+                        right:
+                            context.read<DreamFormBloc>().state.currentIndex !=
+                                0,
+                        left: true),
                     onSwipe: (oldIndex, newIndex, direction) {
                       if (formKey.currentState!.validate()) {
                         context

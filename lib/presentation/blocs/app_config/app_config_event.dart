@@ -39,3 +39,8 @@ class SetLastExported extends AppConfigEvent {
   final int lastExported;
   const SetLastExported(this.lastExported);
 }
+
+class SetLanguage extends AppConfigEvent {
+  final String lang;
+  const SetLanguage(this.lang);
+}

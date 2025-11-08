@@ -1,6 +1,7 @@
 import 'package:date_field/date_field.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -98,6 +99,7 @@ class _TitleRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Material(
       child: TextFormField(
         autofocus: controller.text.isEmpty ? autofocus : false,
@@ -109,7 +111,7 @@ class _TitleRow extends StatelessWidget {
           FocusScope.of(context).unfocus();
         },
         decoration: InputDecoration(
-          labelText: 'Title',
+          labelText: localizations.title,
           hintText: context.read<AppConfigBloc>().state.defaultTitle.isNotEmpty
               ? context.read<AppConfigBloc>().state.defaultTitle
               : null,
@@ -123,7 +125,7 @@ class _TitleRow extends StatelessWidget {
           if ((value == null || value.isEmpty) &&
               context.read<AppConfigBloc>().state.defaultTitle.isEmpty) {
             context.read<DreamFormBloc>().add(ValidChanged(valid: false));
-            return "empty";
+            return localizations.empty;
           }
           context.read<DreamFormBloc>().add(ValidChanged(valid: true));
           return null;
@@ -155,6 +157,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return MultiTriggerAutocomplete(
         optionsAlignment: OptionsAlignment.topStart,
         autocompleteTriggers: [
@@ -224,8 +227,8 @@ class _DescriptionRowState extends State<_DescriptionRow> {
               FocusScope.of(context).unfocus();
             },
             decoration: InputDecoration(
-              labelText: 'Description',
-              hintText: 'asdasdasd...',
+              labelText: localizations.description,
+              hintText: localizations.descriptionHint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -234,7 +237,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
             maxLines: 20,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'empty';
+                return localizations.empty;
               }
               widget.controller.text = widget.controller.text;
               widget.save();
@@ -276,9 +279,10 @@ class _DateTimeRowState extends State<_DateTimeRow> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Material(
       child: DateTimeFormField(
-        dateFormat: DateFormat('dd-MM-yyyy HH:mm'),
+        dateFormat: DateFormat(localizations.dateFormat),
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
@@ -295,7 +299,7 @@ class _DateTimeRowState extends State<_DateTimeRow> {
         },
         validator: (value) {
           if (value == null) {
-            return "empty";
+            return localizations.empty;
           }
           return null;
         },

@@ -1,3 +1,4 @@
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/delegates/dream_search_delegate.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_navigation_bar.dart';
@@ -89,10 +90,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title:
-            const Text('dream_app', style: TextStyle(fontFamily: "Consolas")),
+        title: Text(localizations.appTitle,
+            style: TextStyle(fontFamily: "Consolas")),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

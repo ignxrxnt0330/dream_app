@@ -64,4 +64,16 @@ class SpConfig extends ConfigDatasource {
     int lastExported = prefs.getInt('lastExported') ?? 0;
     return lastExported;
   }
+
+  @override
+  Future<void> setLanguage(String language) async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString('language', language);
+  }
+
+  @override
+  Future<String> getLanguage() async {
+    prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language') ?? 'en';
+  }
 }

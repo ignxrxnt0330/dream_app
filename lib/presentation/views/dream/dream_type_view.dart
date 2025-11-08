@@ -1,4 +1,5 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +30,11 @@ class _DreamTypeViewState extends State<DreamTypeView> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         children: [
-          const Text('Dream type'),
+          Text(localizations.dreamType),
           const SizedBox(
             height: 20,
           ),
@@ -42,7 +44,7 @@ class _DreamTypeViewState extends State<DreamTypeView> {
                 children: [
                   CustomListTile(
                     icon: Icons.sunny,
-                    title: "dream",
+                    title: localizations.dream,
                     selected: type == 0,
                     value: 0,
                     onTap: () {
@@ -53,7 +55,7 @@ class _DreamTypeViewState extends State<DreamTypeView> {
                   ),
                   CustomListTile(
                     icon: Icons.cyclone,
-                    title: "nightmare",
+                    title: localizations.nightmare,
                     selected: type == 1,
                     value: 1,
                     onTap: () {
@@ -64,7 +66,7 @@ class _DreamTypeViewState extends State<DreamTypeView> {
                   ),
                   CustomListTile(
                     icon: Icons.mood_bad_outlined,
-                    title: "paralysis",
+                    title: localizations.paralysis,
                     selected: type == 2,
                     value: 2,
                     onTap: () {
@@ -77,7 +79,7 @@ class _DreamTypeViewState extends State<DreamTypeView> {
               ),
               validator: (_) {
                 if (type == null) {
-                  return 'required';
+                  return localizations.required;
                 }
                 save();
                 return null;

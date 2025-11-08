@@ -1,5 +1,6 @@
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:dream_app/infrastructure/datasources/sp_config.dart';
+import 'package:dream_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -13,7 +14,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   final datasource = IsarDatasource();
 
   AppConfigBloc()
-      : super(const AppConfigState(true, "", Color(0xFF9C27B0), 0)) {
+      : super(const AppConfigState(true, "", Color(0xFF9C27B0), 0, 'en-UK')) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
@@ -23,6 +24,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     on<ExportDreams>(_exportDreams);
     on<DeleteAllDreams>(_deleteAllDreams);
     on<SetLastExported>(_setLastExported);
+    on<SetLanguage>(_setLanguage);
   }
 
   void _initConfig() async {
@@ -36,6 +38,9 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     if (lastExported != 0) {
       add(SetLastExported(lastExported));
     }
+    String lang = await config.getLanguage();
+    mainAppKey.currentState?.setAppLanguage(lang);
+    add(SetLanguage(lang));
   }
 
   void _setDarkMode(SetDarkMode event, Emitter<AppConfigState> emit) async {
@@ -83,5 +88,12 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       DeleteAllDreams event, Emitter<AppConfigState> emit) async {
     await datasource.deleteAllDreams();
     Restart.restartApp();
+  }
+
+  void _setLanguage(SetLanguage event, Emitter<AppConfigState> emit) async {
+    await config.setLanguage(event.lang);
+    mainAppKey.currentState?.setAppLanguage(event.lang);
+    SpConfig().setLanguage(event.lang);
+    emit(state.copyWith(language: event.lang));
   }
 }

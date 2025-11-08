@@ -10,4 +10,6 @@ abstract class ConfigDatasource {
   Future<void> changeAppColor(Color appColor);
   Future<int> getLastExported();
   Future<void> setLastExported(int lastExported);
+  Future<void> setLanguage(String language);
+  Future<String> getLanguage();
 }

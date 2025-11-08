@@ -1,3 +1,4 @@
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_calendar/dream_calendar_bloc.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_dream_list_tile.dart';
@@ -34,6 +35,7 @@ class _CalendarViewState extends State<CalendarView> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final bloc = context.watch<DreamCalendarBloc>();
     final configState = context.watch<AppConfigBloc>().state;
     return Scaffold(
@@ -173,7 +175,7 @@ class _CalendarViewState extends State<CalendarView> {
               child: bloc.state.dreams.isNotEmpty
                   ? Center(
                       child: Text(
-                          "${bloc.state.dreams.length} ${bloc.state.dreams.length == 1 ? "dream" : "dreams"}"))
+                          "${bloc.state.dreams.length} ${bloc.state.dreams.length == 1 ? localizations.dream : localizations.dreams}"))
                   : null,
             ),
           ),
