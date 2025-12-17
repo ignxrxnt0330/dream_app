@@ -271,11 +271,12 @@ class IsarDatasource extends LocalStorageDatasource {
         .sortByDateDesc()
         .dateProperty()
         .findAll();
-    if (dates.isEmpty)
+    if (dates.isEmpty) {
       return Streak(
           streak: streak,
           streakStart: DateTime.now(),
           streakEnd: DateTime.now());
+    }
 
     dates = dates
         .where((date) => date != null)
@@ -292,7 +293,9 @@ class IsarDatasource extends LocalStorageDatasource {
       if (currentDate == null || previousDate == null) continue;
       if (currentDate.day == previousDate.day &&
           currentDate.month == previousDate.month &&
-          currentDate.year == previousDate.year) continue;
+          currentDate.year == previousDate.year) {
+        continue;
+      }
 
       final isNextDay = currentDate.difference(previousDate).inDays.abs() == 1;
       if (isNextDay) {
