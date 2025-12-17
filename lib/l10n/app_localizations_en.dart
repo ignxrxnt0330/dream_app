@@ -101,7 +101,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get desc => 'desc';
 
   @override
-  String get descLength => 'desctLength';
+  String get descLength => 'desctlength';
 
   @override
   String get description => 'description';
@@ -122,10 +122,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dreamLucidness => 'dream lucidness';
 
   @override
-  String get dreamMood => 'Dream mood';
+  String get dreamMood => 'dream mood';
 
   @override
-  String get dreamRating => 'Dream rating';
+  String get dreamRating => 'dream rating';
 
   @override
   String get dreamType => 'dream type';
@@ -149,8 +149,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportDreams => 'export dreams';
 
   @override
-  String get exportDreamsDesc =>
-      'download your dreams as a json file so you can keep them safe';
+  String get exportDreamsDesc => 'download your dreams as a json file so you can keep them safe';
 
   @override
   String get extreme => 'extreme';
@@ -206,7 +205,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mood => 'mood';
 
   @override
-  String get nameCount => 'nameCount';
+  String get nameCount => 'namecount';
 
   @override
   String get names => 'names';
@@ -260,13 +259,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stats => 'stats';
 
   @override
-  String get title => 'Title';
+  String get title => 'title';
 
   @override
-  String get toggleDarkMode => 'swtich between dark and light mode';
+  String get toggleDarkMode => 'swich between dark and light mode';
 
   @override
-  String get types => 'yypes';
+  String get types => 'types';
 
   @override
   String get weekly => 'weekly';
@@ -275,13 +274,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get words => 'words';
 
   @override
-  String xNames(Object nameCount) {
-    return '$nameCount people';
+  String xNames(Object namecount) {
+    return '$namecount people';
   }
 
   @override
-  String xNamesMore(Object nameCount) {
-    return '$nameCount more';
+  String xNamesMore(Object namecount) {
+    return '$namecount more';
   }
 
   @override

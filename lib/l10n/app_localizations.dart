@@ -62,8 +62,7 @@ import 'app_localizations_es.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,8 +82,7 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -281,7 +278,7 @@ abstract class AppLocalizations {
   /// No description provided for @descLength.
   ///
   /// In en, this message translates to:
-  /// **'desctLength'**
+  /// **'desctlength'**
   String get descLength;
 
   /// No description provided for @description.
@@ -323,13 +320,13 @@ abstract class AppLocalizations {
   /// No description provided for @dreamMood.
   ///
   /// In en, this message translates to:
-  /// **'Dream mood'**
+  /// **'dream mood'**
   String get dreamMood;
 
   /// No description provided for @dreamRating.
   ///
   /// In en, this message translates to:
-  /// **'Dream rating'**
+  /// **'dream rating'**
   String get dreamRating;
 
   /// No description provided for @dreamType.
@@ -485,7 +482,7 @@ abstract class AppLocalizations {
   /// No description provided for @nameCount.
   ///
   /// In en, this message translates to:
-  /// **'nameCount'**
+  /// **'namecount'**
   String get nameCount;
 
   /// No description provided for @names.
@@ -593,19 +590,19 @@ abstract class AppLocalizations {
   /// No description provided for @title.
   ///
   /// In en, this message translates to:
-  /// **'Title'**
+  /// **'title'**
   String get title;
 
   /// No description provided for @toggleDarkMode.
   ///
   /// In en, this message translates to:
-  /// **'swtich between dark and light mode'**
+  /// **'swich between dark and light mode'**
   String get toggleDarkMode;
 
   /// No description provided for @types.
   ///
   /// In en, this message translates to:
-  /// **'yypes'**
+  /// **'types'**
   String get types;
 
   /// No description provided for @weekly.
@@ -623,14 +620,14 @@ abstract class AppLocalizations {
   /// No description provided for @xNames.
   ///
   /// In en, this message translates to:
-  /// **'{nameCount} people'**
-  String xNames(Object nameCount);
+  /// **'{namecount} people'**
+  String xNames(Object namecount);
 
   /// No description provided for @xNamesMore.
   ///
   /// In en, this message translates to:
-  /// **'{nameCount} more'**
-  String xNamesMore(Object nameCount);
+  /// **'{namecount} more'**
+  String xNamesMore(Object namecount);
 
   /// No description provided for @yearly.
   ///
@@ -645,8 +642,7 @@ abstract class AppLocalizations {
   String get yes;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -655,25 +651,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'es'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'es':
-      return AppLocalizationsEs();
+    case 'en': return AppLocalizationsEn();
+    case 'es': return AppLocalizationsEs();
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.'
+  );
 }

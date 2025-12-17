@@ -21,10 +21,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get allTime => 'siempre';
 
   @override
-  String get appLang => 'idioma de la aplicación';
+  String get appLang => 'idioma de la app';
 
   @override
-  String get appLangDesc => 'cambia el idioma de la aplicación';
+  String get appLangDesc => 'cambia el idioma de la app';
 
   @override
   String get appTitle => 'dream_app';
@@ -149,8 +149,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get exportDreams => 'exportar sueños';
 
   @override
-  String get exportDreamsDesc =>
-      'descarga tus sueños en un archivo json para poder mantenerlos a salvo';
+  String get exportDreamsDesc => 'descarga tus sueños en un archivo json para poder mantenerlos a salvo';
 
   @override
   String get extreme => 'extrema';
@@ -275,13 +274,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get words => 'palabras';
 
   @override
-  String xNames(Object nameCount) {
-    return '$nameCount personas';
+  String xNames(Object namecount) {
+    return '$namecount personas';
   }
 
   @override
-  String xNamesMore(Object nameCount) {
-    return '$nameCount más';
+  String xNamesMore(Object namecount) {
+    return '$namecount más';
   }
 
   @override

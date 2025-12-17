@@ -159,9 +159,8 @@ class _DescriptionRowState extends State<_DescriptionRow> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return MultiTriggerAutocomplete(
-        optionsAlignment: OptionsAlignment.topStart,
+        optionsAlignment: OptionsAlignment.bottomStart,
         autocompleteTriggers: [
-          //TODO: AutocompleteTrigger space, hide open option ¿?
           AutocompleteTrigger(
             trigger: '@',
             triggerEnd: " ",
@@ -287,7 +286,7 @@ class _DateTimeRowState extends State<_DateTimeRow> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          labelText: 'Date',
+          labelText: localizations.date,
         ),
         initialPickerDateTime: value,
         initialValue: value,
