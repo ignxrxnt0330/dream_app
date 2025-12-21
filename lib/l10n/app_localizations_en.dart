@@ -149,7 +149,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportDreams => 'export dreams';
 
   @override
-  String get exportDreamsDesc => 'download your dreams as a json file so you can keep them safe';
+  String get exportDreamsDesc =>
+      'download your dreams as a json file so you can keep them safe';
 
   @override
   String get extreme => 'extreme';
