@@ -36,66 +36,67 @@ class _DreamLucidnessViewState extends State<DreamLucidnessView> {
     final localizations = AppLocalizations.of(context)!;
     return Center(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(localizations.dreamLucidness),
-          const SizedBox(
-            height: 20,
-          ),
-          Expanded(
-            child: FormField(
-              builder: (context) => ListView(
-                children: [
-                  CustomListTile(
-                    icon: Icons.blind,
-                    title: localizations.none,
-                    selected: lucidness == 0,
-                    value: 0,
-                    onTap: () {
-                      setState(() {
-                        lucidness = 0;
-                      });
-                    },
-                  ),
-                  CustomListTile(
-                    icon: Icons.panorama_fish_eye_sharp,
-                    title: localizations.mild,
-                    selected: lucidness == 1,
-                    value: 1,
-                    onTap: () {
-                      setState(() {
-                        lucidness = 1;
-                      });
-                    },
-                  ),
-                  CustomListTile(
-                    icon: Icons.remove_red_eye_outlined,
-                    title: localizations.high,
-                    selected: lucidness == 2,
-                    value: 2,
-                    onTap: () {
-                      setState(() {
-                        lucidness = 2;
-                      });
-                    },
-                  ),
-                  CustomListTile(
-                    icon: Icons.remove_red_eye,
-                    title: localizations.extreme,
-                    selected: lucidness == 3,
-                    value: 3,
-                    onTap: () {
-                      setState(() {
-                        lucidness = 3;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              validator: (_) {
-                save();
-                return null;
-              },
+          const Expanded(child: SizedBox()),
+          FormField(
+            builder: (context) => ListView(
+              shrinkWrap: true,
+              children: [
+                CustomListTile(
+                  icon: Icons.blind,
+                  title: localizations.none,
+                  selected: lucidness == 0,
+                  value: 0,
+                  onTap: () {
+                    setState(() {
+                      lucidness = 0;
+                    });
+                  },
+                ),
+                CustomListTile(
+                  icon: Icons.panorama_fish_eye_sharp,
+                  title: localizations.mild,
+                  selected: lucidness == 1,
+                  value: 1,
+                  onTap: () {
+                    setState(() {
+                      lucidness = 1;
+                    });
+                  },
+                ),
+                CustomListTile(
+                  icon: Icons.remove_red_eye_outlined,
+                  title: localizations.high,
+                  selected: lucidness == 2,
+                  value: 2,
+                  onTap: () {
+                    setState(() {
+                      lucidness = 2;
+                    });
+                  },
+                ),
+                CustomListTile(
+                  icon: Icons.remove_red_eye,
+                  title: localizations.extreme,
+                  selected: lucidness == 3,
+                  value: 3,
+                  onTap: () {
+                    setState(() {
+                      lucidness = 3;
+                    });
+                  },
+                ),
+              ],
             ),
+            validator: (_) {
+              save();
+              return null;
+            },
+          ),
+          const SizedBox(
+            height: 100,
           ),
         ],
       ),

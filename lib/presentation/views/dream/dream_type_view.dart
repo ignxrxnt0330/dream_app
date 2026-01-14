@@ -31,60 +31,65 @@ class _DreamTypeViewState extends State<DreamTypeView> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    return Center(
+    return Align(
+      alignment: Alignment.bottomCenter,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(localizations.dreamType),
-          const SizedBox(
-            height: 20,
+          const Expanded(
+            child: SizedBox(),
           ),
-          Expanded(
-            child: FormField(
-              builder: (context) => ListView(
-                children: [
-                  CustomListTile(
-                    icon: Icons.sunny,
-                    title: localizations.dream,
-                    selected: type == 0,
-                    value: 0,
-                    onTap: () {
-                      setState(() {
-                        type = 0;
-                      });
-                    },
-                  ),
-                  CustomListTile(
-                    icon: Icons.cyclone,
-                    title: localizations.nightmare,
-                    selected: type == 1,
-                    value: 1,
-                    onTap: () {
-                      setState(() {
-                        type = 1;
-                      });
-                    },
-                  ),
-                  CustomListTile(
-                    icon: Icons.mood_bad_outlined,
-                    title: localizations.paralysis,
-                    selected: type == 2,
-                    value: 2,
-                    onTap: () {
-                      setState(() {
-                        type = 2;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              validator: (_) {
-                if (type == null) {
-                  return localizations.required;
-                }
-                save();
-                return null;
-              },
+          FormField(
+            builder: (context) => ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                CustomListTile(
+                  icon: Icons.sunny,
+                  title: localizations.dream,
+                  selected: type == 0,
+                  value: 0,
+                  onTap: () {
+                    setState(() {
+                      type = 0;
+                    });
+                  },
+                ),
+                CustomListTile(
+                  icon: Icons.cyclone,
+                  title: localizations.nightmare,
+                  selected: type == 1,
+                  value: 1,
+                  onTap: () {
+                    setState(() {
+                      type = 1;
+                    });
+                  },
+                ),
+                CustomListTile(
+                  icon: Icons.mood_bad_outlined,
+                  title: localizations.paralysis,
+                  selected: type == 2,
+                  value: 2,
+                  onTap: () {
+                    setState(() {
+                      type = 2;
+                    });
+                  },
+                ),
+              ],
             ),
+            validator: (_) {
+              if (type == null) {
+                return localizations.required;
+              }
+              save();
+              return null;
+            },
+          ),
+          SizedBox(
+            height: 100,
           ),
         ],
       ),

@@ -31,83 +31,84 @@ class _DreamMoodViewState extends State<DreamMoodView> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    return Center(
+    return Align(
+      alignment: Alignment.bottomCenter,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(localizations.dreamMood),
-          const SizedBox(
-            height: 20,
-          ),
-          Expanded(
-            child: FormField(
-              builder: (context) => ListView(
-                children: [
-                  CustomListTile(
-                    icon: Icons.signal_cellular_nodata,
-                    title: localizations.bad,
-                    selected: mood == 0,
-                    value: 0,
-                    onTap: () {
-                      setState(() {
-                        mood = 0;
-                      });
-                    },
-                  ),
-                  CustomListTile(
-                    icon: Icons.signal_cellular_alt_1_bar_outlined,
-                    title: localizations.meh,
-                    selected: mood == 1,
-                    value: 1,
-                    onTap: () {
-                      setState(() {
-                        mood = 1;
-                      });
-                    },
-                  ),
-                  CustomListTile(
-                    icon: Icons.signal_cellular_alt_2_bar_outlined,
-                    title: localizations.neutral,
-                    selected: mood == 2,
-                    value: 2,
-                    onTap: () {
-                      setState(() {
-                        mood = 2;
-                      });
-                    },
-                  ),
-                  CustomListTile(
-                    icon: Icons.signal_cellular_alt_rounded,
-                    title: localizations.good,
-                    selected: mood == 3,
-                    value: 3,
-                    onTap: () {
-                      setState(() {
-                        mood = 3;
-                      });
-                    },
-                  ),
-                  CustomListTile(
-                    icon: Icons.signal_cellular_4_bar_outlined,
-                    title: localizations.great,
-                    selected: mood == 5,
-                    value: 5,
-                    onTap: () {
-                      setState(() {
-                        mood = 5;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              validator: (_) {
-                if (mood == null) {
-                  return localizations.required;
-                }
-                save();
-                return null;
-              },
+          const Expanded(child: SizedBox()),
+          FormField(
+            builder: (context) => ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                CustomListTile(
+                  icon: Icons.signal_cellular_nodata,
+                  title: localizations.bad,
+                  selected: mood == 0,
+                  value: 0,
+                  onTap: () {
+                    setState(() {
+                      mood = 0;
+                    });
+                  },
+                ),
+                CustomListTile(
+                  icon: Icons.signal_cellular_alt_1_bar_outlined,
+                  title: localizations.meh,
+                  selected: mood == 1,
+                  value: 1,
+                  onTap: () {
+                    setState(() {
+                      mood = 1;
+                    });
+                  },
+                ),
+                CustomListTile(
+                  icon: Icons.signal_cellular_alt_2_bar_outlined,
+                  title: localizations.neutral,
+                  selected: mood == 2,
+                  value: 2,
+                  onTap: () {
+                    setState(() {
+                      mood = 2;
+                    });
+                  },
+                ),
+                CustomListTile(
+                  icon: Icons.signal_cellular_alt_rounded,
+                  title: localizations.good,
+                  selected: mood == 3,
+                  value: 3,
+                  onTap: () {
+                    setState(() {
+                      mood = 3;
+                    });
+                  },
+                ),
+                CustomListTile(
+                  icon: Icons.signal_cellular_4_bar_outlined,
+                  title: localizations.great,
+                  selected: mood == 5,
+                  value: 5,
+                  onTap: () {
+                    setState(() {
+                      mood = 5;
+                    });
+                  },
+                ),
+              ],
             ),
+            validator: (_) {
+              if (mood == null) {
+                return localizations.required;
+              }
+              save();
+              return null;
+            },
           ),
+          SizedBox(height: 100)
         ],
       ),
     );
