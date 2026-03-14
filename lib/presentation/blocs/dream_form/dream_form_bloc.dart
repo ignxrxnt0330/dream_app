@@ -52,7 +52,6 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
         dream: Dream(
             mood: 2, type: 0, lucidness: 0, rating: 3, date: DateTime.now()),
         allNames: []));
-    List<String> allNames = await IsarDatasource().getAllNames();
   }
 
   void _onValidChanged(ValidChanged event, Emitter<DreamFormState> emit) {
