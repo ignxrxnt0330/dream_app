@@ -13,7 +13,7 @@ class SetLanguageDialog extends StatefulWidget {
 }
 
 class _SetLanguageDialogState extends State<SetLanguageDialog> {
-  String language = 'en-UK';
+  String language = 'en-GB';
   @override
   void initState() {
     super.initState();

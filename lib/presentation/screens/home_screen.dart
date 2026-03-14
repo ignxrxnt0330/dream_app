@@ -36,7 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
             showDatePicker(
                     context: context,
                     firstDate: DateTime(2020, 1, 1),
-                    lastDate: DateTime(2069, 4, 20))
+                    lastDate: DateTime(2069, 4, 20),
+                    initialEntryMode: DatePickerEntryMode.input)
                 .then(
               (value) {
                 if (value == null) {
