@@ -14,7 +14,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   final datasource = IsarDatasource();
 
   AppConfigBloc()
-      : super(const AppConfigState(true, "", Color(0xFF9C27B0), 0, 'en-UK')) {
+      : super(const AppConfigState(true, "", Color(0xFF9C27B0), 0, 'en-GB')) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
