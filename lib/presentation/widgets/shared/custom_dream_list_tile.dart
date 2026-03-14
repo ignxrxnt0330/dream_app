@@ -66,7 +66,8 @@ class CustomDreamListTile extends StatelessWidget {
         Text(dream.formattedDate),
         IconButton(
           icon: dream.isFav
-              ? const Icon(Icons.favorite)
+              ? Icon(Icons.favorite,
+                  color: Theme.of(context).colorScheme.primary)
               : const Icon(Icons.favorite_border),
           onPressed: () {
             context
