@@ -1,10 +1,12 @@
 import 'package:date_field/date_field.dart';
+import 'package:dream_app/config/router/app_router.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_trigger_autocomplete_plus/multi_trigger_autocomplete_plus.dart';
 
@@ -280,28 +282,34 @@ class _DateTimeRowState extends State<_DateTimeRow> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return Material(
-      child: DateTimeFormField(
-        dateFormat: DateFormat(localizations.dateFormat),
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
+      child: GestureDetector(
+        onLongPress: () {
+          appRouter.push("/home/1");
+          context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(value));
+        },
+        child: DateTimeFormField(
+          dateFormat: DateFormat(localizations.dateFormat),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            labelText: localizations.date,
           ),
-          labelText: localizations.date,
+          initialPickerDateTime: value,
+          initialValue: value,
+          onChanged: (DateTime? value) {
+            if (value == null) return;
+            Dream dream = context.read<DreamFormBloc>().state.dream;
+            dream = dream.copyWith(date: value);
+            context.read<DreamFormBloc>().add(FieldChanged(dream));
+          },
+          validator: (value) {
+            if (value == null) {
+              return localizations.empty;
+            }
+            return null;
+          },
         ),
-        initialPickerDateTime: value,
-        initialValue: value,
-        onChanged: (DateTime? value) {
-          if (value == null) return;
-          Dream dream = context.read<DreamFormBloc>().state.dream;
-          dream = dream.copyWith(date: value);
-          context.read<DreamFormBloc>().add(FieldChanged(dream));
-        },
-        validator: (value) {
-          if (value == null) {
-            return localizations.empty;
-          }
-          return null;
-        },
       ),
     );
   }
