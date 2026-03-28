@@ -20,9 +20,11 @@ class DreamSearchBloc extends Bloc<DreamSearchEvent, DreamSearchState> {
       emit(state.copyWith(
           isLoading: true, dreams: [], count: 0, query: event.query));
 
-      final dreams = await IsarDatasource().searchDreams(event.query) ?? [];
-      final int count =
-          await IsarDatasource().searchDreamsResultCount(event.query);
+      final dreams = await IsarDatasource()
+              .searchDreams(event.query, names: event.names) ??
+          [];
+      final int count = await IsarDatasource()
+          .searchDreamsResultCount(event.query, names: event.names);
 
       emit(state.copyWith(
         dreams: dreams,
@@ -42,8 +44,8 @@ class DreamSearchBloc extends Bloc<DreamSearchEvent, DreamSearchState> {
       if (state.isLoading || state.endReached) return;
       emit(state.copyWith(isLoading: true));
 
-      final dreams = await IsarDatasource()
-              .searchDreams(event.query, offset: state.offset) ??
+      final dreams = await IsarDatasource().searchDreams(event.query,
+              offset: state.offset, names: event.names) ??
           [];
       emit(state.copyWith(
         dreams: [...state.dreams, ...dreams],

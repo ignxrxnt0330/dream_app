@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:dream_app/domain/entities/dream/dream.dart';
+import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_search/dream_search_bloc.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_dream_list_tile.dart';
+import 'package:dream_app/presentation/widgets/shared/custom_toggle_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -81,6 +83,13 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
         return Column(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
+            child: Flex(direction: Axis.horizontal, children: [
+              ...dreamsState.names
+                  .map((String name) => Chip(label: Text(name))),
+            ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Text(
                 '${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
           ),
@@ -101,29 +110,18 @@ class DreamSearchDelegate extends SearchDelegate<Dream?> {
   Widget buildSuggestions(BuildContext context) {
     return BlocBuilder<DreamSearchBloc, DreamSearchState>(
       builder: (context, dreamsState) {
-        if (timeout?.isActive ?? false) timeout?.cancel();
-        timeout = Timer(const Duration(milliseconds: 500), () async {
-          if (query != dreamsState.query) {
-            context
-                .read<DreamSearchBloc>()
-                .add(SearchDreams(query: query.trim()));
-          }
-        });
-
-        return Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-                '${dreamsState.count} ${dreamsState.count == 1 ? 'result' : 'results'}'),
-          ),
-          Expanded(
-              child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return CustomDreamListTile(
-                        dream: dreamsState.dreams[index]);
-                  },
-                  itemCount: dreamsState.dreams.length))
-        ]);
+        return ToggleButtons(
+          borderRadius: BorderRadius.circular(8),
+          isSelected: [false, true],
+          onPressed: (int index) {},
+          children: [
+            CustomToggleButtons(
+              onPressed: (int index) {
+              debugPrint(index.toString());
+              },
+            )
+          ],
+        );
       },
     );
   }

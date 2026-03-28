@@ -63,7 +63,6 @@ class _HomeViewState extends State<HomeView> {
                     },
                     child: Text(localizations.filterDreams),
                   )),
-              expandedHeight: 50.0,
             ),
             SliverList.builder(
               itemBuilder: (context, index) {

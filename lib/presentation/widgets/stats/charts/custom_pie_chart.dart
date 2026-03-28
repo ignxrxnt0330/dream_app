@@ -60,7 +60,10 @@ class CustomPieChart extends StatelessWidget {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(name.key),
+                            Text(
+                              name.key,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                             Text(name.value.toString())
                           ],
                         );

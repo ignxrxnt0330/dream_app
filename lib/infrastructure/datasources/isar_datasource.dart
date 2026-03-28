@@ -225,30 +225,46 @@ class IsarDatasource extends LocalStorageDatasource {
       names = const <String>[],
       newToOld = true}) async {
     final isar = await db;
-    final dreams = await isar.dreams
-        .where()
-        .filter()
-        .descriptionContains(query, caseSensitive: false)
-        .or()
-        .titleContains(query, caseSensitive: false)
-        .sortByDateDesc()
-        .offset(offset)
-        .limit(limit)
-        .findAll();
-    return dreams;
+    final Query isarQuery = isar.dreams.buildQuery(
+      filter: FilterGroup.or([
+        FilterCondition.contains(
+            property: 'description', value: query, caseSensitive: false),
+        FilterCondition.contains(
+            property: 'title', value: query, caseSensitive: false),
+      ]),
+      whereClauses: [
+        names.map((name) => FilterCondition.contains(
+            property: 'names', value: name, caseSensitive: false))
+      ],
+      offset: offset,
+      limit: limit,
+      sortBy: [
+        SortProperty(property: 'date', sort: newToOld ? Sort.desc : Sort.asc)
+      ],
+    );
+
+    return await isarQuery.findAll() as List<Dream>;
   }
 
   @override
   Future<int> searchDreamsResultCount(String query,
       {names = const <String>[]}) async {
     final isar = await db;
-    final int dreamCount = await isar.dreams
-        .where()
-        .filter()
-        .descriptionContains(query, caseSensitive: false)
-        .or()
-        .titleContains(query, caseSensitive: false)
-        .count();
+    final Query isarQuery = isar.dreams.buildQuery(
+      filter: FilterGroup.or([
+        FilterCondition.contains(
+            property: 'description', value: query, caseSensitive: false),
+        FilterCondition.contains(
+            property: 'title', value: query, caseSensitive: false),
+      ]),
+      whereClauses: [
+        names.map((name) => FilterCondition.contains(
+            property: 'names', value: name, caseSensitive: false))
+      ],
+    );
+
+    final int dreamCount = await isarQuery.count();
+
     return dreamCount;
   }
 
