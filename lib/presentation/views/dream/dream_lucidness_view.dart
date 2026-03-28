@@ -40,6 +40,18 @@ class _DreamLucidnessViewState extends State<DreamLucidnessView> {
         children: [
           Text(localizations.dreamLucidness),
           const Expanded(child: SizedBox()),
+          switch (lucidness) {
+            0 => Icon(Icons.blind,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            1 => Icon(Icons.panorama_fish_eye_sharp,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            2 => Icon(Icons.remove_red_eye_outlined,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            3 => Icon(Icons.remove_red_eye,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            _ => SizedBox.shrink()
+          },
+          const Expanded(child: SizedBox()),
           FormField(
             builder: (context) => ListView(
               shrinkWrap: true,

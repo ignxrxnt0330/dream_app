@@ -38,6 +38,20 @@ class _DreamMoodViewState extends State<DreamMoodView> {
         children: [
           Text(localizations.dreamMood),
           const Expanded(child: SizedBox()),
+          switch (mood) {
+            0 => Icon(Icons.signal_cellular_nodata,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            1 => Icon(Icons.signal_cellular_alt_1_bar_outlined,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            2 => Icon(Icons.signal_cellular_alt_2_bar_outlined,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            3 => Icon(Icons.signal_cellular_alt_rounded,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            5 => Icon(Icons.signal_cellular_4_bar_outlined,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            _ => SizedBox.shrink()
+          },
+          const Expanded(child: SizedBox()),
           FormField(
             builder: (context) => ListView(
               shrinkWrap: true,

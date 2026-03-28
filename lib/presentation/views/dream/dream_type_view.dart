@@ -40,6 +40,16 @@ class _DreamTypeViewState extends State<DreamTypeView> {
           const Expanded(
             child: SizedBox(),
           ),
+          switch (type) {
+            0 => Icon(Icons.sunny,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            1 => Icon(Icons.cyclone,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            2 => Icon(Icons.mood_bad_outlined,
+                size: 75, color: Theme.of(context).colorScheme.primary),
+            _ => SizedBox.shrink()
+          },
+          const Expanded(child: SizedBox()),
           FormField(
             builder: (context) => ListView(
               shrinkWrap: true,
