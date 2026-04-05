@@ -143,14 +143,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get empty => 'vacío';
 
   @override
+  String get encrypt => 'encriptar';
+
+  @override
   String get es => 'es';
 
   @override
   String get exportDreams => 'exportar sueños';
 
   @override
-  String get exportDreamsDesc =>
-      'descarga tus sueños en un archivo json para poder mantenerlos a salvo';
+  String get exportDreamsDesc => 'descarga tus sueños en un archivo json para poder mantenerlos a salvo';
 
   @override
   String get extreme => 'extrema';
@@ -255,6 +257,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get setDefaultTitle => 'establecer título por defecto';
+
+  @override
+  String get setEncryptKey => 'introduce la clave de encriptación';
 
   @override
   String get stats => 'estadísticas';

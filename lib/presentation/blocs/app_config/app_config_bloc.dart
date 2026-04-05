@@ -14,7 +14,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   final datasource = IsarDatasource();
 
   AppConfigBloc()
-      : super(const AppConfigState(true, "", Color(0xFF9C27B0), 0, 'en-GB')) {
+      : super(const AppConfigState(true, "", Color(0xFF9C27B0), 0, 'en-GB', '')) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
@@ -25,6 +25,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     on<DeleteAllDreams>(_deleteAllDreams);
     on<SetLastExported>(_setLastExported);
     on<SetLanguage>(_setLanguage);
+    on<RequestFile>(_requestFile);
   }
 
   void _initConfig() async {
@@ -73,14 +74,15 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   }
 
   void _exportDreams(ExportDreams event, Emitter<AppConfigState> emit) async {
-    await datasource.exportDreams();
+    await datasource.exportDreams(event.encryptKey);
     int lastExported = DateTime.now().millisecondsSinceEpoch;
     SpConfig().setLastExported(lastExported);
     emit(state.copyWith(lastExported: lastExported));
   }
 
   void _importDreams(ImportDreams event, Emitter<AppConfigState> emit) async {
-    bool res = await datasource.importDreams();
+		emit(state.copyWith(importDreamsPath: ''));
+    bool res = await datasource.importDreams(path: event.path, encryptKey: event.encryptKey);
     if (res) Restart.restartApp();
   }
 
@@ -95,5 +97,10 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     mainAppKey.currentState?.setAppLanguage(event.lang);
     SpConfig().setLanguage(event.lang);
     emit(state.copyWith(language: event.lang));
+  }
+
+  void _requestFile(RequestFile event, Emitter<AppConfigState> emit) async {
+    final String? path = await datasource.requestFile();
+    emit(state.copyWith(importDreamsPath: path));
   }
 }

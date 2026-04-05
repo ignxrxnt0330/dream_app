@@ -24,11 +24,14 @@ class ChangeAppColor extends AppConfigEvent {
 }
 
 class ExportDreams extends AppConfigEvent {
-  const ExportDreams();
+  final String encryptKey;
+  const ExportDreams(this.encryptKey);
 }
 
 class ImportDreams extends AppConfigEvent {
-  const ImportDreams();
+  final String path;
+  final String encryptKey;
+  const ImportDreams(this.path, this.encryptKey);
 }
 
 class DeleteAllDreams extends AppConfigEvent {
@@ -43,4 +46,8 @@ class SetLastExported extends AppConfigEvent {
 class SetLanguage extends AppConfigEvent {
   final String lang;
   const SetLanguage(this.lang);
+}
+
+class RequestFile extends AppConfigEvent {
+  const RequestFile();
 }

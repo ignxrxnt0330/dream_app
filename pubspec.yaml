@@ -54,6 +54,7 @@ dependencies:
   fl_chart: ^1.0.0
   flutter_card_swiper: ^7.0.2
   multi_trigger_autocomplete_plus: ^1.0.2
+  encrypter: ^2.0.0
 
 dev_dependencies:
   flutter_test:

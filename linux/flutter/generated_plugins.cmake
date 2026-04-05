@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  encrypter
   isar_flutter_libs
 )
 

@@ -1,6 +1,8 @@
 import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/widgets/config/color_picker_dialog.dart';
+import 'package:dream_app/presentation/widgets/config/export_dreams_dialog.dart';
+import 'package:dream_app/presentation/widgets/config/import_dreams_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/default_title_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/set_language_dialog.dart';
 import 'package:dream_app/util/custom_date_utils.dart';
@@ -103,7 +105,29 @@ class _ConfigViewState extends State<ConfigView> {
               subtitle: Text(localizations.importDreamsDesc),
               trailing: const Icon(Icons.upload_file_rounded),
               onTap: () {
-                context.read<AppConfigBloc>().add(const ImportDreams());
+                context.read<AppConfigBloc>().add(const RequestFile());
+                context
+                    .read<AppConfigBloc>()
+                    .stream
+                    .firstWhere((state) => state.importDreamsPath != '')
+                    .then((state) {
+                  if (!context.mounted) return;
+                  if (state.importDreamsPath != '') {
+                    if (state.importDreamsPath.endsWith('.enc')) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return const ImportDreamsDialog();
+                          }).then((_) {
+
+													});
+                    } else {
+                      context
+                          .read<AppConfigBloc>()
+                          .add(ImportDreams(state.importDreamsPath, ''));
+                    }
+                  }
+                });
               },
             ),
             ListTile(
@@ -131,7 +155,12 @@ class _ConfigViewState extends State<ConfigView> {
               subtitle: Text(localizations.exportDreamsDesc),
               trailing: const Icon(Icons.download),
               onTap: () {
-                context.read<AppConfigBloc>().add(const ExportDreams());
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const ExportDreamsDialog();
+                  },
+                );
               },
             ),
             ListTile(
@@ -139,7 +168,6 @@ class _ConfigViewState extends State<ConfigView> {
               subtitle: Text(localizations.appLangDesc),
               trailing: const Icon(Icons.language),
               onTap: () {
-                setState(() {});
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {

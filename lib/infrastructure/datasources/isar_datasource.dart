@@ -7,6 +7,7 @@ import 'package:dream_app/domain/consts.dart';
 import 'package:dream_app/domain/datasource/local_storage_datasource.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/domain/entities/stats/streak.dart';
+import 'package:encrypter/encrypter/aes.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -150,7 +151,7 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<bool> exportDreams() async {
+  Future<bool> exportDreams(String encryptKey) async {
     try {
       final List<Dream> dreams = await getAllDreams();
       String data = "[${dreams.map((dream) => dream.toJson()).join(",\n")}]";
@@ -158,8 +159,16 @@ class IsarDatasource extends LocalStorageDatasource {
 
       final dir = await getTemporaryDirectory();
       if (dir != null) {
-        final timeStamp = DateTime.now().millisecondsSinceEpoch;
-        final filePath = "${dir.path}/dreams_$timeStamp.json";
+        final int timeStamp = DateTime.now().millisecondsSinceEpoch;
+        String filePath = "${dir.path}/dreams_$timeStamp.json";
+
+        if (encryptKey != "") {
+          String? encryptedData = await Encrypter.encryptAES256CBC(data, key: encryptKey.padRight(32));
+          if (encryptedData == null) return false;
+          data = encryptedData;
+          filePath = "${dir.path}/dreams_$timeStamp.enc";
+        }
+
         final file = await File(filePath).create();
         await file.writeAsString(data);
         if (Platform.isAndroid) {
@@ -177,18 +186,19 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<bool> importDreams() async {
+  Future<bool> importDreams({String path = '', String encryptKey = ''}) async {
     try {
-      final params = OpenFileDialogParams(
-        dialogType: OpenFileDialogType.document,
-        fileExtensionsFilter: ["json"],
-        localOnly: true,
-      );
-      final filePath = await FlutterFileDialog.pickFile(params: params);
       List<Dream> dreams = [];
-      if (filePath != null) {
-        final file = File(filePath);
-        final data = await file.readAsString();
+      if (path != null) {
+        final File file = File(path);
+        String data = await file.readAsString();
+
+        if (encryptKey != "") {
+          String? decryptedData = await Encrypter.decryptAES256CBC(data, key: encryptKey.padRight(32));
+          if (decryptedData == null) return false;
+          data = decryptedData;
+        }
+
         final List<dynamic> jsonDreams = jsonDecode(data);
         for (Map<String, dynamic> jsonDream in jsonDreams) {
           dreams.add(Dream.fromJson(jsonDream));
@@ -590,5 +600,16 @@ class IsarDatasource extends LocalStorageDatasource {
       map[name] = (map[name] ?? 0) + 1;
     }
     return map;
+  }
+
+  @override
+  Future<String?> requestFile() async {
+      final params = OpenFileDialogParams(
+        dialogType: OpenFileDialogType.document,
+        fileExtensionsFilter: ["json", "enc"],
+        localOnly: true,
+      );
+    final filePath = await FlutterFileDialog.pickFile(params: params);
+		return filePath;
   }
 }
