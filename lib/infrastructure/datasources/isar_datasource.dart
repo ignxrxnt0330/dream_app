@@ -205,20 +205,6 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<List<String>> getAllNames() async {
-    final isar = await db;
-    final List<String> allNames =
-        await isar.dreams.where().findAll().then((dreams) {
-      return dreams
-          .map((dream) => dream.names)
-          .expand((element) => element)
-          .toSet()
-          .toList();
-    });
-    return allNames;
-  }
-
-  @override
   Future<List<Dream>>? searchDreams(String query,
       {int limit = 10,
       int offset = 0,

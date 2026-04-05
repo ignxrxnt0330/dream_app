@@ -6,7 +6,6 @@ import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_trigger_autocomplete_plus/multi_trigger_autocomplete_plus.dart';
 
@@ -24,7 +23,7 @@ class _DreamFormViewState extends State<DreamFormView> {
   final dateController = TextEditingController();
   final descriptionFocusNode = FocusNode();
   List<String> names = [];
-  List<String> allNames = [];
+  Map<String, int> allNames = {};
 
   final _descriptionKey = GlobalKey<_DescriptionRowState>();
 
@@ -36,9 +35,8 @@ class _DreamFormViewState extends State<DreamFormView> {
     descriptionController.text = dream.description;
     names = dream.names;
 
-    IsarDatasource().getAllNames().then((names) {
-      allNames = names;
-      allNames.sort((a, b) => a.compareTo(b));
+    IsarDatasource().mostUsedNames(99999).then((names) {
+      allNames = names ?? {};
       setState(() {});
     });
   }
@@ -51,11 +49,6 @@ class _DreamFormViewState extends State<DreamFormView> {
           description: descriptionController.text,
         );
     context.read<DreamFormBloc>().add(FieldChanged(dream));
-  }
-
-  void checkNames() {
-    if (descriptionController.text.contains("@")) {}
-    if (descriptionController.text.contains("@")) {}
   }
 
   @override
@@ -83,7 +76,7 @@ class _DreamFormViewState extends State<DreamFormView> {
                 descriptionController,
                 save,
                 descriptionFocusNode,
-                allNames),
+                allNames.keys.toList()),
             const SizedBox(height: 20),
             _NamesRow(names),
           ],

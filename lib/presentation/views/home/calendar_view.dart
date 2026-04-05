@@ -24,7 +24,8 @@ class _CalendarViewState extends State<CalendarView> {
     super.initState();
     context.read<DreamCalendarBloc>().add(const FetchDates());
     context.read<DreamCalendarBloc>().add(const FetchBracket());
-    context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(context.read<DreamCalendarBloc>().state.selectedDate));
+    context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(
+        context.read<DreamCalendarBloc>().state.selectedDate));
   }
 
   @override
