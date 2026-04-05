@@ -43,18 +43,24 @@ class _DreamRatingViewState extends State<DreamRatingView> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Center(
-                    child: Wrap(children: [
-                      ...List.generate(
-                          rating.toInt(),
-                          (int val) => Icon(Icons.star_sharp,
-                              size: 50,
-                              color: Theme.of(context).colorScheme.primary)),
-                      rating.toInt() != rating
-                          ? Icon(Icons.star_half_sharp,
-                              size: 50,
-                              color: Theme.of(context).colorScheme.primary)
-                          : SizedBox.shrink() // odd
-                    ]),
+                    child: rating == 0
+                        ? Icon(Icons.star_outline_sharp,
+                            size: 50,
+                            color: Theme.of(context).colorScheme.primary)
+                        : Wrap(children: [
+                            ...List.generate(
+                                rating.toInt(),
+                                (int val) => Icon(Icons.star_sharp,
+                                    size: 50,
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
+                            rating.toInt() != rating
+                                ? Icon(Icons.star_half_sharp,
+                                    size: 50,
+                                    color:
+                                        Theme.of(context).colorScheme.primary)
+                                : SizedBox.shrink() // odd
+                          ]),
                   ),
                   Text(
                     "$rating",
