@@ -293,7 +293,7 @@ class IsarDatasource extends LocalStorageDatasource {
         continue;
       }
 
-      final isNextDay = currentDate.difference(previousDate).inDays.abs() == 1;
+      final isNextDay = currentDate.difference(previousDate).inDays.abs() <= 1;
       if (isNextDay) {
         streak++;
         streakEnd = previousDate;
@@ -342,7 +342,7 @@ class IsarDatasource extends LocalStorageDatasource {
 
       if (currentDate == null || previousDate == null) continue;
 
-      final isNextDay = currentDate.difference(previousDate).inDays.abs() == 1;
+      final isNextDay = currentDate.difference(previousDate).inDays.abs() <= 1;
 
       if (isNextDay) {
         streak++;
