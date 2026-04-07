@@ -21,20 +21,16 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    // Init TabController once
     tabBarController = TabController(length: 4, vsync: this);
 
-    // Add listener ONCE
     tabBarController.addListener(() {
       onChangeIndex(tabBarController.index);
     });
 
-    // Trigger initial fetch
     context
         .read<DreamStatsBloc>()
         .add(FetchStats(bracket: context.read<DreamStatsBloc>().state.bracket));
 
-    // Init scroll controllers
     scrollControllers = List.generate(4, (_) {
       final controller = ScrollController();
       controller.addListener(() {
@@ -215,6 +211,7 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
               ),
               Expanded(
                 child: TabBarView(
+                  controller: tabBarController,
                   children: List.generate(tabs.length, (index) {
                     final scrollController = scrollControllers[index];
                     return Center(
