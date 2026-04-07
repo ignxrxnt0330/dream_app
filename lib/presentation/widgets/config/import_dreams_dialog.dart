@@ -33,7 +33,7 @@ class _ImportDreamsDialogState extends State<ImportDreamsDialog> {
         ),
         TextButton(
           onPressed: () {
-						final AppConfigState state = context.read<AppConfigBloc>().state;
+            final AppConfigState state = context.read<AppConfigBloc>().state;
             context.read<AppConfigBloc>().add(ImportDreams(
                 state.importDreamsPath, encryptKeyController.value.text));
             Navigator.of(context).pop();

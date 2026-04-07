@@ -14,7 +14,8 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   final datasource = IsarDatasource();
 
   AppConfigBloc()
-      : super(const AppConfigState(true, "", Color(0xFF9C27B0), 0, 'en-GB', '')) {
+      : super(
+            const AppConfigState(true, "", Color(0xFF9C27B0), 0, 'en-GB', '')) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
@@ -81,8 +82,9 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   }
 
   void _importDreams(ImportDreams event, Emitter<AppConfigState> emit) async {
-		emit(state.copyWith(importDreamsPath: ''));
-    bool res = await datasource.importDreams(path: event.path, encryptKey: event.encryptKey);
+    emit(state.copyWith(importDreamsPath: ''));
+    bool res = await datasource.importDreams(
+        path: event.path, encryptKey: event.encryptKey);
     if (res) Restart.restartApp();
   }
 

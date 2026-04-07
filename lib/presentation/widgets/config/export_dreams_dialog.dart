@@ -31,7 +31,9 @@ class _ExportDreamsDialogState extends State<ExportDreamsDialog> {
         ),
         TextButton(
           onPressed: () {
-            context.read<AppConfigBloc>().add(ExportDreams(encryptKeyController.value.text));
+            context
+                .read<AppConfigBloc>()
+                .add(ExportDreams(encryptKeyController.value.text));
             Navigator.of(context).pop();
           },
           child: Text(localizations.confirm),

@@ -163,7 +163,8 @@ class IsarDatasource extends LocalStorageDatasource {
         String filePath = "${dir.path}/dreams_$timeStamp.json";
 
         if (encryptKey != "") {
-          String? encryptedData = await Encrypter.encryptAES256CBC(data, key: encryptKey.padRight(32));
+          String? encryptedData = await Encrypter.encryptAES256CBC(data,
+              key: encryptKey.padRight(32));
           if (encryptedData == null) return false;
           data = encryptedData;
           filePath = "${dir.path}/dreams_$timeStamp.enc";
@@ -194,7 +195,8 @@ class IsarDatasource extends LocalStorageDatasource {
         String data = await file.readAsString();
 
         if (encryptKey != "") {
-          String? decryptedData = await Encrypter.decryptAES256CBC(data, key: encryptKey.padRight(32));
+          String? decryptedData = await Encrypter.decryptAES256CBC(data,
+              key: encryptKey.padRight(32));
           if (decryptedData == null) return false;
           data = decryptedData;
         }
@@ -604,12 +606,12 @@ class IsarDatasource extends LocalStorageDatasource {
 
   @override
   Future<String?> requestFile() async {
-      final params = OpenFileDialogParams(
-        dialogType: OpenFileDialogType.document,
-        fileExtensionsFilter: ["json", "enc"],
-        localOnly: true,
-      );
+    final params = OpenFileDialogParams(
+      dialogType: OpenFileDialogType.document,
+      fileExtensionsFilter: ["json", "enc"],
+      localOnly: true,
+    );
     final filePath = await FlutterFileDialog.pickFile(params: params);
-		return filePath;
+    return filePath;
   }
 }

@@ -29,6 +29,12 @@ class AppConfigState extends Equatable {
   }
 
   @override
-  List<Object> get props =>
-      [darkMode, defaultTitle, appColor, lastExported, language, importDreamsPath];
+  List<Object> get props => [
+        darkMode,
+        defaultTitle,
+        appColor,
+        lastExported,
+        language,
+        importDreamsPath
+      ];
 }

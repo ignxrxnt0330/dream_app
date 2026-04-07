@@ -118,9 +118,7 @@ class _ConfigViewState extends State<ConfigView> {
                           context: context,
                           builder: (BuildContext context) {
                             return const ImportDreamsDialog();
-                          }).then((_) {
-
-													});
+                          }).then((_) {});
                     } else {
                       context
                           .read<AppConfigBloc>()
