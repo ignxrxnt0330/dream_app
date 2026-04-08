@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/dream_stats/dream_stats_bloc.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +18,20 @@ class StatsView extends StatefulWidget {
 class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
   late TabController tabBarController;
   late List<ScrollController> scrollControllers;
+  late int bracket;
 
   @override
   void initState() {
     super.initState();
+    bracket = 7;
 
     tabBarController = TabController(length: 4, vsync: this);
 
     tabBarController.addListener(() {
       onChangeIndex(tabBarController.index);
+      setSwipeListener();
     });
+    setSwipeListener();
 
     context
         .read<DreamStatsBloc>()
@@ -46,8 +52,28 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
     });
   }
 
+  void onStartSwipe() {
+    final animationValue = tabBarController.animation!.value;
+    int currentIndex = tabBarController.index;
+    if ((currentIndex - animationValue).abs() < 0.3) {
+      return;
+    }
+    final List<int> tabs = <int>[7, 30, 365, 99999];
+
+    if (animationValue > currentIndex) {
+      bracket = tabs[currentIndex + 1];
+    } else if (animationValue < currentIndex) {
+      bracket = tabs[currentIndex - 1];
+    }
+    context.read<DreamStatsBloc>().add(BracketChanged(bracket: bracket));
+    tabBarController.animation?.removeListener(onStartSwipe);
+  }
+
+  void setSwipeListener() {
+    tabBarController.animation?.addListener(onStartSwipe);
+  }
+
   void onChangeIndex(int index) {
-    late int bracket;
     switch (index) {
       case 0:
         bracket = 7;
