@@ -18,16 +18,37 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  FloatingActionButton? getFab(int index, BuildContext context) {
+  Widget? getFab(int index, BuildContext context) {
     switch (index) {
       case 0:
-        return FloatingActionButton(
-          onPressed: () {
-            context.read<DreamFormBloc>().add(const FormInit());
-            context.push("/dream/0");
-          },
-          child: const Icon(Icons.add),
-        );
+        return GestureDetector(
+            onLongPress: () {
+              final int lastEdited =
+                  context.read<DreamHomeBloc>().state.lastEdited;
+              if (lastEdited == 0) {
+                return;
+              }
+              context.read<DreamFormBloc>().add(FetchDream(lastEdited));
+              context
+                  .read<DreamFormBloc>()
+                  .stream
+                  .firstWhere((state) => state.dream.id == lastEdited)
+                  .then((state) {
+                if (!context.mounted) return;
+                if (state.dream.hidden) {
+                  context.push("/bio_validate/dream/$lastEdited");
+                  return;
+                }
+                context.push("/dream/$lastEdited");
+              });
+            },
+            child: FloatingActionButton(
+              onPressed: () {
+                context.read<DreamFormBloc>().add(const FormInit());
+                context.push("/dream/0");
+              },
+              child: const Icon(Icons.add),
+            ));
       case 1:
         return FloatingActionButton(
           onPressed: () {

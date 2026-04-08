@@ -73,9 +73,10 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
       final updatedDreams = state.dreams
           .map((dream) => dream.id == event.dream.id ? event.dream : dream)
           .toList();
-      emit(state.copyWith(dreams: updatedDreams));
+      emit(state.copyWith(dreams: updatedDreams, lastEdited: event.dream.id));
     } else {
-      emit(state.copyWith(dreams: [event.dream, ...state.dreams]));
+      emit(state.copyWith(
+          dreams: [event.dream, ...state.dreams], lastEdited: event.dream.id));
     }
     state.dreams.sort((a, b) => b.date!.compareTo(a.date!));
   }
