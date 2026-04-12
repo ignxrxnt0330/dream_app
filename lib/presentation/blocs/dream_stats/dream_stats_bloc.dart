@@ -67,7 +67,7 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
     } else {
       DateTime date = await IsarDatasource().firstDate();
       date = DateTime(date.year, date.month, date.day); // 00:00
-      final int bracket = DateTime.now().difference(date).inDays;
+      final int bracket = DateTime.now().difference(date).inDays + 1;
       await _fetchStats(FetchStats(bracket: bracket), emit);
     }
   }

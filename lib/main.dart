@@ -28,7 +28,6 @@ class _MainAppState extends State<MainApp> {
   void setAppLanguage(String langCode) {
     setState(() {
       _locale = Locale(langCode.split('').take(2).join(''));
-      print(_locale);
     });
   }
 
