@@ -4,6 +4,7 @@ import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
+import 'package:dream_app/util/custom_string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -160,10 +161,11 @@ class _DescriptionRowState extends State<_DescriptionRow> {
             trigger: '@',
             triggerEnd: " ",
             optionsViewBuilder: (context, autocompleteQuery, _) {
+              String query = autocompleteQuery.query.toLowerCase();
               List<String> names = widget.allNames
-                  .where((n) => n
-                      .toLowerCase()
-                      .contains(autocompleteQuery.query.toLowerCase()))
+                  .where((n) =>
+                      n.toLowerCase().contains(query) ||
+                      CustomStringUtils.getEditDistance(query, n) < 3)
                   .toList();
               return Opacity(
                 opacity: 0.75,
