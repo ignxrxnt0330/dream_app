@@ -209,6 +209,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mood => 'mood';
 
   @override
+  String get more => 'more';
+
+  @override
   String get nameCount => 'namecount';
 
   @override

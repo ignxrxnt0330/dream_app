@@ -1,5 +1,6 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
+import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -12,7 +13,8 @@ class CustomDreamListTile extends StatelessWidget {
 
   final Dream dream;
 
-  Widget getNamesChips(Dream dream) {
+  Widget getNamesChips(Dream dream, BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     var names = dream.names;
     if (names.isEmpty) return const SizedBox(height: 0);
 
@@ -40,7 +42,9 @@ class CustomDreamListTile extends StatelessWidget {
           ...names
               .take(shownNamesLength)
               .map((name) => Chip(label: Text(name))),
-          Chip(label: Text("${names.length - shownNamesLength} more"))
+          Chip(
+              label: Text(
+                  "${names.length - shownNamesLength} ${localizations.more}"))
         ],
       );
     }
@@ -86,7 +90,7 @@ class CustomDreamListTile extends StatelessWidget {
             ),
             maxLines: 2,
           ),
-          getNamesChips(dream),
+          getNamesChips(dream, context),
         ],
       ),
       onTap: () async {

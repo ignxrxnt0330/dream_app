@@ -488,6 +488,12 @@ abstract class AppLocalizations {
   /// **'mood'**
   String get mood;
 
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'more'**
+  String get more;
+
   /// No description provided for @nameCount.
   ///
   /// In en, this message translates to:
