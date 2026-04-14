@@ -19,8 +19,9 @@ class CustomDreamListTile extends StatelessWidget {
     if (names.isEmpty) return const SizedBox(height: 0);
 
     if (dream.hidden) {
-      return Wrap(
-          spacing: 5, children: [Chip(label: Text("${names.length} people"))]);
+      return Wrap(spacing: 5, children: [
+        Chip(label: Text("${names.length} ${localizations.people}"))
+      ]);
     }
 
     int shownNamesLength = 0;
@@ -57,6 +58,7 @@ class CustomDreamListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return ListTile(
       title: Row(children: [
         SizedBox(
@@ -115,13 +117,14 @@ class CustomDreamListTile extends StatelessWidget {
           builder: (context) {
             return AlertDialog(
               title: Text(dream.title),
-              content: const Text("do you really wanna delete this dream ¿?"),
+              content: Text(
+                  localizations.confirmAction(localizations.deleteThisDream)),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text("nah"),
+                  child: Text(localizations.no),
                 ),
                 TextButton(
                   onPressed: () {
@@ -130,7 +133,7 @@ class CustomDreamListTile extends StatelessWidget {
                         .add(RemoveDream(dreamId: dream.id));
                     Navigator.of(context).pop();
                   },
-                  child: const Text("ye"),
+                  child: Text(localizations.yes),
                 ),
               ],
             );
