@@ -160,13 +160,32 @@ class _DescriptionRowState extends State<_DescriptionRow> {
           AutocompleteTrigger(
             trigger: '@',
             triggerEnd: " ",
+            minimumRequiredCharacters: 2,
             optionsViewBuilder: (context, autocompleteQuery, _) {
               String query = autocompleteQuery.query.toLowerCase();
-              List<String> names = widget.allNames
-                  .where((n) =>
-                      n.toLowerCase().contains(query) ||
-                      CustomStringUtils.getEditDistance(query, n) < 3)
-                  .toList();
+
+              List<String> names = [];
+              if (query.length <= 10) {
+                for (String n in widget.allNames) {
+                  if (n == query) names.add(n);
+                  if (n.contains(query)) names.add(n);
+                  if (n.startsWith(query[0])) {
+                    late bool closeEditDistance;
+                    if (n.length > query.length) {
+                      // compare edit distance to same index
+                      String pumpedName = n.substring(0, query.length);
+                      closeEditDistance =
+                          CustomStringUtils.getEditDistance(query, pumpedName) <
+                              3;
+                    } else {
+                      closeEditDistance =
+                          CustomStringUtils.getEditDistance(query, n) < 3;
+                    }
+                    if (closeEditDistance) names.add(n);
+                  }
+                }
+              }
+
               return Opacity(
                 opacity: 0.75,
                 child: Container(
