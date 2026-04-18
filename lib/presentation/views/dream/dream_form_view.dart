@@ -150,6 +150,28 @@ class _DescriptionRow extends StatefulWidget {
 class _DescriptionRowState extends State<_DescriptionRow> {
   FocusNode? descriptionFocusNode;
   TextEditingController? _lastController;
+  bool justCompleted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(() {
+      final text = widget.controller.text;
+      if (text.endsWith(' ,')) {
+        final newText = text.replaceFirst(RegExp(r' ,$'), ', ');
+        widget.controller.text = newText;
+        if (_lastController != null && _lastController!.text != newText) {
+          _lastController!.text = newText;
+        }
+        widget.controller.selection =
+            TextSelection.collapsed(offset: newText.length);
+        if (_lastController != null) {
+          _lastController!.selection =
+              TextSelection.collapsed(offset: newText.length);
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +224,8 @@ class _DescriptionRowState extends State<_DescriptionRow> {
                           onTap: () {
                             final autocomplete =
                                 MultiTriggerAutocomplete.of(context);
-                            return autocomplete.acceptAutocompleteOption(name);
+                            autocomplete.acceptAutocompleteOption(name);
+                            justCompleted = true;
                           });
                     },
                     itemCount: names.length,
