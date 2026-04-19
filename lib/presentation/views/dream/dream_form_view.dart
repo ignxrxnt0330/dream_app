@@ -77,7 +77,7 @@ class _DreamFormViewState extends State<DreamFormView> {
                 descriptionController,
                 save,
                 descriptionFocusNode,
-                allNames.keys.toList()),
+                allNames),
             const SizedBox(height: 20),
             _NamesRow(names),
           ],
@@ -138,7 +138,7 @@ class _DescriptionRow extends StatefulWidget {
   final TextEditingController controller;
   final Function save;
   final FocusNode descriptionFocusNode;
-  final List<String> allNames;
+  final Map<String, int> allNames;
   const _DescriptionRow(
       this.controller, this.save, this.descriptionFocusNode, this.allNames,
       {super.key});
@@ -186,27 +186,42 @@ class _DescriptionRowState extends State<_DescriptionRow> {
             optionsViewBuilder: (context, autocompleteQuery, _) {
               String query = autocompleteQuery.query.toLowerCase();
 
-              List<String> names = [];
+              Map<String, double> namesMap = {};
               if (query.length <= 10) {
-                for (String n in widget.allNames) {
-                  if (n == query) names.add(n);
-                  if (n.contains(query)) names.add(n);
+                for (String n in widget.allNames.keys) {
+                  if (n == query) {
+                    namesMap[n] = 0;
+                    continue;
+                  }
+                  if (query.contains(n)) {
+                    namesMap[n] = CustomStringUtils.getEditDistance(n, query);
+                    continue;
+                  }
                   if (n.startsWith(query[0])) {
-                    late bool closeEditDistance;
+                    late double editDistance;
                     if (n.length > query.length) {
                       // compare edit distance to same index
                       String pumpedName = n.substring(0, query.length);
-                      closeEditDistance =
-                          CustomStringUtils.getEditDistance(query, pumpedName) <
-                              3;
+                      editDistance =
+                          CustomStringUtils.getEditDistance(query, pumpedName);
                     } else {
-                      closeEditDistance =
-                          CustomStringUtils.getEditDistance(query, n) < 3;
+                      editDistance =
+                          CustomStringUtils.getEditDistance(query, n);
                     }
-                    if (closeEditDistance) names.add(n);
+                    namesMap[n] = editDistance;
                   }
                 }
               }
+
+              final List<String> names = namesMap.keys.toList()
+                ..sort((a, b) {
+                  final scoreCompare = namesMap[a]!.compareTo(namesMap[b]!);
+                  if (scoreCompare != 0) return scoreCompare;
+                  // Sort by usage descending if scores are equal
+                  final usageA = widget.allNames[a] ?? 0;
+                  final usageB = widget.allNames[b] ?? 0;
+                  return usageB.compareTo(usageA);
+                });
 
               return Opacity(
                 opacity: 0.75,
@@ -218,7 +233,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      final name = names[index];
+                      final String name = names[index];
                       return ListTile(
                           title: Text(name),
                           onTap: () {
@@ -228,7 +243,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
                             justCompleted = true;
                           });
                     },
-                    itemCount: names.length,
+                    itemCount: namesMap.length,
                   ),
                 ),
               );
