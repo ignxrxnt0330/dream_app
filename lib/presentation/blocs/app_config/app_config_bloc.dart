@@ -14,12 +14,13 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   final datasource = IsarDatasource();
 
   AppConfigBloc()
-      : super(
-            const AppConfigState(true, "", Color(0xFF9C27B0), 0, 'en-GB', '')) {
+      : super(const AppConfigState(
+            true, "", "", Color(0xFF9C27B0), 0, 'en-GB', '')) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
     on<SetDefaultTitle>(_setDefaultTitle);
+    on<SetDefaultEncryptionKey>(_setDefaultEncryptionKey);
     on<ChangeAppColor>(_changeAppColor);
     on<ImportDreams>(_importDreams);
     on<ExportDreams>(_exportDreams);
@@ -34,6 +35,10 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     String? defTitle = await config.getDefaultTitle();
     if (defTitle != null && defTitle.isNotEmpty) {
       add(SetDefaultTitle(defTitle));
+    }
+    String? defEncryptionKey = await config.getDefaultEncryptionKey();
+    if (defEncryptionKey != null && defEncryptionKey.isNotEmpty) {
+      add(SetDefaultEncryptionKey(defEncryptionKey));
     }
     add(ChangeAppColor(await config.getAppColor()));
     int? lastExported = await config.getLastExported();
@@ -60,6 +65,12 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
       SetDefaultTitle event, Emitter<AppConfigState> emit) async {
     await config.setDefaultTitle(event.title);
     emit(state.copyWith(defaultTitle: event.title));
+  }
+
+  void _setDefaultEncryptionKey(
+      SetDefaultEncryptionKey event, Emitter<AppConfigState> emit) async {
+    await config.setDefaultEncryptionKey(event.encryptionKey);
+    emit(state.copyWith(defaultEncryptionKey: event.encryptionKey));
   }
 
   void _setLastExported(

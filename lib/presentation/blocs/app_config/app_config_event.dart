@@ -18,6 +18,11 @@ class SetDefaultTitle extends AppConfigEvent {
   const SetDefaultTitle(this.title);
 }
 
+class SetDefaultEncryptionKey extends AppConfigEvent {
+  final String encryptionKey;
+  const SetDefaultEncryptionKey(this.encryptionKey);
+}
+
 class ChangeAppColor extends AppConfigEvent {
   final Color appColor;
   const ChangeAppColor(this.appColor);

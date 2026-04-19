@@ -41,7 +41,7 @@ class _DefaultTitleDialogState extends State<DefaultTitleDialog> {
           onPressed: () {
             context
                 .read<AppConfigBloc>()
-                .add(SetDefaultTitle(defaultTitleController.text));
+                .add(SetDefaultEncryptionKey(defaultTitleController.text));
             Navigator.of(context).pop();
           },
           child: Text(localizations.confirm),

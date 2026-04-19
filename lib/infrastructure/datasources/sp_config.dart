@@ -39,6 +39,19 @@ class SpConfig extends ConfigDatasource {
   }
 
   @override
+  Future<String?> getDefaultEncryptionKey() async {
+    prefs = await SharedPreferences.getInstance();
+    return prefs.getString('defaultEncryptionKey');
+  }
+
+  @override
+  Future<void> setDefaultEncryptionKey(String title) async {
+    prefs = await SharedPreferences.getInstance();
+    print(title);
+    prefs.setString('defaultEncryptionKey', title);
+  }
+
+  @override
   Future<Color> getAppColor() async {
     prefs = await SharedPreferences.getInstance();
     String appColor = prefs.getString('appColor') ?? "9C27B0";

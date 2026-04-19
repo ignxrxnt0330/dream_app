@@ -1,6 +1,7 @@
 import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/widgets/config/color_picker_dialog.dart';
+import 'package:dream_app/presentation/widgets/config/default_encryption_key_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/export_dreams_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/import_dreams_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/default_title_dialog.dart';
@@ -101,6 +102,20 @@ class _ConfigViewState extends State<ConfigView> {
               },
             ),
             ListTile(
+              title: Text(localizations.defaultEncryptionKey),
+              subtitle: Text(localizations.setDefaultEncryptKey),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                setState(() {});
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const DefaultEncryptionKeyDialog();
+                  },
+                );
+              },
+            ),
+            ListTile(
               title: Text(localizations.importDreams),
               subtitle: Text(localizations.importDreamsDesc),
               trailing: const Icon(Icons.upload_file_rounded),
@@ -114,11 +129,21 @@ class _ConfigViewState extends State<ConfigView> {
                   if (!context.mounted) return;
                   if (state.importDreamsPath != '') {
                     if (state.importDreamsPath.endsWith('.enc')) {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return const ImportDreamsDialog();
-                          }).then((_) {});
+                      String defaultEncryptionKey = context
+                          .read<AppConfigBloc>()
+                          .state
+                          .defaultEncryptionKey;
+                      if (defaultEncryptionKey.isNotEmpty) {
+                        context.read<AppConfigBloc>().add(ImportDreams(
+                            state.importDreamsPath, defaultEncryptionKey));
+                      } else {
+                        Navigator.of(context).pop();
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const ImportDreamsDialog();
+                            }).then((_) {});
+                      }
                     } else {
                       context
                           .read<AppConfigBloc>()
@@ -153,12 +178,21 @@ class _ConfigViewState extends State<ConfigView> {
               subtitle: Text(localizations.exportDreamsDesc),
               trailing: const Icon(Icons.download),
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const ExportDreamsDialog();
-                  },
-                );
+                String defaultEncryptionKey =
+                    context.read<AppConfigBloc>().state.defaultEncryptionKey;
+                if (defaultEncryptionKey.isNotEmpty) {
+                  context
+                      .read<AppConfigBloc>()
+                      .add(ExportDreams(defaultEncryptionKey));
+                } else {
+                  Navigator.of(context).pop();
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const ExportDreamsDialog();
+                    },
+                  );
+                }
               },
             ),
             ListTile(

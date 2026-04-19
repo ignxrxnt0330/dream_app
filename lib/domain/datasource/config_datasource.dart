@@ -6,6 +6,8 @@ abstract class ConfigDatasource {
   Future<bool> toggleDarkMode();
   Future<String?> getDefaultTitle();
   Future<void> setDefaultTitle(String title);
+  Future<String?> getDefaultEncryptionKey();
+  Future<void> setDefaultEncryptionKey(String title);
   Future<Color> getAppColor();
   Future<void> changeAppColor(Color appColor);
   Future<int> getLastExported();
