@@ -29,6 +29,7 @@ class _DefaultTitleDialogState extends State<DefaultTitleDialog> {
       content: TextField(
         controller: defaultTitleController,
         autofocus: true,
+        maxLength: 40
       ),
       actions: [
         TextButton(
