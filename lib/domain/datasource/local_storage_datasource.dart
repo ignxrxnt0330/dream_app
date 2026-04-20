@@ -9,12 +9,13 @@ abstract class LocalStorageDatasource {
       {int limit = 10,
       int offset = 0,
       String order = "date",
+      String query = "",
       bool asc = false,
       bool fav = false,
       bool hidden = false,
       int type = 3});
   Future<int> homeDreamCount(
-      {bool fav = false, bool hidden = false, int type = 3});
+      {bool fav = false, bool hidden = false, int type = 3, String query});
   Future<Dream?> getDream(int id);
   Future<void> toggleFavDream(int id);
   Future<List<Dream?>> loadFavoriteDreams({int limit = 10, int offset = 0});

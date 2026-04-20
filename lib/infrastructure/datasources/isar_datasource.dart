@@ -75,14 +75,21 @@ class IsarDatasource extends LocalStorageDatasource {
       {int limit = 10,
       int offset = 0,
       String order = "date",
+      String query = "",
       bool asc = false,
       bool fav = false,
       bool hidden = false,
       int type = 3}) async {
+    print(query);
     final isar = await db;
     final dreams = await isar.dreams
         .buildQuery(
           filter: FilterGroup.and([
+            if (query.isNotEmpty)
+              FilterGroup.or([
+                FilterCondition.contains(property: 'title', value: query),
+                FilterCondition.contains(property: 'description', value: query),
+              ]),
             if (fav) FilterCondition.equalTo(property: 'isFav', value: true),
             if (hidden)
               FilterCondition.equalTo(property: 'hidden', value: true),
@@ -101,11 +108,19 @@ class IsarDatasource extends LocalStorageDatasource {
 
   @override
   Future<int> homeDreamCount(
-      {bool fav = false, bool hidden = false, int type = 3}) async {
+      {bool fav = false,
+      bool hidden = false,
+      int type = 3,
+      String query = ''}) async {
     final isar = await db;
     final count = await isar.dreams
         .buildQuery(
           filter: FilterGroup.and([
+            if (query.isNotEmpty)
+              FilterGroup.or([
+                FilterCondition.contains(property: 'title', value: query),
+                FilterCondition.contains(property: 'description', value: query),
+              ]),
             if (fav) FilterCondition.equalTo(property: 'isFav', value: true),
             if (hidden)
               FilterCondition.equalTo(property: 'hidden', value: true),

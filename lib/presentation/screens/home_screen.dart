@@ -1,6 +1,5 @@
 import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
-import 'package:dream_app/presentation/delegates/dream_search_delegate.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:dream_app/presentation/views/views.dart';
@@ -18,6 +17,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isSearching = false;
+  final FocusNode _searchFocusNode = FocusNode();
+  final TextEditingController _searchController = TextEditingController();
+
   Widget? getFab(int index, BuildContext context) {
     switch (index) {
       case 0:
@@ -111,20 +114,75 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
+  void initState() {
+    _searchFocusNode.addListener(() {
+      if (!_searchFocusNode.hasFocus) {
+        _isSearching = false;
+        setState(() {});
+      }
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(localizations.appTitle,
-            style: TextStyle(fontFamily: "Consolas")),
+        title: _isSearching
+            ? TextField(
+                autofocus: true,
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                decoration: InputDecoration(
+                  hintText: 'Search...',
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            _searchController.clear();
+                            context
+                                .read<DreamHomeBloc>()
+                                .add(QueryChanged(query: ''));
+                            setState(() {});
+                          },
+                        )
+                      : null,
+                ),
+                onChanged: (value) {
+                  context.read<DreamHomeBloc>().add(QueryChanged(query: value));
+                },
+                onSubmitted: (String value) {
+                  context.read<DreamHomeBloc>().add(QueryChanged(query: value));
+                  _isSearching = false;
+                  setState(() {});
+                },
+              )
+            : Text(localizations.appTitle,
+                style: TextStyle(fontFamily: "Consolas")),
         actions: [
+          BlocBuilder<DreamHomeBloc, DreamHomeState>(
+            builder: (context, state) {
+              return Visibility(
+                visible: !_isSearching && state.query != '',
+                child: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                    context.read<DreamHomeBloc>().add(QueryChanged(query: ''));
+                    setState(() {});
+                  },
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              showSearch(
-                context: context,
-                delegate: DreamSearchDelegate(context),
-              );
+              _isSearching = true;
+              if (widget.index != 0) context.replace('/home/0');
+              setState(() {});
             },
           ),
         ],

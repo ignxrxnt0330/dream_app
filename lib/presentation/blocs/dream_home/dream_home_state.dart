@@ -12,6 +12,8 @@ class DreamHomeState extends Equatable {
   final int type;
   final int count;
   final Id lastEdited;
+  final bool isSearching;
+  final String query;
 
   const DreamHomeState({
     required this.dreams,
@@ -25,6 +27,8 @@ class DreamHomeState extends Equatable {
     this.type = 3,
     this.count = 0,
     this.lastEdited = 0,
+    this.isSearching = false,
+    this.query = ''
   });
 
   DreamHomeState copyWith({
@@ -39,6 +43,8 @@ class DreamHomeState extends Equatable {
     int? type,
     int? count,
     Id? lastEdited,
+    bool? isSearching,
+    String? query,
   }) =>
       DreamHomeState(
         dreams: dreams ?? this.dreams,
@@ -52,6 +58,8 @@ class DreamHomeState extends Equatable {
         type: type ?? this.type,
         count: count ?? this.count,
         lastEdited: lastEdited ?? this.lastEdited,
+        isSearching: isSearching ?? this.isSearching,
+        query: query ?? this.query,
       );
 
   @override
@@ -65,7 +73,9 @@ class DreamHomeState extends Equatable {
         hidden,
         type,
         count,
-        lastEdited
+        lastEdited,
+        isSearching,
+        query
       ];
 
   @override
