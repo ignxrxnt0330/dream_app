@@ -23,9 +23,6 @@ abstract class LocalStorageDatasource {
   Future<bool> exportDreams(String encryptKey);
   Future<bool?> importDreams({String path, String encryptKey});
   Future<String?> requestFile();
-  Future<List<Dream>>? searchDreams(String query,
-      {int limit = 10, int offset = 0, names = const [], bool newToOld = true});
-  Future<int> searchDreamsResultCount(String query, {names = const []});
   Future<List<DateTime>> allDates({DateTime? start, DateTime? end});
   Future<DateTime> firstDate();
   Future<DateTime> lastDate();

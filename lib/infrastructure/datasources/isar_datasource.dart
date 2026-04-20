@@ -232,40 +232,6 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<List<Dream>>? searchDreams(String query,
-      {int limit = 10,
-      int offset = 0,
-      names = const <String>[],
-      newToOld = true}) async {
-    final isar = await db;
-    final dreams = await isar.dreams
-        .where()
-        .filter()
-        .descriptionContains(query, caseSensitive: false)
-        .or()
-        .titleContains(query, caseSensitive: false)
-        .sortByDateDesc()
-        .offset(offset)
-        .limit(limit)
-        .findAll();
-    return dreams;
-  }
-
-  @override
-  Future<int> searchDreamsResultCount(String query,
-      {names = const <String>[]}) async {
-    final isar = await db;
-    final int dreamCount = await isar.dreams
-        .where()
-        .filter()
-        .descriptionContains(query, caseSensitive: false)
-        .or()
-        .titleContains(query, caseSensitive: false)
-        .count();
-    return dreamCount;
-  }
-
-  @override
   Future<int> dreamCount(int bracket) async {
     DateTime date = DateTime.now().subtract(Duration(days: bracket));
     final isar = await db;
