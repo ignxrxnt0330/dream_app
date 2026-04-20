@@ -126,12 +126,9 @@ class _DreamScreenState extends State<DreamScreen> {
                       isDisabled: !scrollable,
                       numberOfCardsDisplayed: 1,
                       allowedSwipeDirection: AllowedSwipeDirection.only(
-                          right: context
-                                  .read<DreamFormBloc>()
-                                  .state
-                                  .currentIndex !=
-                              0,
-                          left: true),
+                        right: true,
+                        left: true,
+                      ),
                       onSwipe: (oldIndex, newIndex, direction) {
                         if (formKey.currentState!.validate()) {
                           context
