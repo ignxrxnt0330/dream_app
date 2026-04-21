@@ -43,7 +43,7 @@ class _MainAppState extends State<MainApp> {
           BlocProvider<DreamHomeBloc>(
             create: (context) => DreamHomeBloc(),
           ),
-         BlocProvider<DreamStatsBloc>(
+          BlocProvider<DreamStatsBloc>(
             create: (context) => DreamStatsBloc(),
           ),
           BlocProvider<DreamCalendarBloc>(

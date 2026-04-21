@@ -41,8 +41,7 @@ class _DefaultEncryptionKeyDialogState
                   hidden = !hidden;
                   setState(() {});
                 },
-                icon:
-                    Icon(hidden ? Icons.lock : Icons.lock_open)),
+                icon: Icon(hidden ? Icons.lock : Icons.lock_open)),
           )),
       actions: [
         TextButton(

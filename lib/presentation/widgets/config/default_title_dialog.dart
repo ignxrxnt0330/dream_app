@@ -27,10 +27,7 @@ class _DefaultTitleDialogState extends State<DefaultTitleDialog> {
     return AlertDialog(
       title: Text(localizations.setDefaultTitle),
       content: TextField(
-        controller: defaultTitleController,
-        autofocus: true,
-        maxLength: 40
-      ),
+          controller: defaultTitleController, autofocus: true, maxLength: 40),
       actions: [
         TextButton(
           onPressed: () {

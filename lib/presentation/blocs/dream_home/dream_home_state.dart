@@ -15,21 +15,20 @@ class DreamHomeState extends Equatable {
   final bool isSearching;
   final String query;
 
-  const DreamHomeState({
-    required this.dreams,
-    this.offset = 0,
-    this.isLoading = false,
-    this.endReached = false,
-    this.order = "date",
-    this.asc = false,
-    this.fav = false,
-    this.hidden = false,
-    this.type = 3,
-    this.count = 0,
-    this.lastEdited = 0,
-    this.isSearching = false,
-    this.query = ''
-  });
+  const DreamHomeState(
+      {required this.dreams,
+      this.offset = 0,
+      this.isLoading = false,
+      this.endReached = false,
+      this.order = "date",
+      this.asc = false,
+      this.fav = false,
+      this.hidden = false,
+      this.type = 3,
+      this.count = 0,
+      this.lastEdited = 0,
+      this.isSearching = false,
+      this.query = ''});
 
   DreamHomeState copyWith({
     List<Dream>? dreams,

@@ -154,33 +154,60 @@ class _DreamScreenState extends State<DreamScreen> {
               builder: (context, state) {
             final isKeyboardVisible =
                 MediaQuery.of(context).viewInsets.bottom != 0;
-            return Visibility(
-              visible: state.currentIndex == 0 ? !isKeyboardVisible : true,
-              child: FloatingActionButton(
-                onPressed: () {
-                  if (isKeyboardVisible) {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    return;
-                  }
-                  if (!formKey.currentState!.validate()) return;
-                  if (state.currentIndex == slides.length - 1) {
-                    context.read<DreamFormBloc>().add(const DreamSubmitted());
-                    context.pop();
-                    context
-                        .read<DreamHomeBloc>()
-                        .add(HandleDream(dream: state.dream));
-                    return;
-                  }
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  swiperController.swipe(CardSwiperDirection.left);
-                },
-                child: Icon(
-                  state.currentIndex >= (slides.length - 1)
-                      ? Icons.arrow_upward
-                      : (isKeyboardVisible
-                          ? Icons.arrow_downward
-                          : Icons.arrow_forward),
-                ),
+            return Align(
+              alignment: Alignment.bottomRight,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Visibility(
+                    visible: state.currentIndex != 0,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        if (state.currentIndex == 0) return;
+                        swiperController.swipe(CardSwiperDirection.right);
+                        final int newIndex = state.currentIndex - 1;
+                        context
+                            .read<DreamFormBloc>()
+                            .add(IndexChanged(newIndex));
+                      },
+                      child: Icon(Icons.arrow_back),
+                    ),
+                  ),
+                  SizedBox(height: 16), // Space between buttons
+                  Visibility(
+                    visible:
+                        state.currentIndex == 0 ? !isKeyboardVisible : true,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        if (isKeyboardVisible) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          return;
+                        }
+                        if (!formKey.currentState!.validate()) return;
+                        if (state.currentIndex == slides.length - 1) {
+                          context
+                              .read<DreamFormBloc>()
+                              .add(const DreamSubmitted());
+                          context.pop();
+                          context
+                              .read<DreamHomeBloc>()
+                              .add(HandleDream(dream: state.dream));
+                          return;
+                        }
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        swiperController.swipe(CardSwiperDirection.left);
+                      },
+                      child: Icon(
+                        state.currentIndex >= (slides.length - 1)
+                            ? Icons.arrow_upward
+                            : (isKeyboardVisible
+                                ? Icons.arrow_downward
+                                : Icons.arrow_forward),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             );
           }),

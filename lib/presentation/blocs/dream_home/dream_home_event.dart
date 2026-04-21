@@ -44,7 +44,6 @@ class OrderChanged extends DreamHomeEvent {
       required this.type});
 }
 
-
 class QueryChanged extends DreamHomeEvent {
   final String query;
   const QueryChanged({required this.query});
