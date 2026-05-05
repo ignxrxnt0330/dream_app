@@ -39,3 +39,12 @@ class ValidChanged extends DreamFormEvent {
   final bool valid;
   const ValidChanged({required this.valid});
 }
+
+class ExitEditDream extends DreamFormEvent {
+  final int? index;
+  const ExitEditDream({this.index});
+}
+
+class ResumeEditDream extends DreamFormEvent {
+  const ResumeEditDream();
+}

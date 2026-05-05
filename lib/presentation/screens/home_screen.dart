@@ -26,23 +26,20 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return GestureDetector(
             onLongPress: () {
-              final int lastEdited =
-                  context.read<DreamHomeBloc>().state.lastEdited;
-              if (lastEdited == 0) {
-                return;
-              }
-              context.read<DreamFormBloc>().add(FetchDream(lastEdited));
+              final int lastEditedId =
+                  context.read<DreamFormBloc>().state.lastEdited.dream.id;
+              context.read<DreamFormBloc>().add(ResumeEditDream());
               context
                   .read<DreamFormBloc>()
                   .stream
-                  .firstWhere((state) => state.dream.id == lastEdited)
+                  .firstWhere((state) => state.dream.id == lastEditedId)
                   .then((state) {
                 if (!context.mounted) return;
                 if (state.dream.hidden) {
-                  context.push("/bio_validate/dream/$lastEdited");
+                  context.push("/bio_validate/dream/$lastEditedId");
                   return;
                 }
-                context.push("/dream/$lastEdited");
+                context.push("/dream/$lastEditedId");
               });
             },
             child: FloatingActionButton(

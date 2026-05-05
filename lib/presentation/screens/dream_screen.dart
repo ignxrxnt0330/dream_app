@@ -19,10 +19,10 @@ class DreamScreen extends StatefulWidget {
 
 class _DreamScreenState extends State<DreamScreen> {
   late final List<Widget> slides;
+  late final int initialIndex;
 
   final formKey = GlobalKey<FormState>();
   final swiperController = CardSwiperController();
-  // bool scrollable = false;
 
   @override
   void initState() {
@@ -30,6 +30,9 @@ class _DreamScreenState extends State<DreamScreen> {
     if (widget.dreamId != 0) {
       context.read<DreamFormBloc>().add(FetchDream(widget.dreamId!));
     }
+    initialIndex = context.read<DreamFormBloc>().state.isLastEdited
+        ? context.read<DreamFormBloc>().state.lastEdited.index
+        : 0;
 
     slides = const <Widget>[
       DreamFormView(),
@@ -106,48 +109,57 @@ class _DreamScreenState extends State<DreamScreen> {
               ),
             ],
           ),
-          body: Form(
-            key: formKey,
-            child: Column(
-              children: [
-                Expanded(
-                  child: BlocBuilder<DreamFormBloc, DreamFormState>(
-                      builder: (context, state) {
-                    bool scrollable = state.valid;
-                    return CardSwiper(
-                      padding: EdgeInsetsGeometry.all(15),
-                      cardsCount: slides.length,
-                      cardBuilder: (context, index, a, b) => slides[index],
-                      controller: swiperController,
-                      scale: 1,
-                      isLoop: false,
-                      duration: Duration(milliseconds: 100),
-                      maxAngle: 0,
-                      isDisabled: !scrollable,
-                      numberOfCardsDisplayed: 1,
-                      allowedSwipeDirection: AllowedSwipeDirection.only(
-                        right: true,
-                        left: true,
-                      ),
-                      onSwipe: (oldIndex, newIndex, direction) {
-                        if (formKey.currentState!.validate()) {
-                          context
-                              .read<DreamFormBloc>()
-                              .add(IndexChanged(newIndex!));
-                          if (direction == CardSwiperDirection.right) {
-                            swiperController.moveTo(oldIndex - 1);
+          body: PopScope(
+            onPopInvokedWithResult: (bool value, _) {
+              context
+                  .read<DreamFormBloc>()
+                  .add(FieldChanged(context.read<DreamFormBloc>().state.dream));
+              context.read<DreamFormBloc>().add(ExitEditDream());
+            },
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: BlocBuilder<DreamFormBloc, DreamFormState>(
+                        builder: (context, state) {
+                      bool scrollable = state.valid;
+                      return CardSwiper(
+                        padding: EdgeInsetsGeometry.all(15),
+                        cardsCount: slides.length,
+                        cardBuilder: (context, index, a, b) => slides[index],
+                        initialIndex: state.lastEdited.index,
+                        controller: swiperController,
+                        scale: 1,
+                        isLoop: false,
+                        duration: Duration(milliseconds: 100),
+                        maxAngle: 0,
+                        isDisabled: !scrollable,
+                        numberOfCardsDisplayed: 1,
+                        allowedSwipeDirection: AllowedSwipeDirection.only(
+                          right: true,
+                          left: true,
+                        ),
+                        onSwipe: (oldIndex, newIndex, direction) {
+                          if (formKey.currentState!.validate()) {
+                            context
+                                .read<DreamFormBloc>()
+                                .add(IndexChanged(newIndex!));
+                            if (direction == CardSwiperDirection.right) {
+                              swiperController.moveTo(oldIndex - 1);
+                            } else {
+                              swiperController.moveTo(oldIndex + 1);
+                            }
                           } else {
-                            swiperController.moveTo(oldIndex + 1);
+                            swiperController.undo();
                           }
-                        } else {
-                          swiperController.undo();
-                        }
-                        return false;
-                      },
-                    );
-                  }),
-                ),
-              ],
+                          return false;
+                        },
+                      );
+                    }),
+                  ),
+                ],
+              ),
             ),
           ),
           floatingActionButton: BlocBuilder<DreamFormBloc, DreamFormState>(

@@ -11,7 +11,6 @@ class DreamHomeState extends Equatable {
   final bool hidden;
   final int type;
   final int count;
-  final Id lastEdited;
   final bool isSearching;
   final String query;
 
@@ -26,7 +25,6 @@ class DreamHomeState extends Equatable {
       this.hidden = false,
       this.type = 3,
       this.count = 0,
-      this.lastEdited = 0,
       this.isSearching = false,
       this.query = ''});
 
@@ -56,7 +54,6 @@ class DreamHomeState extends Equatable {
         hidden: hidden ?? this.hidden,
         type: type ?? this.type,
         count: count ?? this.count,
-        lastEdited: lastEdited ?? this.lastEdited,
         isSearching: isSearching ?? this.isSearching,
         query: query ?? this.query,
       );
@@ -72,7 +69,6 @@ class DreamHomeState extends Equatable {
         hidden,
         type,
         count,
-        lastEdited,
         isSearching,
         query
       ];
