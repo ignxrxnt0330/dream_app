@@ -77,7 +77,6 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
   }
 
   void _onExitDream(ExitEditDream event, Emitter<DreamFormState> emit) {
-  print(state.currentIndex);
     emit(state.copyWith(
         lastEdited: LastEdited(
             dream: state.dream, index: event.index ?? state.currentIndex)));

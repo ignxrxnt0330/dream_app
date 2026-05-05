@@ -80,15 +80,20 @@ class IsarDatasource extends LocalStorageDatasource {
       bool fav = false,
       bool hidden = false,
       int type = 3}) async {
-    print(query);
     final isar = await db;
     final dreams = await isar.dreams
         .buildQuery(
           filter: FilterGroup.and([
-            if (query.isNotEmpty)
+            if (query.trim().isNotEmpty)
               FilterGroup.or([
-                FilterCondition.contains(property: 'title', value: query),
-                FilterCondition.contains(property: 'description', value: query),
+                FilterCondition.contains(
+                    property: 'title',
+                    value: query.trim(),
+                    caseSensitive: false),
+                FilterCondition.contains(
+                    property: 'description',
+                    value: query.trim(),
+                    caseSensitive: false),
               ]),
             if (fav) FilterCondition.equalTo(property: 'isFav', value: true),
             if (hidden)
