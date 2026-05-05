@@ -157,8 +157,10 @@ class _DescriptionRowState extends State<_DescriptionRow> {
     super.initState();
     widget.controller.addListener(() {
       final text = widget.controller.text;
-      if (text.endsWith(' ,')) {
-        final newText = text.replaceFirst(RegExp(r' ,$'), ', ');
+      if (text.endsWith(' ,') || text.endsWith(' .')) {
+        final newText = text
+            .replaceFirst(RegExp(r' ,$'), ', ')
+            .replaceFirst(RegExp(r' \.$'), '. ');
         widget.controller.text = newText;
         if (_lastController != null && _lastController!.text != newText) {
           _lastController!.text = newText;
