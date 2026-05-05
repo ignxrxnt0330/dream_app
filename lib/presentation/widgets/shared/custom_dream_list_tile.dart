@@ -18,9 +18,20 @@ class CustomDreamListTile extends StatelessWidget {
     var names = dream.names;
     if (names.isEmpty) return const SizedBox(height: 0);
 
+    final int peopleCount = names.length ~/ 2;
+    final int personCount = names.length % 2;
     if (dream.hidden) {
       return Wrap(spacing: 5, children: [
-        Chip(label: Text("${names.length} ${localizations.people}"))
+        ...List.generate(
+          peopleCount,
+          (int _) =>
+              Icon(Icons.people, color: Theme.of(context).colorScheme.primary),
+        ),
+        ...List.generate(
+          personCount,
+          (int _) =>
+              Icon(Icons.person, color: Theme.of(context).colorScheme.primary),
+        )
       ]);
     }
 
