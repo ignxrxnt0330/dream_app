@@ -142,13 +142,16 @@ class _DreamScreenState extends State<DreamScreen> {
                         ),
                         onSwipe: (oldIndex, newIndex, direction) {
                           if (formKey.currentState!.validate()) {
-                            context
-                                .read<DreamFormBloc>()
-                                .add(IndexChanged(newIndex!));
                             if (direction == CardSwiperDirection.right) {
                               swiperController.moveTo(oldIndex - 1);
+                            context
+                                .read<DreamFormBloc>()
+                                .add(IndexChanged(oldIndex - 1));
                             } else {
                               swiperController.moveTo(oldIndex + 1);
+                            context
+                                .read<DreamFormBloc>()
+                                .add(IndexChanged(oldIndex + 1));
                             }
                           } else {
                             swiperController.undo();
