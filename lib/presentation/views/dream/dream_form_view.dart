@@ -197,7 +197,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
                 }
               }
 
-              final List<String> names = namesMap.keys.toList()
+              final List<String> names = namesMap.keys.toSet().toList()
                 ..sort((a, b) {
                   final scoreCompare = namesMap[a]!.compareTo(namesMap[b]!);
                   if (scoreCompare != 0) return scoreCompare;
