@@ -172,12 +172,13 @@ class _DescriptionRowState extends State<_DescriptionRow> {
 
               Map<String, double> namesMap = {};
               if (query.length <= 10) {
-                for (String n in widget.allNames.keys) {
+                for (int i = 0; i < widget.allNames.length; i++) {
+                  final String n = widget.allNames.keys.elementAt(i);
                   if (n == query) {
                     namesMap[n] = 0;
                     continue;
                   }
-                  if (query.contains(n)) {
+                  if (query.contains(n) || i < 25) { // always include first 25 names
                     namesMap[n] = CustomStringUtils.getEditDistance(n, query);
                     continue;
                   }
