@@ -155,24 +155,6 @@ class _DescriptionRowState extends State<_DescriptionRow> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(() {
-      final text = widget.controller.text;
-      if (text.endsWith(' ,') || text.endsWith(' .')) {
-        final newText = text
-            .replaceFirst(RegExp(r' ,$'), ', ')
-            .replaceFirst(RegExp(r' \.$'), '. ');
-        widget.controller.text = newText;
-        if (_lastController != null && _lastController!.text != newText) {
-          _lastController!.text = newText;
-        }
-        widget.controller.selection =
-            TextSelection.collapsed(offset: newText.length);
-        if (_lastController != null) {
-          _lastController!.selection =
-              TextSelection.collapsed(offset: newText.length);
-        }
-      }
-    });
   }
 
   @override
@@ -265,6 +247,33 @@ class _DescriptionRowState extends State<_DescriptionRow> {
             }
 
             controller.addListener(() {
+              if (!justCompleted) return;
+
+              int currentIndex = controller.selection.baseOffset;
+              if (currentIndex <= 0 || currentIndex > controller.text.length) {
+                return;
+              }
+
+              // replace " ," to ", "
+              final text = controller.text;
+              final lastTyped = text.characters.elementAt(currentIndex - 1);
+
+              final bool comma = lastTyped == ",";
+              final bool dot = lastTyped == ".";
+              if (comma || dot) {
+                final newText = text.replaceRange(
+                    currentIndex - 2, currentIndex, "${comma ? "," : "."} ");
+
+                controller.text = newText;
+
+                controller.selection =
+                    TextSelection.collapsed(offset: currentIndex);
+                widget.controller.selection =
+                    TextSelection.collapsed(offset: currentIndex);
+
+                justCompleted = false;
+              }
+
               if (widget.controller.text != controller.text) {
                 widget.controller.text = controller.text;
                 widget.save();
