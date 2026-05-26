@@ -178,7 +178,8 @@ class _DescriptionRowState extends State<_DescriptionRow> {
                     namesMap[n] = 0;
                     continue;
                   }
-                  if (query.contains(n) || i < 25) { // always include first 25 names
+                  if (query.contains(n) || i < 25) {
+                    // always include first 25 names
                     namesMap[n] = CustomStringUtils.getEditDistance(n, query);
                     continue;
                   }
@@ -248,31 +249,30 @@ class _DescriptionRowState extends State<_DescriptionRow> {
             }
 
             controller.addListener(() {
-              if (!justCompleted) return;
+              if (justCompleted) {
+                int currentIndex = controller.selection.baseOffset;
+                if (currentIndex >= 0 &&
+                    currentIndex < controller.text.length) {
+                  // replace " ," to ", "
+                  final text = controller.text;
+                  final lastTyped = text.characters.elementAt(currentIndex - 1);
 
-              int currentIndex = controller.selection.baseOffset;
-              if (currentIndex <= 0 || currentIndex > controller.text.length) {
-                return;
-              }
+                  final bool comma = lastTyped == ",";
+                  final bool dot = lastTyped == ".";
+                  if (comma || dot) {
+                    final newText = text.replaceRange(currentIndex - 2,
+                        currentIndex, "${comma ? "," : "."} ");
 
-              // replace " ," to ", "
-              final text = controller.text;
-              final lastTyped = text.characters.elementAt(currentIndex - 1);
+                    controller.text = newText;
 
-              final bool comma = lastTyped == ",";
-              final bool dot = lastTyped == ".";
-              if (comma || dot) {
-                final newText = text.replaceRange(
-                    currentIndex - 2, currentIndex, "${comma ? "," : "."} ");
+                    controller.selection =
+                        TextSelection.collapsed(offset: currentIndex);
+                    widget.controller.selection =
+                        TextSelection.collapsed(offset: currentIndex);
 
-                controller.text = newText;
-
-                controller.selection =
-                    TextSelection.collapsed(offset: currentIndex);
-                widget.controller.selection =
-                    TextSelection.collapsed(offset: currentIndex);
-
-                justCompleted = false;
+                    justCompleted = false;
+                  }
+                }
               }
 
               if (widget.controller.text != controller.text) {
