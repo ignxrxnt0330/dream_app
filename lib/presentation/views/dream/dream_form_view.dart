@@ -252,7 +252,8 @@ class _DescriptionRowState extends State<_DescriptionRow> {
               if (justCompleted) {
                 int currentIndex = controller.selection.baseOffset;
                 if (currentIndex >= 0 &&
-                    currentIndex < controller.text.length) {
+                    currentIndex <= controller.text.length &&
+                    currentIndex - 1 >= 0) {
                   // replace " ," to ", "
                   final text = controller.text;
                   final lastTyped = text.characters.elementAt(currentIndex - 1);
