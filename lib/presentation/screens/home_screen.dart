@@ -132,21 +132,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 autofocus: true,
                 controller: _searchController,
                 focusNode: _searchFocusNode,
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: Icon(Icons.clear),
-                          onPressed: () {
-                            _searchController.clear();
-                            context
-                                .read<DreamHomeBloc>()
-                                .add(QueryChanged(query: ''));
-                            setState(() {});
-                          },
-                        )
-                      : null,
-                ),
                 onChanged: (value) {
                   context.read<DreamHomeBloc>().add(QueryChanged(query: value));
                 },
@@ -162,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BlocBuilder<DreamHomeBloc, DreamHomeState>(
             builder: (context, state) {
               return Visibility(
-                visible: !_isSearching && state.query != '',
+                visible: state.query != '',
                 child: IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: () {
