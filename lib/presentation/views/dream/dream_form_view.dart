@@ -270,11 +270,10 @@ class _DescriptionRowState extends State<_DescriptionRow> {
                         TextSelection.collapsed(offset: currentIndex);
                     widget.controller.selection =
                         TextSelection.collapsed(offset: currentIndex);
-
-                    justCompleted = false;
                   }
                 }
               }
+                    justCompleted = false;
 
               if (widget.controller.text != controller.text) {
                 widget.controller.text = controller.text;
