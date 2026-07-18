@@ -83,6 +83,7 @@ class Dream {
         .allMatches(description)
         .map((match) => match.group(1)?.normalize.toLowerCase())
         .whereType<String>()
+        .toSet()
         .toList();
   }
 
