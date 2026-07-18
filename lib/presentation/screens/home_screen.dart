@@ -18,8 +18,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _isSearching = false;
+  bool _showReplace = false;
   final FocusNode _searchFocusNode = FocusNode();
+  final FocusNode _replaceFocusNode = FocusNode();
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _replaceController = TextEditingController();
 
   Widget? getFab(int index, BuildContext context) {
     switch (index) {
@@ -113,7 +116,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _searchFocusNode.addListener(() {
-      if (!_searchFocusNode.hasFocus) {
+      //FIXME: inputs / botones buscar
+      if (!_searchFocusNode.hasFocus && !_replaceFocusNode.hasFocus) {
         _isSearching = false;
         setState(() {});
       }
@@ -127,19 +131,53 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 100,
         title: _isSearching
-            ? TextField(
-                autofocus: true,
-                controller: _searchController,
-                focusNode: _searchFocusNode,
-                onChanged: (value) {
-                  context.read<DreamHomeBloc>().add(QueryChanged(query: value));
-                },
-                onSubmitted: (String value) {
-                  context.read<DreamHomeBloc>().add(QueryChanged(query: value));
-                  _isSearching = false;
-                  setState(() {});
-                },
+            ? SafeArea(
+                child: Column(
+                  children: [
+                    TextField(
+                      autofocus: true,
+                      controller: _searchController,
+                      focusNode: _searchFocusNode,
+                      onChanged: (value) {
+                        context
+                            .read<DreamHomeBloc>()
+                            .add(QueryChanged(query: value));
+                      },
+                      onSubmitted: (String value) {
+                        context
+                            .read<DreamHomeBloc>()
+                            .add(QueryChanged(query: value));
+                        _isSearching = false;
+                        setState(() {});
+                      },
+                    ),
+                    BlocBuilder<DreamHomeBloc, DreamHomeState>(
+                      builder: (context, state) {
+                        return Visibility(
+                          visible: _isSearching && _showReplace,
+                          child: TextField(
+                            autofocus: false,
+                            controller: _replaceController,
+                            focusNode: _replaceFocusNode,
+                            onSubmitted: (String value) {
+                              context.read<DreamHomeBloc>().add(ResultsReplaced(
+                                  replace: _replaceController.value.text));
+                              context
+                                  .read<DreamHomeBloc>()
+                                  .add(QueryChanged(query: ''));
+                              _isSearching = false;
+                              _showReplace = false;
+                              _replaceController.clear();
+                              setState(() {});
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               )
             : Text(localizations.appTitle,
                 style: TextStyle(fontFamily: "Consolas")),
@@ -158,6 +196,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             },
+          ),
+          BlocBuilder<DreamHomeBloc, DreamHomeState>(
+            builder: (context, state) {
+              return Visibility(
+                visible: _isSearching,
+                child: IconButton(
+                  icon: Icon(Icons.find_replace_sharp),
+                  onPressed: () {
+                    _showReplace = !_showReplace;
+                    _replaceFocusNode.requestFocus();
+                    setState(() {});
+                  },
+                ),
+              );
+            },
+          ),
+          Visibility(
+            visible: _isSearching,
+            child: IconButton(
+              icon: const Icon(Icons.sort),
+              onPressed: () {
+                //TODO: toggle replace
+                //TODO: show filter modal
+              },
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.search),

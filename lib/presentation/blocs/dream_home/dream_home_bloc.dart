@@ -18,6 +18,7 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
     on<RemoveDream>(_removeDream);
     on<OrderChanged>(_orderChanged);
     on<QueryChanged>(_queryChanged);
+    on<ResultsReplaced>(_resultsReplaced);
   }
 
   void _fetchMoreDreams(FetchDreams event, Emitter<DreamHomeState> emit) async {
@@ -105,6 +106,13 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
 
   void _queryChanged(QueryChanged event, Emitter<DreamHomeState> emit) async {
     emit(state.copyWith(query: event.query));
+    add(const RefreshDreams());
+  }
+
+  void _resultsReplaced(
+      ResultsReplaced event, Emitter<DreamHomeState> emit) async {
+    await datasource.replaceDreams(state.query, event.replace, state.dreams,
+        caseSensitive: event.caseSensitive);
     add(const RefreshDreams());
   }
 }

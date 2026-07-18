@@ -600,4 +600,16 @@ class IsarDatasource extends LocalStorageDatasource {
     final filePath = await FlutterFileDialog.pickFile(params: params);
     return filePath;
   }
+
+  @override
+  Future<void> replaceDreams(String query, String replace, List<Dream> dreams,
+      {bool caseSensitive = false}) async {
+    final RegExp pattern = RegExp(query, caseSensitive: caseSensitive);
+    final isar = await db;
+    for (Dream dream in dreams) {
+      dream.title = dream.title.replaceAll(pattern, replace);
+      dream.description = dream.description.replaceAll(pattern, replace);
+      isar.writeTxnSync(() => isar.dreams.putSync(dream));
+    }
+  }
 }

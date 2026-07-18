@@ -48,3 +48,9 @@ class QueryChanged extends DreamHomeEvent {
   final String query;
   const QueryChanged({required this.query});
 }
+
+class ResultsReplaced extends DreamHomeEvent {
+  final String replace;
+  final bool caseSensitive;
+  const ResultsReplaced({required this.replace, this.caseSensitive = false});
+}
