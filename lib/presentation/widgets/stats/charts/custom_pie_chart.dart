@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomPieChart extends StatelessWidget {
   final Map<String, int> data;
@@ -71,7 +72,7 @@ class CustomPieChart extends StatelessWidget {
                     TextButton(
                       child: const Text("Close"),
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        if (context.canPop()) Navigator.of(context).pop();
                         return;
                       },
                     ),

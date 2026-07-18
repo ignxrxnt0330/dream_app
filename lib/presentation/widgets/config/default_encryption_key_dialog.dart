@@ -2,6 +2,7 @@ import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class DefaultEncryptionKeyDialog extends StatefulWidget {
   const DefaultEncryptionKeyDialog({super.key});
@@ -46,7 +47,7 @@ class _DefaultEncryptionKeyDialogState
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            if (context.canPop()) Navigator.of(context).pop();
           },
           child: Text(localizations.cancel),
         ),
@@ -54,7 +55,7 @@ class _DefaultEncryptionKeyDialogState
           onPressed: () {
             context.read<AppConfigBloc>().add(
                 SetDefaultEncryptionKey(defaultEncryptionKeyController.text));
-            Navigator.of(context).pop();
+            if (context.canPop()) Navigator.of(context).pop();
           },
           child: Text(localizations.confirm),
         ),

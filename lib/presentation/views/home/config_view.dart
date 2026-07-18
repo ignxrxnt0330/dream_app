@@ -1,3 +1,4 @@
+import 'package:date_field/date_field.dart';
 import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/widgets/config/color_picker_dialog.dart';
@@ -10,6 +11,7 @@ import 'package:dream_app/util/custom_date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import "package:dream_app/infrastructure/datasources/sp_config.dart";
+import 'package:go_router/go_router.dart';
 import 'package:restart_app/restart_app.dart';
 
 class ConfigView extends StatefulWidget {
@@ -49,14 +51,14 @@ class _ConfigViewState extends State<ConfigView> {
                       TextButton(
                         child: Text(localizations.no),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          if (context.canPop()) Navigator.of(context).pop();
                           return;
                         },
                       ),
                       TextButton(
                         child: Text(localizations.yes),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          if (context.canPop()) Navigator.of(context).pop();
                           context
                               .read<AppConfigBloc>()
                               .add(const ToggleDarkMode());
@@ -137,7 +139,7 @@ class _ConfigViewState extends State<ConfigView> {
                         context.read<AppConfigBloc>().add(ImportDreams(
                             state.importDreamsPath, defaultEncryptionKey));
                       } else {
-                        Navigator.of(context).pop();
+                        if (context.canPop()) Navigator.of(context).pop();
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -185,7 +187,7 @@ class _ConfigViewState extends State<ConfigView> {
                       .read<AppConfigBloc>()
                       .add(ExportDreams(defaultEncryptionKey));
                 } else {
-                  Navigator.of(context).pop();
+                  if (context.canPop()) Navigator.of(context).pop();
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -252,7 +254,7 @@ class _ConfigViewState extends State<ConfigView> {
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          if (context.canPop()) Navigator.of(context).pop();
                         },
                         child: Text(localizations.no),
                       ),
@@ -261,7 +263,7 @@ class _ConfigViewState extends State<ConfigView> {
                           context
                               .read<AppConfigBloc>()
                               .add(const DeleteAllDreams());
-                          Navigator.of(context).pop();
+                          if (context.canPop()) Navigator.of(context).pop();
                         },
                         child: Text(localizations.yes),
                       ),

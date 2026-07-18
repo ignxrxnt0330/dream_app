@@ -4,6 +4,7 @@ import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:dream_app/presentation/widgets/shared/custom_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SetLanguageDialog extends StatefulWidget {
   const SetLanguageDialog({super.key});
@@ -54,14 +55,14 @@ class _SetLanguageDialogState extends State<SetLanguageDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            if (context.canPop()) Navigator.of(context).pop();
           },
           child: Text(localizations.cancel),
         ),
         TextButton(
           onPressed: () {
             context.read<AppConfigBloc>().add(SetLanguage(language));
-            Navigator.of(context).pop();
+            if (context.canPop()) Navigator.of(context).pop();
           },
           child: Text(localizations.confirm),
         ),

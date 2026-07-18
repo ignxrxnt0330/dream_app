@@ -2,6 +2,7 @@ import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class ExportDreamsDialog extends StatefulWidget {
   const ExportDreamsDialog({super.key});
@@ -25,7 +26,7 @@ class _ExportDreamsDialogState extends State<ExportDreamsDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            if (context.canPop()) Navigator.of(context).pop();
           },
           child: Text(localizations.cancel),
         ),
@@ -34,7 +35,7 @@ class _ExportDreamsDialogState extends State<ExportDreamsDialog> {
             context
                 .read<AppConfigBloc>()
                 .add(ExportDreams(encryptKeyController.value.text));
-            Navigator.of(context).pop();
+            if (context.canPop()) Navigator.of(context).pop();
           },
           child: Text(localizations.confirm),
         ),

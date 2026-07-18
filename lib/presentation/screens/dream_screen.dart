@@ -71,7 +71,8 @@ class _DreamScreenState extends State<DreamScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop();
+                                if (context.canPop())
+                                  Navigator.of(context).pop();
                               },
                               child: Text(localizations.no),
                             ),
@@ -80,8 +81,10 @@ class _DreamScreenState extends State<DreamScreen> {
                                 context
                                     .read<DreamHomeBloc>()
                                     .add(RemoveDream(dreamId: state.dream.id));
-                                Navigator.of(context).pop(); // close dialog
-                                Navigator.of(context).pop(); // return to prev
+                                if (context.canPop())
+                                  Navigator.of(context).pop();
+                                if (context.canPop())
+                                  Navigator.of(context).pop();
                               },
                               child: Text(localizations.yes),
                             ),
@@ -204,7 +207,7 @@ class _DreamScreenState extends State<DreamScreen> {
                           context
                               .read<DreamFormBloc>()
                               .add(const DreamSubmitted());
-                          context.pop();
+                          if (context.canPop()) Navigator.of(context).pop();
                           context
                               .read<DreamHomeBloc>()
                               .add(HandleDream(dream: state.dream));

@@ -273,7 +273,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
                   }
                 }
               }
-                    justCompleted = false;
+              justCompleted = false;
 
               if (widget.controller.text != controller.text) {
                 widget.controller.text = controller.text;

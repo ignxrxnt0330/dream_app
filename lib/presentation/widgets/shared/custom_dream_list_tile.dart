@@ -133,7 +133,7 @@ class CustomDreamListTile extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    if (context.canPop()) Navigator.of(context).pop();
                   },
                   child: Text(localizations.no),
                 ),
@@ -142,7 +142,7 @@ class CustomDreamListTile extends StatelessWidget {
                     context
                         .read<DreamHomeBloc>()
                         .add(RemoveDream(dreamId: dream.id));
-                    Navigator.of(context).pop();
+                    if (context.canPop()) Navigator.of(context).pop();
                   },
                   child: Text(localizations.yes),
                 ),

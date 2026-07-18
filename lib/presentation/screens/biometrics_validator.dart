@@ -28,7 +28,7 @@ class _BiometricsValidatorState extends State<BiometricsValidator> {
       context.pushReplacement("/${widget.obj}/${widget.redirUrl}");
       return;
     }
-    Navigator.of(context).pop();
+    if (context.canPop()) Navigator.of(context).pop();
   }
 
   @override

@@ -2,6 +2,7 @@ import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class DefaultTitleDialog extends StatefulWidget {
   const DefaultTitleDialog({super.key});
@@ -31,7 +32,7 @@ class _DefaultTitleDialogState extends State<DefaultTitleDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            if (context.canPop()) Navigator.of(context).pop();
           },
           child: Text(localizations.cancel),
         ),
@@ -40,7 +41,7 @@ class _DefaultTitleDialogState extends State<DefaultTitleDialog> {
             context
                 .read<AppConfigBloc>()
                 .add(SetDefaultEncryptionKey(defaultTitleController.text));
-            Navigator.of(context).pop();
+            if (context.canPop()) Navigator.of(context).pop();
           },
           child: Text(localizations.confirm),
         ),

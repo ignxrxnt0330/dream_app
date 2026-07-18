@@ -2,6 +2,7 @@ import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/app_config/app_config_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class ImportDreamsDialog extends StatefulWidget {
   const ImportDreamsDialog({super.key});
@@ -27,7 +28,7 @@ class _ImportDreamsDialogState extends State<ImportDreamsDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            if (context.canPop()) Navigator.of(context).pop();
           },
           child: Text(localizations.cancel),
         ),
@@ -36,7 +37,7 @@ class _ImportDreamsDialogState extends State<ImportDreamsDialog> {
             final AppConfigState state = context.read<AppConfigBloc>().state;
             context.read<AppConfigBloc>().add(ImportDreams(
                 state.importDreamsPath, encryptKeyController.value.text));
-            Navigator.of(context).pop();
+            if (context.canPop()) Navigator.of(context).pop();
           },
           child: Text(localizations.confirm),
         ),
