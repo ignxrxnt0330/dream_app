@@ -36,13 +36,30 @@ class _DefaultEncryptionKeyDialogState
           autofocus: true,
           obscureText: hidden,
           maxLength: 32,
+          onChanged: (_) {
+            setState(() {});
+          },
           decoration: InputDecoration(
-            suffix: IconButton(
-                onPressed: () {
-                  hidden = !hidden;
-                  setState(() {});
-                },
-                icon: Icon(hidden ? Icons.lock : Icons.lock_open)),
+            suffix: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Visibility(
+                  visible: defaultEncryptionKeyController.text.isNotEmpty,
+                  child: IconButton(
+                      onPressed: () {
+                        defaultEncryptionKeyController.clear();
+                        setState(() {});
+                      },
+                      icon: Icon(Icons.clear)),
+                ),
+                IconButton(
+                    onPressed: () {
+                      hidden = !hidden;
+                      setState(() {});
+                    },
+                    icon: Icon(hidden ? Icons.lock : Icons.lock_open))
+              ],
+            ),
           )),
       actions: [
         TextButton(

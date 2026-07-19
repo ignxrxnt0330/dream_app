@@ -84,6 +84,7 @@
   "resetDefault": "reset default",
   "restart": "restart app",
   "setAppLang": "set the app's language",
+  "setAsDefault": "set as default",
   "setDefaultEncryptKey": "set default encryption key",
   "setDefaultTitle": "set default title",
   "setEncryptKey": "enter encryption key",
