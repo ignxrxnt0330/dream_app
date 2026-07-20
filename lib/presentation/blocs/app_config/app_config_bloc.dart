@@ -93,8 +93,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     await datasource.exportDreams(event.encryptKey);
     int lastExported = DateTime.now().millisecondsSinceEpoch;
     await config.setLastExported(lastExported);
-    final currentHash = await datasource.getDreamsHash();
-    await config.updateExportedDreamsHash(currentHash);
+    add(UpdateDreamsHash());
     emit(state.copyWith(lastExported: lastExported, unsavedChanges: false));
   }
 
@@ -102,14 +101,14 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     emit(state.copyWith(importDreamsPath: ''));
     bool res = await datasource.importDreams(
         path: event.path, encryptKey: event.encryptKey);
+    add(UpdateDreamsHash());
     if (res) Restart.restartApp();
   }
 
   void _deleteAllDreams(
       DeleteAllDreams event, Emitter<AppConfigState> emit) async {
     await datasource.deleteAllDreams();
-    await config.updateExportedDreamsHash("");
-    add(CheckDreamHash());
+    add(UpdateDreamsHash());
     Restart.restartApp();
   }
 
