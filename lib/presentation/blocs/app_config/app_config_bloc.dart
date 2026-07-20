@@ -90,7 +90,8 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   }
 
   void _exportDreams(ExportDreams event, Emitter<AppConfigState> emit) async {
-    await datasource.exportDreams(event.encryptKey);
+    final bool exported = await datasource.exportDreams(event.encryptKey);
+    if (!exported) return;
     int lastExported = DateTime.now().millisecondsSinceEpoch;
     await config.setLastExported(lastExported);
     add(UpdateDreamsHash());
