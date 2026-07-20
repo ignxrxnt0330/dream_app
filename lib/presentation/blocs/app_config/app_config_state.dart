@@ -8,6 +8,7 @@ class AppConfigState extends Equatable {
   final int lastExported;
   final String language;
   final String importDreamsPath;
+  final bool unsavedChanges;
   const AppConfigState(
       this.darkMode,
       this.defaultTitle,
@@ -15,26 +16,27 @@ class AppConfigState extends Equatable {
       this.appColor,
       this.lastExported,
       this.language,
-      this.importDreamsPath);
+      this.importDreamsPath,
+      this.unsavedChanges);
 
-  AppConfigState copyWith({
-    bool? darkMode,
-    String? defaultTitle,
-    String? defaultEncryptionKey,
-    Color? appColor,
-    int? lastExported,
-    String? language,
-    String? importDreamsPath,
-  }) {
+  AppConfigState copyWith(
+      {bool? darkMode,
+      String? defaultTitle,
+      String? defaultEncryptionKey,
+      Color? appColor,
+      int? lastExported,
+      String? language,
+      String? importDreamsPath,
+      bool? unsavedChanges}) {
     return AppConfigState(
-      darkMode ?? this.darkMode,
-      defaultTitle ?? this.defaultTitle,
-      defaultEncryptionKey ?? this.defaultEncryptionKey,
-      appColor ?? this.appColor,
-      lastExported ?? this.lastExported,
-      language ?? this.language,
-      importDreamsPath ?? this.importDreamsPath,
-    );
+        darkMode ?? this.darkMode,
+        defaultTitle ?? this.defaultTitle,
+        defaultEncryptionKey ?? this.defaultEncryptionKey,
+        appColor ?? this.appColor,
+        lastExported ?? this.lastExported,
+        language ?? this.language,
+        importDreamsPath ?? this.importDreamsPath,
+        unsavedChanges ?? this.unsavedChanges);
   }
 
   @override
@@ -45,6 +47,7 @@ class AppConfigState extends Equatable {
         appColor,
         lastExported,
         language,
-        importDreamsPath
+        importDreamsPath,
+        unsavedChanges
       ];
 }

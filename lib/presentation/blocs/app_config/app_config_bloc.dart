@@ -15,7 +15,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
 
   AppConfigBloc()
       : super(const AppConfigState(
-            true, "", "", Color(0xFF9C27B0), 0, 'en-GB', '')) {
+            true, "", "", Color(0xFF9C27B0), 0, 'en-GB', '', false)) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
@@ -28,6 +28,8 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     on<SetLastExported>(_setLastExported);
     on<SetLanguage>(_setLanguage);
     on<RequestFile>(_requestFile);
+    on<UpdateDreamsHash>(_updateDreamsHash);
+    on<CheckDreamHash>(_checkDreamsHash);
   }
 
   void _initConfig() async {
@@ -48,6 +50,8 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     String lang = await config.getLanguage();
     mainAppKey.currentState?.setAppLanguage(lang);
     add(SetLanguage(lang));
+
+    add(CheckDreamHash());
   }
 
   void _setDarkMode(SetDarkMode event, Emitter<AppConfigState> emit) async {
@@ -88,8 +92,10 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   void _exportDreams(ExportDreams event, Emitter<AppConfigState> emit) async {
     await datasource.exportDreams(event.encryptKey);
     int lastExported = DateTime.now().millisecondsSinceEpoch;
-    SpConfig().setLastExported(lastExported);
-    emit(state.copyWith(lastExported: lastExported));
+    await config.setLastExported(lastExported);
+    final currentHash = await datasource.getDreamsHash();
+    await config.updateExportedDreamsHash(currentHash);
+    emit(state.copyWith(lastExported: lastExported, unsavedChanges: false));
   }
 
   void _importDreams(ImportDreams event, Emitter<AppConfigState> emit) async {
@@ -102,18 +108,36 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
   void _deleteAllDreams(
       DeleteAllDreams event, Emitter<AppConfigState> emit) async {
     await datasource.deleteAllDreams();
+    await config.updateExportedDreamsHash("");
+    add(CheckDreamHash());
     Restart.restartApp();
   }
 
   void _setLanguage(SetLanguage event, Emitter<AppConfigState> emit) async {
     await config.setLanguage(event.lang);
     mainAppKey.currentState?.setAppLanguage(event.lang);
-    SpConfig().setLanguage(event.lang);
+    await config.setLanguage(event.lang);
     emit(state.copyWith(language: event.lang));
   }
 
   void _requestFile(RequestFile event, Emitter<AppConfigState> emit) async {
     final String? path = await datasource.requestFile();
     emit(state.copyWith(importDreamsPath: path));
+  }
+
+  void _updateDreamsHash(
+      UpdateDreamsHash event, Emitter<AppConfigState> emit) async {
+    final currentHash = await datasource.getDreamsHash();
+    await config.updateExportedDreamsHash(currentHash);
+    add(CheckDreamHash(currentHash: currentHash));
+  }
+
+  void _checkDreamsHash(
+      CheckDreamHash event, Emitter<AppConfigState> emit) async {
+    final String exportedHash = await config.getExportedDreamsHash();
+    final currentHash = event.currentHash ?? await datasource.getDreamsHash();
+    final bool unsavedChages = exportedHash != currentHash;
+
+    emit(state.copyWith(unsavedChanges: unsavedChages));
   }
 }

@@ -172,8 +172,21 @@ class _ConfigViewState extends State<ConfigView> {
                               .lastExportedDate(lastExportedDate.formatDate);
                         }
 
-                        return Text(exportedText,
-                            style: const TextStyle(fontSize: 11));
+                        return Row(
+                          children: [
+                            Text(exportedText,
+                                style: const TextStyle(fontSize: 11)),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            BlocBuilder<AppConfigBloc, AppConfigState>(
+                                builder: (context, state) {
+                              return state.unsavedChanges
+                                  ? Icon(Icons.circle, size: 8)
+                                  : SizedBox();
+                            })
+                          ],
+                        );
                       },
                     ),
                   ]),

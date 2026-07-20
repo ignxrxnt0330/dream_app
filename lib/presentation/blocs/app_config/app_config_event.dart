@@ -56,3 +56,12 @@ class SetLanguage extends AppConfigEvent {
 class RequestFile extends AppConfigEvent {
   const RequestFile();
 }
+
+class UpdateDreamsHash extends AppConfigEvent {
+  const UpdateDreamsHash();
+}
+
+class CheckDreamHash extends AppConfigEvent {
+  final String? currentHash;
+  const CheckDreamHash({this.currentHash});
+}

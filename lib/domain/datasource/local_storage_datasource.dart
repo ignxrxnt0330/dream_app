@@ -45,4 +45,5 @@ abstract class LocalStorageDatasource {
   Future<Streak> longestStreak();
 
   Future<void> replaceDreams(String query, String replace, List<Dream> dreams);
+  Future<String> getDreamsHash();
 }

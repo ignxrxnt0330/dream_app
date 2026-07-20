@@ -612,4 +612,15 @@ class IsarDatasource extends LocalStorageDatasource {
       isar.writeTxnSync(() => isar.dreams.putSync(dream));
     }
   }
+
+  @override
+  Future<String> getDreamsHash() async {
+    final List<Dream> dreams = await getAllDreams();
+    if (dreams.isEmpty) return "";
+    final String key = "asd                             ";
+    final String data =
+        "[${dreams.map((dream) => dream.toJson()).join(",\n")}]";
+    final String hash = await Encrypter.encryptAES256CBC(data, key: key) ?? "";
+    return hash;
+  }
 }

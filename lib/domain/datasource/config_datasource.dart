@@ -14,4 +14,6 @@ abstract class ConfigDatasource {
   Future<void> setLastExported(int lastExported);
   Future<void> setLanguage(String language);
   Future<String> getLanguage();
+  Future<void> updateExportedDreamsHash(String hash);
+  Future<String> getExportedDreamsHash();
 }

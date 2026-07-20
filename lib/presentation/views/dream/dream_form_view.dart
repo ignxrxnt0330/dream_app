@@ -166,9 +166,9 @@ class _DescriptionRowState extends State<_DescriptionRow> {
   bool justCompleted = false;
 
   @override
-    void initState() {
-      super.initState();
-    }
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

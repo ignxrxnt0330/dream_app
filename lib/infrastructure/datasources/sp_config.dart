@@ -89,4 +89,16 @@ class SpConfig extends ConfigDatasource {
     prefs = await SharedPreferences.getInstance();
     return prefs.getString('language') ?? 'en';
   }
+
+  @override
+  Future<String> getExportedDreamsHash() async {
+    prefs = await SharedPreferences.getInstance();
+    return prefs.getString('exportedDreamsHash') ?? '';
+  }
+
+  @override
+  Future<void> updateExportedDreamsHash(String hash) async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setString('exportedDreamsHash', hash);
+  }
 }
