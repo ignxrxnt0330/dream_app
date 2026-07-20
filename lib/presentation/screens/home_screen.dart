@@ -139,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 100,
+          toolbarHeight: _showReplace ? 100 : 50,
           title: _isSearching
               ? SafeArea(
                   child: Column(
