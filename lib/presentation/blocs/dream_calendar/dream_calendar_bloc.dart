@@ -24,9 +24,10 @@ class DreamCalendarBloc extends Bloc<DreamCalendarEvent, DreamCalendarState> {
   Future<void> _onFetchDreams(
       FetchDreamsOnDate event, Emitter<DreamCalendarState> emit) async {
     emit(state.copyWith(dreams: [], selectedDate: event.date));
-    List<Dream> dreams = await IsarDatasource().dreamsOnDate(event.date);
-    if ((event.date.month != state.targetDate.month) ||
-        (event.date.year != state.targetDate.year)) {
+    List<Dream> dreams =
+        await IsarDatasource().dreamsOnDate(event.date ?? state.selectedDate);
+    if ((event.date?.month != state.targetDate.month) ||
+        (event.date?.year != state.targetDate.year)) {
       emit(state.copyWith(targetDate: event.date));
     }
     emit(state.copyWith(dreams: dreams));

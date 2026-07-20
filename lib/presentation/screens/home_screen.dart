@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (value == null) {
                   return;
                 }
-                bloc.add(FetchDreamsOnDate(value));
+                bloc.add(FetchDreamsOnDate(date: value));
               },
               onError: (err) {
                 debugPrint(err);
@@ -104,7 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
       var calendarBloc = context.read<DreamCalendarBloc>();
       calendarBloc.add(const FetchBracket());
       calendarBloc.add(const FetchDates());
-      calendarBloc.add(FetchDreamsOnDate(calendarBloc.state.selectedDate));
+      calendarBloc
+          .add(FetchDreamsOnDate(date: calendarBloc.state.selectedDate));
     },
     (BuildContext context) {
       final int bracket = context.read<DreamStatsBloc>().state.bracket;

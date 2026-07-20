@@ -318,7 +318,7 @@ class _DateTimeRowState extends State<_DateTimeRow> {
       child: GestureDetector(
         onLongPress: () {
           appRouter.push("/home/1");
-          context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(value));
+          context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(date: value));
         },
         child: DateTimeFormField(
           dateFormat: DateFormat(localizations.dateFormat),

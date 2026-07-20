@@ -25,7 +25,7 @@ class _CalendarViewState extends State<CalendarView> {
     context.read<DreamCalendarBloc>().add(const FetchDates());
     context.read<DreamCalendarBloc>().add(const FetchBracket());
     context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(
-        context.read<DreamCalendarBloc>().state.selectedDate));
+        date: context.read<DreamCalendarBloc>().state.selectedDate));
   }
 
   @override
@@ -59,7 +59,7 @@ class _CalendarViewState extends State<CalendarView> {
                 if (selected) {
                   return;
                 }
-                bloc.add(FetchDreamsOnDate(date));
+                bloc.add(FetchDreamsOnDate(date: date));
               },
 
               daysHaveCircularBorder: true,
@@ -82,7 +82,7 @@ class _CalendarViewState extends State<CalendarView> {
               headerTitleTouchable: true,
               onHeaderTitlePressed: () => context
                   .read<DreamCalendarBloc>()
-                  .add(FetchDreamsOnDate(DateTime.now())),
+                  .add(FetchDreamsOnDate(date: DateTime.now())),
 
 // selected
               selectedDayButtonColor:

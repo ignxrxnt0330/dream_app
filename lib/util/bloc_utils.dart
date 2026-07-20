@@ -9,5 +9,5 @@ void refreshAllBlocs(BuildContext context) {
   var calendarBloc = context.read<DreamCalendarBloc>();
   calendarBloc.add(const FetchBracket());
   calendarBloc.add(const FetchDates());
-  calendarBloc.add(FetchDreamsOnDate(calendarBloc.state.selectedDate));
+  calendarBloc.add(FetchDreamsOnDate(date: calendarBloc.state.selectedDate));
 }

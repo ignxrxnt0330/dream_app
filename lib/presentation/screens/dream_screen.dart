@@ -1,4 +1,5 @@
 import 'package:dream_app/l10n/app_localizations.dart';
+import 'package:dream_app/presentation/blocs/dream_calendar/dream_calendar_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
 import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
 import 'package:flutter/material.dart';
@@ -71,8 +72,9 @@ class _DreamScreenState extends State<DreamScreen> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                if (context.canPop())
+                                if (context.canPop()) {
                                   Navigator.of(context).pop();
+                                }
                               },
                               child: Text(localizations.no),
                             ),
@@ -81,10 +83,12 @@ class _DreamScreenState extends State<DreamScreen> {
                                 context
                                     .read<DreamHomeBloc>()
                                     .add(RemoveDream(dreamId: state.dream.id));
-                                if (context.canPop())
+                                if (context.canPop()) {
                                   Navigator.of(context).pop();
-                                if (context.canPop())
+                                }
+                                if (context.canPop()) {
                                   Navigator.of(context).pop();
+                                }
                               },
                               child: Text(localizations.yes),
                             ),
@@ -211,6 +215,22 @@ class _DreamScreenState extends State<DreamScreen> {
                           context
                               .read<DreamHomeBloc>()
                               .add(HandleDream(dream: state.dream));
+                          final DateTime calendarDate = context
+                              .read<DreamCalendarBloc>()
+                              .state
+                              .selectedDate;
+                          final bool sameDayAsCalendarSelected =
+                              (calendarDate.day == state.dream.date?.day &&
+                                  calendarDate.month ==
+                                      state.dream.date?.month &&
+                                  calendarDate.year == state.dream.date?.year);
+
+                          if (sameDayAsCalendarSelected) {
+                            context
+                                .read<DreamCalendarBloc>()
+                                .add(FetchDreamsOnDate());
+                          }
+
                           return;
                         }
                         FocusManager.instance.primaryFocus?.unfocus();

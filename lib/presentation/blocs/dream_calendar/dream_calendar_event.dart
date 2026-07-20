@@ -9,8 +9,8 @@ class FetchDates extends DreamCalendarEvent {
 }
 
 class FetchDreamsOnDate extends DreamCalendarEvent {
-  final DateTime date;
-  const FetchDreamsOnDate(this.date);
+  final DateTime? date;
+  const FetchDreamsOnDate({this.date});
 }
 
 class FetchBracket extends DreamCalendarEvent {
