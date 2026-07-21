@@ -618,9 +618,11 @@ class IsarDatasource extends LocalStorageDatasource {
     final List<Dream> dreams = await getAllDreams();
     if (dreams.isEmpty) return "";
     final String key = "asd                             ";
+    final String iv = "asd                             ";
     final String data =
         "[${dreams.map((dream) => dream.toJson()).join(",\n")}]";
-    final String hash = await Encrypter.encryptAES256CBC(data, key: key) ?? "";
+    final String hash =
+        await Encrypter.encryptAES256CBC(data, key: key, iv: iv) ?? "";
     return hash;
   }
 }
