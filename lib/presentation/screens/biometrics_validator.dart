@@ -20,7 +20,10 @@ class _BiometricsValidatorState extends State<BiometricsValidator> {
   void initState() {
     super.initState();
     checkBiometrics().then((bool allowed) {
-      if (!allowed || !mounted) return;
+      if (!allowed || !mounted) {
+        if (mounted) context.pop();
+        return;
+      }
 
       if (widget.runtimeType == String &&
           widget.redirUrl.runtimeType == String) {
