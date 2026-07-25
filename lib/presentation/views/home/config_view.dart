@@ -2,6 +2,7 @@ import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/widgets/config/color_picker_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/default_encryption_key_dialog.dart';
+import 'package:dream_app/presentation/widgets/config/delete_all_dreams_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/export_dreams_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/import_dreams_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/default_title_dialog.dart';
@@ -107,13 +108,8 @@ class _ConfigViewState extends State<ConfigView> {
               subtitle: Text(localizations.setDefaultEncryptKey),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                setState(() {});
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const DefaultEncryptionKeyDialog();
-                  },
-                );
+                context.push("/bio_validate_dialog",
+                    extra: DefaultEncryptionKeyDialog());
               },
             ),
             ListTile(
@@ -256,33 +252,8 @@ class _ConfigViewState extends State<ConfigView> {
             subtitle: Text(localizations.deleteAllDesc),
             trailing: const Icon(Icons.warning),
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text(localizations.deleteAll),
-                    content:
-                        Text(localizations.confirmAction("delete all dreams")),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          if (context.canPop()) Navigator.of(context).pop();
-                        },
-                        child: Text(localizations.no),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          context
-                              .read<AppConfigBloc>()
-                              .add(const DeleteAllDreams());
-                          if (context.canPop()) Navigator.of(context).pop();
-                        },
-                        child: Text(localizations.yes),
-                      ),
-                    ],
-                  );
-                },
-              );
+              context.push("/bio_validate_dialog",
+                  extra: DeleteAllDreamsDialog());
             },
           ))
         ],

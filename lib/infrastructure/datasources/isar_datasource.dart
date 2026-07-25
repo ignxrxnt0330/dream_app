@@ -8,6 +8,7 @@ import 'package:dream_app/domain/datasource/local_storage_datasource.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/domain/entities/stats/streak.dart';
 import 'package:encrypter/encrypter/aes.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -232,6 +233,7 @@ class IsarDatasource extends LocalStorageDatasource {
         return false;
       }
     } catch (e) {
+      debugPrint("error ${e.toString()}");
       return false;
     }
   }

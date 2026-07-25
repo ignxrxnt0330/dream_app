@@ -9,8 +9,9 @@ import 'package:go_router/go_router.dart';
 class HomeScreen extends StatefulWidget {
   static const name = 'HomeScreen';
   final int index;
+  final Widget? configDialog;
 
-  const HomeScreen({super.key, required this.index});
+  const HomeScreen({super.key, required this.index, this.configDialog});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -125,6 +126,16 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {});
       }
     });
+
+    if (widget.index == 3 && widget.configDialog != null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return widget.configDialog!;
+        },
+      );
+    }
+
     super.initState();
   }
 
@@ -231,16 +242,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               },
-            ),
-            Visibility(
-              visible: _isSearching,
-              child: IconButton(
-                icon: const Icon(Icons.sort),
-                onPressed: () {
-                  //TODO: toggle replace
-                  //TODO: show filter modal
-                },
-              ),
             ),
             IconButton(
               icon: const Icon(Icons.search),
