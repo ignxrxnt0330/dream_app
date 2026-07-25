@@ -47,7 +47,6 @@ class SpConfig extends ConfigDatasource {
   @override
   Future<void> setDefaultEncryptionKey(String title) async {
     prefs = await SharedPreferences.getInstance();
-    print(title);
     prefs.setString('defaultEncryptionKey', title);
   }
 

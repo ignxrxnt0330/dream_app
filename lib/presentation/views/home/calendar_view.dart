@@ -18,6 +18,7 @@ class CalendarView extends StatefulWidget {
 class _CalendarViewState extends State<CalendarView> {
   ScrollController scrollController = ScrollController();
   final EventList<Event> _markedDateMap = EventList<Event>(events: {});
+  double _horizontaLPositionScrollOffset = 0;
 
   @override
   void initState() {
@@ -32,6 +33,30 @@ class _CalendarViewState extends State<CalendarView> {
   void dispose() {
     scrollController.dispose();
     super.dispose();
+  }
+
+  void onDreamDragStart(DragStartDetails details) {
+    _horizontaLPositionScrollOffset = details.localPosition.dx;
+  }
+
+  void onDreamDragEnd(DragEndDetails details) {
+    if ((_horizontaLPositionScrollOffset.abs() - details.localPosition.dx.abs())
+            .abs() >=
+        100) {
+      final DateTime currDate =
+          context.read<DreamCalendarBloc>().state.selectedDate;
+
+      // left
+      if (_horizontaLPositionScrollOffset > details.localPosition.dx) {
+        // add 1 day
+        context.read<DreamCalendarBloc>().add(
+            FetchDreamsOnDate(date: currDate.add(const Duration(days: 1))));
+      } else {
+        // subtract 1 day
+        context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(
+            date: currDate.subtract(const Duration(days: 1))));
+      }
+    }
   }
 
   @override
@@ -53,7 +78,7 @@ class _CalendarViewState extends State<CalendarView> {
                         el.year == date.year)
                     .isEmpty;
                 if (noDreams) {
-                  return;
+                  // return;
                 }
                 bool selected = bloc.state.selectedDate == date;
                 if (selected) {
@@ -174,9 +199,12 @@ class _CalendarViewState extends State<CalendarView> {
             child: SizedBox(
               height: 20,
               child: bloc.state.dreams.isNotEmpty
-                  ? Center(
-                      child: Text(
-                          "${bloc.state.dreams.length} ${bloc.state.dreams.length == 1 ? localizations.dream : localizations.dreams}"))
+                  ? GestureDetector(
+                      onHorizontalDragStart: onDreamDragStart,
+                      onHorizontalDragEnd: onDreamDragEnd,
+                      child: Center(
+                          child: Text(
+                              "${bloc.state.dreams.length} ${bloc.state.dreams.length == 1 ? localizations.dream : localizations.dreams}")))
                   : null,
             ),
           ),
@@ -184,16 +212,24 @@ class _CalendarViewState extends State<CalendarView> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final dream = bloc.state.dreams[index];
-                return CustomDreamListTile(dream: dream);
+                return GestureDetector(
+                  onHorizontalDragStart: onDreamDragStart,
+                  onHorizontalDragEnd: onDreamDragEnd,
+                  child: CustomDreamListTile(dream: dream),
+                );
               },
               childCount: bloc.state.dreams.length,
             ),
           ),
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: SizedBox(
-              height: 100,
+              height: 200,
+              child: GestureDetector(
+                onHorizontalDragStart: onDreamDragStart,
+                onHorizontalDragEnd: onDreamDragEnd,
+              ),
             ),
-          ),
+          )
         ],
       ),
     );
