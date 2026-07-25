@@ -199,15 +199,20 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, state) {
                 return Visibility(
                   visible: state.query != '',
-                  child: IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      _searchController.clear();
-                      context
-                          .read<DreamHomeBloc>()
-                          .add(QueryChanged(query: ''));
-                      setState(() {});
-                    },
+                  child: Row(
+                    children: [
+                      _isSearching ? SizedBox() : Text("(${state.count})"),
+                      IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          context
+                              .read<DreamHomeBloc>()
+                              .add(QueryChanged(query: ''));
+                          setState(() {});
+                        },
+                      ),
+                    ],
                   ),
                 );
               },

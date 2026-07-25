@@ -199,9 +199,6 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
             icon: Icon(types[type].values.first.entries.first.value,
                 color: color),
           ),
-          BlocBuilder<DreamHomeBloc, DreamHomeState>(builder: (context, state) {
-            return Text("(${state.count})");
-          })
         ]));
   }
 }
