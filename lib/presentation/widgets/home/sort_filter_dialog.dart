@@ -16,11 +16,17 @@ class SortFilterDialog extends StatefulWidget {
 class _SortFilterDialogState extends State<SortFilterDialog> {
   Timer? timeout;
 
-  bool asc = false;
-  int sort = 0;
-  bool fav = false;
-  bool hidden = false;
-  int type = 3;
+  static const bool defaultAsc = false;
+  static const int defaultSort = 0;
+  static const bool defaultFav = false;
+  static const bool defaultHidden = false;
+  static const int defaultType = 3;
+
+  bool asc = defaultAsc;
+  int sort = defaultSort;
+  bool fav = defaultFav;
+  bool hidden = defaultHidden;
+  int type = defaultType;
 
   @override
   void initState() {
@@ -156,6 +162,30 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
     }
   }
 
+  bool isDefault() {
+    if (asc != defaultAsc) return false;
+    if (sort != defaultSort) return false;
+    if (fav != defaultFav) return false;
+    if (hidden != defaultHidden) return false;
+    if (type != defaultType) return false;
+    return true;
+  }
+
+  void setDefaults() {
+    asc = defaultAsc;
+    sort = defaultSort;
+    fav = defaultFav;
+    hidden = defaultHidden;
+    type = defaultType;
+    context.read<DreamHomeBloc>().add(OrderChanged(
+        order: sortOptions[sort].keys.first,
+        asc: asc,
+        fav: fav,
+        hidden: hidden,
+        type: type));
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -198,6 +228,16 @@ class _SortFilterDialogState extends State<SortFilterDialog> {
                 style: TextStyle(color: color)),
             icon: Icon(types[type].values.first.entries.first.value,
                 color: color),
+          ),
+          Visibility(
+            visible: !isDefault(),
+            maintainSize: true,
+            maintainState: true,
+            maintainAnimation: true,
+            child: IconButton(
+              icon: Icon(Icons.clear, color: color),
+              onPressed: setDefaults,
+            ),
           ),
         ]));
   }
