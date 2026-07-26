@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_trigger_autocomplete_plus/multi_trigger_autocomplete_plus.dart';
-import 'package:rich_text_controller/rich_text_controller.dart';
 
 class DreamFormView extends StatefulWidget {
   static const name = 'dream_form_view';
@@ -21,7 +20,7 @@ class DreamFormView extends StatefulWidget {
 
 class _DreamFormViewState extends State<DreamFormView> {
   final titleController = TextEditingController();
-  late RichTextController descriptionController;
+  final descriptionController = TextEditingController();
   final dateController = TextEditingController();
   final descriptionFocusNode = FocusNode();
   List<String> names = [];
@@ -34,21 +33,8 @@ class _DreamFormViewState extends State<DreamFormView> {
     super.initState();
     Dream dream = context.read<DreamFormBloc>().state.dream;
     titleController.text = dream.title;
-    names = dream.names;
-    final Color highlightColor = context.read<AppConfigBloc>().state.appColor;
-    final namesRegex = RegExp(r'@([\wáéíóúÁÉÍÓÚñÑüÜ]+)',
-        multiLine: true, caseSensitive: false);
-    descriptionController =
-        RichTextController(text: '', onMatch: (match) {}, targetMatches: [
-      MatchTargetItem(
-        style: TextStyle(color: highlightColor),
-        regex: namesRegex,
-        allowInlineMatching: true,
-        //TODO:
-        // onTap:
-      ),
-    ]);
     descriptionController.text = dream.description;
+    names = dream.names;
 
     IsarDatasource().mostUsedNames(99999).then((names) {
       allNames = names ?? {};
@@ -82,7 +68,7 @@ class _DreamFormViewState extends State<DreamFormView> {
                   -9223372036854775808,
               () {
                 _descriptionKey.currentState?.descriptionFocusNode
-                    .requestFocus();
+                    ?.requestFocus();
               },
             ),
             const SizedBox(height: 20),
@@ -149,7 +135,7 @@ class _TitleRow extends StatelessWidget {
 }
 
 class _DescriptionRow extends StatefulWidget {
-  final RichTextController controller;
+  final TextEditingController controller;
   final Function save;
   final FocusNode descriptionFocusNode;
   final Map<String, int> allNames;
@@ -162,7 +148,8 @@ class _DescriptionRow extends StatefulWidget {
 }
 
 class _DescriptionRowState extends State<_DescriptionRow> {
-  FocusNode get descriptionFocusNode => widget.descriptionFocusNode;
+  FocusNode? descriptionFocusNode;
+  TextEditingController? _lastController;
   bool justCompleted = false;
 
   @override
@@ -174,8 +161,6 @@ class _DescriptionRowState extends State<_DescriptionRow> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return MultiTriggerAutocomplete(
-        textEditingController: widget.controller,
-        focusNode: widget.descriptionFocusNode,
         optionsAlignment: OptionsAlignment.bottomStart,
         autocompleteTriggers: [
           AutocompleteTrigger(
@@ -252,6 +237,51 @@ class _DescriptionRowState extends State<_DescriptionRow> {
           ),
         ],
         fieldViewBuilder: (context, controller, focusNode) {
+          descriptionFocusNode = focusNode;
+          if (_lastController != controller) {
+            _lastController = controller;
+
+            if (controller.text != widget.controller.text) {
+              controller.text = widget.controller.text;
+              controller.selection = TextSelection.fromPosition(
+                TextPosition(offset: controller.text.length),
+              );
+            }
+
+            controller.addListener(() {
+              if (justCompleted) {
+                int currentIndex = controller.selection.baseOffset;
+                if (currentIndex >= 0 &&
+                    currentIndex <= controller.text.length &&
+                    currentIndex - 1 >= 0) {
+                  // replace " ," to ", "
+                  final text = controller.text;
+                  final lastTyped = text.characters.elementAt(currentIndex - 1);
+
+                  final bool comma = lastTyped == ",";
+                  final bool dot = lastTyped == ".";
+                  if (comma || dot) {
+                    final newText = text.replaceRange(currentIndex - 2,
+                        currentIndex, "${comma ? "," : "."} ");
+
+                    controller.text = newText;
+
+                    controller.selection =
+                        TextSelection.collapsed(offset: currentIndex);
+                    widget.controller.selection =
+                        TextSelection.collapsed(offset: currentIndex);
+                  }
+                }
+              }
+              justCompleted = false;
+
+              if (widget.controller.text != controller.text) {
+                widget.controller.text = controller.text;
+                widget.save();
+              }
+            });
+          }
+
           return TextFormField(
             controller: controller,
             focusNode: focusNode,
@@ -274,6 +304,7 @@ class _DescriptionRowState extends State<_DescriptionRow> {
               if (value == null || value.isEmpty) {
                 return localizations.empty;
               }
+              widget.controller.text = widget.controller.text;
               widget.save();
               return null;
             },
