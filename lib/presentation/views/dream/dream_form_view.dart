@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_trigger_autocomplete_plus/multi_trigger_autocomplete_plus.dart';
+import 'package:rich_text_controller/rich_text_controller.dart';
 
 class DreamFormView extends StatefulWidget {
   static const name = 'dream_form_view';
@@ -20,7 +21,7 @@ class DreamFormView extends StatefulWidget {
 
 class _DreamFormViewState extends State<DreamFormView> {
   final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
+  late RichTextController descriptionController;
   final dateController = TextEditingController();
   final descriptionFocusNode = FocusNode();
   List<String> names = [];
@@ -33,8 +34,21 @@ class _DreamFormViewState extends State<DreamFormView> {
     super.initState();
     Dream dream = context.read<DreamFormBloc>().state.dream;
     titleController.text = dream.title;
-    descriptionController.text = dream.description;
     names = dream.names;
+    final Color highlightColor = context.read<AppConfigBloc>().state.appColor;
+    final namesRegex = RegExp(r'@([\wáéíóúÁÉÍÓÚñÑüÜ]+)',
+        multiLine: true, caseSensitive: false);
+    descriptionController =
+        RichTextController(text: '', onMatch: (match) {}, targetMatches: [
+      MatchTargetItem(
+        style: TextStyle(color: highlightColor),
+        regex: namesRegex,
+        allowInlineMatching: true,
+        //TODO:
+        // onTap:
+      ),
+    ]);
+    descriptionController.text = dream.description;
 
     IsarDatasource().mostUsedNames(99999).then((names) {
       allNames = names ?? {};
@@ -135,7 +149,7 @@ class _TitleRow extends StatelessWidget {
 }
 
 class _DescriptionRow extends StatefulWidget {
-  final TextEditingController controller;
+  final RichTextController controller;
   final Function save;
   final FocusNode descriptionFocusNode;
   final Map<String, int> allNames;
@@ -161,6 +175,8 @@ class _DescriptionRowState extends State<_DescriptionRow> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     return MultiTriggerAutocomplete(
+        textEditingController: widget.controller,
+        focusNode: widget.descriptionFocusNode,
         optionsAlignment: OptionsAlignment.bottomStart,
         autocompleteTriggers: [
           AutocompleteTrigger(

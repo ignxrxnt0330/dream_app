@@ -55,6 +55,7 @@ dependencies:
   flutter_card_swiper: ^7.0.2
   multi_trigger_autocomplete_plus: ^1.0.2
   encrypter: ^2.0.0
+  rich_text_controller: ^3.0.1
 
 dev_dependencies:
   flutter_test:
