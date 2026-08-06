@@ -25,7 +25,7 @@ class _BiometricsValidatorState extends State<BiometricsValidator> {
         return;
       }
 
-      if (widget.runtimeType == String &&
+      if (widget.obj.runtimeType == String &&
           widget.redirUrl.runtimeType == String) {
         redirUrl(context, widget.obj!, widget.redirUrl!);
       } else if (widget.dialog != null) {
