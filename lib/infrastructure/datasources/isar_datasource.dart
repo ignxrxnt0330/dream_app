@@ -198,10 +198,8 @@ class IsarDatasource extends LocalStorageDatasource {
           await FlutterFileDialog.saveFile(params: params)
               .then((res) => saved = true);
         }
-      } else {
-        return saved;
       }
-      return true;
+      return saved;
     } catch (e) {
       return false;
     }

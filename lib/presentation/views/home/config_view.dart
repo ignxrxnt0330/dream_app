@@ -3,8 +3,7 @@ import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/widgets/config/color_picker_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/default_encryption_key_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/delete_all_dreams_dialog.dart';
-import 'package:dream_app/presentation/widgets/config/export_dreams_dialog.dart';
-import 'package:dream_app/presentation/widgets/config/import_dreams_dialog.dart';
+import 'package:dream_app/presentation/widgets/config/import_export_dreams_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/default_title_dialog.dart';
 import 'package:dream_app/presentation/widgets/config/set_language_dialog.dart';
 import 'package:dream_app/util/custom_date_utils.dart';
@@ -138,7 +137,7 @@ class _ConfigViewState extends State<ConfigView> {
                         showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return const ImportDreamsDialog();
+                              return const ImportExportDreamsDialog(import: true,);
                             }).then((_) {});
                       }
                     } else {
@@ -199,7 +198,7 @@ class _ConfigViewState extends State<ConfigView> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return const ExportDreamsDialog();
+                      return const ImportExportDreamsDialog();
                     },
                   );
                 }

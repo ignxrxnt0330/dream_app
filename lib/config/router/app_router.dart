@@ -1,5 +1,4 @@
 import 'package:dream_app/presentation/screens/screens.dart';
-import 'package:dream_app/presentation/widgets/config/export_dreams_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -51,12 +50,12 @@ final appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: "/config/action",
+      path: "/bio_validate_action",
       name: "ConfigAction",
       builder: (context, state) {
-        return HomeScreen(
-          index: 3,
-          configDialog: ExportDreamsDialog(),
+        final action = state.extra as Function?;
+        return BiometricsValidator(
+          action: action,
         );
       },
     ),

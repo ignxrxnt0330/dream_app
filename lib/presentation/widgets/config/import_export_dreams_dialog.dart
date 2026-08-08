@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class ImportDreamsDialog extends StatefulWidget {
-  const ImportDreamsDialog({super.key});
+class ImportExportDreamsDialog extends StatefulWidget {
+  final bool import;
+  const ImportExportDreamsDialog({super.key, this.import = false});
 
   @override
-  State<ImportDreamsDialog> createState() => _ImportDreamsDialogState();
+  State<ImportExportDreamsDialog> createState() =>
+      _ImportExportDreamsDialogState();
 }
 
-class _ImportDreamsDialogState extends State<ImportDreamsDialog> {
+class _ImportExportDreamsDialogState extends State<ImportExportDreamsDialog> {
   TextEditingController encryptKeyController = TextEditingController();
   bool hidden = true;
   bool setAsDefault = false;
@@ -19,6 +21,52 @@ class _ImportDreamsDialogState extends State<ImportDreamsDialog> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+
+    void setDefaultEncryptionKey() {
+      debugPrint("dsa setDefaultEncryptionKey");
+      context
+          .read<AppConfigBloc>()
+          .add(SetDefaultEncryptionKey(encryptKeyController.value.text));
+    }
+
+    void onPressed() {
+      if (setAsDefault) {
+        context.push("/bio_validate_action", extra: setDefaultEncryptionKey);
+
+        context
+            .read<AppConfigBloc>()
+            .stream
+            .firstWhere((state) => state.defaultEncryptionKey == encryptKeyController.value.text)
+            .then((state) {
+          if (!context.mounted) return;
+          debugPrint("dsa asdas");
+
+          final AppConfigState state = context.read<AppConfigBloc>().state;
+
+          if (widget.import) {
+            context.read<AppConfigBloc>().add(ImportDreams(
+                state.importDreamsPath, encryptKeyController.value.text));
+          } else {
+            context
+                .read<AppConfigBloc>()
+                .add(ExportDreams(encryptKeyController.value.text));
+          }
+
+          if (context.canPop()) Navigator.of(context).pop();
+        });
+      } else {
+        final AppConfigState state = context.read<AppConfigBloc>().state;
+        if (widget.import) {
+          context.read<AppConfigBloc>().add(ImportDreams(
+              state.importDreamsPath, encryptKeyController.value.text));
+        } else {
+          context
+              .read<AppConfigBloc>()
+              .add(ExportDreams(encryptKeyController.value.text));
+        }
+        if (context.canPop()) Navigator.of(context).pop();
+      }
+    }
 
     return AlertDialog(
       title: Text(localizations.setEncryptKey),
@@ -77,18 +125,7 @@ class _ImportDreamsDialogState extends State<ImportDreamsDialog> {
           child: Text(localizations.cancel),
         ),
         TextButton(
-          onPressed: () {
-            if (setAsDefault) {
-              context.read<AppConfigBloc>().add(
-                  SetDefaultEncryptionKey(encryptKeyController.value.text));
-              setState(() {});
-            }
-
-            final AppConfigState state = context.read<AppConfigBloc>().state;
-            context.read<AppConfigBloc>().add(ImportDreams(
-                state.importDreamsPath, encryptKeyController.value.text));
-            if (context.canPop()) Navigator.of(context).pop();
-          },
+          onPressed: onPressed,
           child: Text(localizations.confirm),
         ),
       ],

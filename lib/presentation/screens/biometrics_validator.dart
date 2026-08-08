@@ -8,8 +8,10 @@ class BiometricsValidator extends StatefulWidget {
   final String? obj;
   final String? redirUrl;
   final Widget? dialog;
+  final Function? action;
 
-  const BiometricsValidator({super.key, this.redirUrl, this.obj, this.dialog});
+  const BiometricsValidator(
+      {super.key, this.redirUrl, this.obj, this.dialog, this.action});
 
   @override
   State<BiometricsValidator> createState() => _BiometricsValidatorState();
@@ -31,6 +33,9 @@ class _BiometricsValidatorState extends State<BiometricsValidator> {
       } else if (widget.dialog != null) {
         context.pop();
         showDialog(context: context, builder: (context) => widget.dialog!);
+      } else if (widget.action != null) {
+        context.pop();
+        widget.action!();
       }
     });
   }
