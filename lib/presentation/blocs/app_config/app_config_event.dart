@@ -65,3 +65,7 @@ class CheckDreamHash extends AppConfigEvent {
   final String? currentHash;
   const CheckDreamHash({this.currentHash});
 }
+
+class ClearSnackbarMessage extends AppConfigEvent {
+  const ClearSnackbarMessage();
+}

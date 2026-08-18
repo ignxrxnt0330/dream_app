@@ -28,234 +28,259 @@ class _ConfigViewState extends State<ConfigView> {
     super.initState();
   }
 
+  String getSnackbarText(String key, AppLocalizations localizations) {
+    final map = {
+      'configImportSuccess': localizations.configImportSuccess,
+      'configImportError': localizations.configImportError,
+    };
+
+    return map[key] ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    return Scaffold(
-      body: CustomScrollView(
-        physics: const RangeMaintainingScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-              child: Column(children: [
-            SwitchListTile(
-              title: Text(localizations.darkMode),
-              subtitle: Text(localizations.toggleDarkMode),
-              value: context.watch<AppConfigBloc>().state.darkMode,
-              onChanged: (value) {
-                if (value == false) {
-                  AlertDialog dialog = AlertDialog(
-                    title: Text(localizations.areYouSure),
-                    content: Text(localizations.badChoide),
-                    actions: [
-                      TextButton(
-                        child: Text(localizations.no),
-                        onPressed: () {
-                          if (context.canPop()) Navigator.of(context).pop();
-                          return;
-                        },
-                      ),
-                      TextButton(
-                        child: Text(localizations.yes),
-                        onPressed: () {
-                          if (context.canPop()) Navigator.of(context).pop();
-                          context
-                              .read<AppConfigBloc>()
-                              .add(const ToggleDarkMode());
-                        },
-                      ),
-                    ],
-                  );
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    return BlocListener<AppConfigBloc, AppConfigState>(
+      listener: (context, state) {
+        if (state.snackbarMessage.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text(getSnackbarText(state.snackbarMessage, localizations)),
+                duration: const Duration(seconds: 3)),
+          );
+          context.read<AppConfigBloc>().add(const ClearSnackbarMessage());
+        }
+      },
+      child: Scaffold(
+        body: CustomScrollView(
+          physics: const RangeMaintainingScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+                child: Column(children: [
+              SwitchListTile(
+                title: Text(localizations.darkMode),
+                subtitle: Text(localizations.toggleDarkMode),
+                value: context.watch<AppConfigBloc>().state.darkMode,
+                onChanged: (value) {
+                  if (value == false) {
+                    AlertDialog dialog = AlertDialog(
+                      title: Text(localizations.areYouSure),
+                      content: Text(localizations.badChoide),
+                      actions: [
+                        TextButton(
+                          child: Text(localizations.no),
+                          onPressed: () {
+                            if (context.canPop()) Navigator.of(context).pop();
+                            return;
+                          },
+                        ),
+                        TextButton(
+                          child: Text(localizations.yes),
+                          onPressed: () {
+                            if (context.canPop()) Navigator.of(context).pop();
+                            context
+                                .read<AppConfigBloc>()
+                                .add(const ToggleDarkMode());
+                          },
+                        ),
+                      ],
+                    );
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return dialog;
+                      },
+                    );
+                  } else {
+                    context.read<AppConfigBloc>().add(const ToggleDarkMode());
+                  }
+                },
+              ),
+              ListTile(
+                title: Text(localizations.colors),
+                subtitle: Text(localizations.changeColors),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const ColorPickerDialog();
+                      });
+                },
+              ),
+              ListTile(
+                title: Text(localizations.defaultTitle),
+                subtitle: Text(localizations.setDefaultTitle),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  setState(() {});
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return dialog;
+                      return const DefaultTitleDialog();
                     },
                   );
-                } else {
-                  context.read<AppConfigBloc>().add(const ToggleDarkMode());
-                }
-              },
-            ),
-            ListTile(
-              title: Text(localizations.colors),
-              subtitle: Text(localizations.changeColors),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return const ColorPickerDialog();
-                    });
-              },
-            ),
-            ListTile(
-              title: Text(localizations.defaultTitle),
-              subtitle: Text(localizations.setDefaultTitle),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                setState(() {});
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const DefaultTitleDialog();
-                  },
-                );
-              },
-            ),
-            ListTile(
-              title: Text(localizations.defaultEncryptionKey),
-              subtitle: Text(localizations.setDefaultEncryptKey),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                context.push("/bio_validate_dialog",
-                    extra: DefaultEncryptionKeyDialog());
-              },
-            ),
-            ListTile(
-              title: Text(localizations.importDreams),
-              subtitle: Text(localizations.importDreamsDesc),
-              trailing: const Icon(Icons.upload_file_rounded),
-              onTap: () {
-                context.read<AppConfigBloc>().add(const RequestFile());
-                context
-                    .read<AppConfigBloc>()
-                    .stream
-                    .firstWhere((state) => state.importDreamsPath != '')
-                    .then((state) {
-                  if (!context.mounted) return;
-                  if (state.importDreamsPath != '') {
-                    if (state.importDreamsPath.endsWith('.enc')) {
-                      String defaultEncryptionKey = context
-                          .read<AppConfigBloc>()
-                          .state
-                          .defaultEncryptionKey;
-                      if (defaultEncryptionKey.isNotEmpty) {
-                        context.read<AppConfigBloc>().add(ImportDreams(
-                            state.importDreamsPath, defaultEncryptionKey));
-                      } else {
-                        if (context.canPop()) Navigator.of(context).pop();
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const ImportExportDreamsDialog(import: true,);
-                            }).then((_) {});
-                      }
-                    } else {
-                      context
-                          .read<AppConfigBloc>()
-                          .add(ImportDreams(state.importDreamsPath, ''));
-                    }
-                  }
-                });
-              },
-            ),
-            ListTile(
-              title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(localizations.exportDreams),
-                    BlocBuilder<AppConfigBloc, AppConfigState>(
-                      builder: (context, state) {
-                        String exportedText = localizations.noExportData;
-                        int lastExported =
-                            context.read<AppConfigBloc>().state.lastExported;
-                        if (lastExported != 0) {
-                          DateTime lastExportedDate =
-                              DateTime.fromMillisecondsSinceEpoch(lastExported);
-                          exportedText = localizations
-                              .lastExportedDate(lastExportedDate.formatDate);
-                        }
-
-                        return Row(
-                          children: [
-                            Text(exportedText,
-                                style: const TextStyle(fontSize: 11)),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            BlocBuilder<AppConfigBloc, AppConfigState>(
-                                builder: (context, state) {
-                              return state.unsavedChanges
-                                  ? Icon(Icons.circle, size: 8)
-                                  : SizedBox();
-                            })
-                          ],
-                        );
-                      },
-                    ),
-                  ]),
-              subtitle: Text(localizations.exportDreamsDesc),
-              trailing: const Icon(Icons.download),
-              onTap: () {
-                String defaultEncryptionKey =
-                    context.read<AppConfigBloc>().state.defaultEncryptionKey;
-                if (defaultEncryptionKey.isNotEmpty) {
+                },
+              ),
+              ListTile(
+                title: Text(localizations.defaultEncryptionKey),
+                subtitle: Text(localizations.setDefaultEncryptKey),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  context.push("/bio_validate_dialog",
+                      extra: DefaultEncryptionKeyDialog());
+                },
+              ),
+              ListTile(
+                title: Text(localizations.importDreams),
+                subtitle: Text(localizations.importDreamsDesc),
+                trailing: const Icon(Icons.upload_file_rounded),
+                onTap: () {
+                  context.read<AppConfigBloc>().add(const RequestFile());
                   context
                       .read<AppConfigBloc>()
-                      .add(ExportDreams(defaultEncryptionKey));
-                } else {
-                  if (context.canPop()) Navigator.of(context).pop();
+                      .stream
+                      .firstWhere((state) => state.importDreamsPath != '')
+                      .then((state) {
+                    if (!context.mounted) return;
+                    if (state.importDreamsPath != '') {
+                      if (state.importDreamsPath.endsWith('.enc')) {
+                        String defaultEncryptionKey = context
+                            .read<AppConfigBloc>()
+                            .state
+                            .defaultEncryptionKey;
+                        if (defaultEncryptionKey.isNotEmpty) {
+                          context.read<AppConfigBloc>().add(ImportDreams(
+                              state.importDreamsPath, defaultEncryptionKey));
+                        } else {
+                          if (context.canPop()) Navigator.of(context).pop();
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const ImportExportDreamsDialog(
+                                  import: true,
+                                );
+                              }).then((_) {});
+                        }
+                      } else {
+                        context
+                            .read<AppConfigBloc>()
+                            .add(ImportDreams(state.importDreamsPath, ''));
+                      }
+                    }
+                  });
+                },
+              ),
+              ListTile(
+                title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(localizations.exportDreams),
+                      BlocBuilder<AppConfigBloc, AppConfigState>(
+                        builder: (context, state) {
+                          String exportedText = localizations.noExportData;
+                          int lastExported =
+                              context.read<AppConfigBloc>().state.lastExported;
+                          if (lastExported != 0) {
+                            DateTime lastExportedDate =
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    lastExported);
+                            exportedText = localizations
+                                .lastExportedDate(lastExportedDate.formatDate);
+                          }
+
+                          return Row(
+                            children: [
+                              Text(exportedText,
+                                  style: const TextStyle(fontSize: 11)),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              BlocBuilder<AppConfigBloc, AppConfigState>(
+                                  builder: (context, state) {
+                                return state.unsavedChanges
+                                    ? Icon(Icons.circle, size: 8)
+                                    : SizedBox();
+                              })
+                            ],
+                          );
+                        },
+                      ),
+                    ]),
+                subtitle: Text(localizations.exportDreamsDesc),
+                trailing: const Icon(Icons.download),
+                onTap: () {
+                  String defaultEncryptionKey =
+                      context.read<AppConfigBloc>().state.defaultEncryptionKey;
+                  if (defaultEncryptionKey.isNotEmpty) {
+                    context
+                        .read<AppConfigBloc>()
+                        .add(ExportDreams(defaultEncryptionKey));
+                  } else {
+                    if (context.canPop()) Navigator.of(context).pop();
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const ImportExportDreamsDialog();
+                      },
+                    );
+                  }
+                },
+              ),
+              ListTile(
+                title: Text(localizations.appLang),
+                subtitle: Text(localizations.appLangDesc),
+                trailing: const Icon(Icons.language),
+                onTap: () {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return const ImportExportDreamsDialog();
+                      return const SetLanguageDialog();
                     },
                   );
-                }
-              },
+                },
+              ),
+              ListTile(
+                title: Text(localizations.restart),
+                subtitle: Text(localizations.reopen),
+                trailing: Icon(Icons.refresh),
+                onTap: Restart.restartApp,
+              ),
+              ListTile(
+                title: Text(localizations.about),
+                subtitle: Text(localizations.aboutTheApp),
+                onTap: () => {
+                  showAboutDialog(
+                    context: context,
+                    applicationName: localizations.appTitle,
+                    applicationVersion: "0.0.1",
+                    // applicationIcon: const Icon(Icons.), //TODO:
+                    children: [
+                      Text(localizations.dreamJournalingApp),
+                    ],
+                  )
+                },
+              ),
+            ])),
+            const SliverSafeArea(
+              sliver: SliverFillRemaining(
+                hasScrollBody: false,
+                // fillOverscroll: ,
+              ),
             ),
-            ListTile(
-              title: Text(localizations.appLang),
-              subtitle: Text(localizations.appLangDesc),
-              trailing: const Icon(Icons.language),
+            SliverToBoxAdapter(
+                child: ListTile(
+              title: Text(localizations.deleteAll),
+              subtitle: Text(localizations.deleteAllDesc),
+              trailing: const Icon(Icons.warning),
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const SetLanguageDialog();
-                  },
-                );
+                context.push("/bio_validate_dialog",
+                    extra: DeleteAllDreamsDialog());
               },
-            ),
-            ListTile(
-              title: Text(localizations.restart),
-              subtitle: Text(localizations.reopen),
-              trailing: Icon(Icons.refresh),
-              onTap: Restart.restartApp,
-            ),
-            ListTile(
-              title: Text(localizations.about),
-              subtitle: Text(localizations.aboutTheApp),
-              onTap: () => {
-                showAboutDialog(
-                  context: context,
-                  applicationName: localizations.appTitle,
-                  applicationVersion: "0.0.1",
-                  // applicationIcon: const Icon(Icons.), //TODO:
-                  children: [
-                    Text(localizations.dreamJournalingApp),
-                  ],
-                )
-              },
-            ),
-          ])),
-          const SliverSafeArea(
-            sliver: SliverFillRemaining(
-              hasScrollBody: false,
-              // fillOverscroll: ,
-            ),
-          ),
-          SliverToBoxAdapter(
-              child: ListTile(
-            title: Text(localizations.deleteAll),
-            subtitle: Text(localizations.deleteAllDesc),
-            trailing: const Icon(Icons.warning),
-            onTap: () {
-              context.push("/bio_validate_dialog",
-                  extra: DeleteAllDreamsDialog());
-            },
-          ))
-        ],
+            ))
+          ],
+        ),
       ),
     );
   }

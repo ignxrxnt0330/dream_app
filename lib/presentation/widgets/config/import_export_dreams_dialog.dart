@@ -36,7 +36,8 @@ class _ImportExportDreamsDialogState extends State<ImportExportDreamsDialog> {
         context
             .read<AppConfigBloc>()
             .stream
-            .firstWhere((state) => state.defaultEncryptionKey == encryptKeyController.value.text)
+            .firstWhere((state) =>
+                state.defaultEncryptionKey == encryptKeyController.value.text)
             .then((state) {
           if (!context.mounted) return;
           debugPrint("dsa asdas");

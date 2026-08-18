@@ -17,6 +17,8 @@
   "close": "close",
   "colors": "colors",
   "config": "config",
+  "configImportError": "error importing dreams",
+  "configImportSuccess": "dreams imported successfully",
   "confirm": "confirm",
   "confirmAction": "do you really want to {action}?",
   "consolas": "Consolas",

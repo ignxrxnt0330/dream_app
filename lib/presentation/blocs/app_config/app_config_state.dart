@@ -9,6 +9,7 @@ class AppConfigState extends Equatable {
   final String language;
   final String importDreamsPath;
   final bool unsavedChanges;
+  final String snackbarMessage;
   const AppConfigState(
       this.darkMode,
       this.defaultTitle,
@@ -17,7 +18,8 @@ class AppConfigState extends Equatable {
       this.lastExported,
       this.language,
       this.importDreamsPath,
-      this.unsavedChanges);
+      this.unsavedChanges,
+      this.snackbarMessage);
 
   AppConfigState copyWith(
       {bool? darkMode,
@@ -27,7 +29,8 @@ class AppConfigState extends Equatable {
       int? lastExported,
       String? language,
       String? importDreamsPath,
-      bool? unsavedChanges}) {
+      bool? unsavedChanges,
+      String? snackbarMessage}) {
     return AppConfigState(
         darkMode ?? this.darkMode,
         defaultTitle ?? this.defaultTitle,
@@ -36,7 +39,8 @@ class AppConfigState extends Equatable {
         lastExported ?? this.lastExported,
         language ?? this.language,
         importDreamsPath ?? this.importDreamsPath,
-        unsavedChanges ?? this.unsavedChanges);
+        unsavedChanges ?? this.unsavedChanges,
+        snackbarMessage ?? this.snackbarMessage);
   }
 
   @override
@@ -48,6 +52,7 @@ class AppConfigState extends Equatable {
         lastExported,
         language,
         importDreamsPath,
-        unsavedChanges
+        unsavedChanges,
+        snackbarMessage
       ];
 }

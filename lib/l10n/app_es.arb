@@ -17,6 +17,8 @@
   "close": "cerrar",
   "colors": "colores",
   "config": "configuración",
+  "configImportError": "error importando sueños",
+  "configImportSuccess": "sueños importados correctamente",
   "confirm": "confirmar",
   "confirmAction": "¿seguro que quieres {action}?",
   "consolas": "Consolas",

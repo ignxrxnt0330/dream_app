@@ -15,7 +15,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
 
   AppConfigBloc()
       : super(const AppConfigState(
-            true, "", "", Color(0xFF9C27B0), 0, 'en-GB', '', false)) {
+            true, "", "", Color(0xFF9C27B0), 0, 'en-GB', '', false, '')) {
     _initConfig();
     on<SetDarkMode>(_setDarkMode);
     on<ToggleDarkMode>(_toggleDarkMode);
@@ -30,6 +30,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     on<RequestFile>(_requestFile);
     on<UpdateDreamsHash>(_updateDreamsHash);
     on<CheckDreamHash>(_checkDreamsHash);
+    on<ClearSnackbarMessage>(_clearSnackbarMessage);
   }
 
   void _initConfig() async {
@@ -102,8 +103,12 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     emit(state.copyWith(importDreamsPath: ''));
     bool res = await datasource.importDreams(
         path: event.path, encryptKey: event.encryptKey);
-    add(UpdateDreamsHash());
-    if (res) Restart.restartApp();
+    if (res) {
+      add(UpdateDreamsHash());
+      Restart.restartApp();
+    } else {
+      emit(state.copyWith(snackbarMessage: 'configImportError'));
+    }
   }
 
   void _deleteAllDreams(
@@ -139,5 +144,10 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     final bool unsavedChages = exportedHash != currentHash;
 
     emit(state.copyWith(unsavedChanges: unsavedChages));
+  }
+
+  void _clearSnackbarMessage(
+      ClearSnackbarMessage event, Emitter<AppConfigState> emit) async {
+    emit(state.copyWith(snackbarMessage: ''));
   }
 }

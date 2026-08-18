@@ -10,8 +10,7 @@ class HomeScreen extends StatefulWidget {
   static const name = 'HomeScreen';
   final int index;
 
-  const HomeScreen(
-      {super.key, required this.index});
+  const HomeScreen({super.key, required this.index});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
