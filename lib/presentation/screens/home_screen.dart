@@ -53,28 +53,53 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Icon(Icons.add),
             ));
       case 1:
-        return FloatingActionButton(
-          onPressed: () {
-            var bloc = context.read<DreamCalendarBloc>();
-            // showDatePicker(context: context, firstDate: bloc.state.firstDate ?? DateTime.now(), lastDate: bloc.state.lastDate ?? DateTime.now()).then(
-            showDatePicker(
-                    context: context,
-                    firstDate: DateTime(2020, 1, 1),
-                    lastDate: DateTime(2069, 4, 20),
-                    initialEntryMode: DatePickerEntryMode.input)
-                .then(
-              (value) {
-                if (value == null) {
-                  return;
-                }
-                bloc.add(FetchDreamsOnDate(date: value));
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                final DateTime currDate =
+                    context.read<DreamCalendarBloc>().state.selectedDate;
+                context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(
+                    date: currDate.subtract(const Duration(days: 1))));
               },
-              onError: (err) {
-                debugPrint(err);
+              child: Icon(Icons.arrow_back),
+            ),
+            FloatingActionButton(
+              onPressed: () {
+                final DateTime currDate =
+                    context.read<DreamCalendarBloc>().state.selectedDate;
+                context.read<DreamCalendarBloc>().add(FetchDreamsOnDate(
+                    date: currDate.add(const Duration(days: 1))));
               },
-            );
-          },
-          child: const Icon(Icons.date_range),
+              child: Icon(Icons.arrow_forward),
+            ),
+            FloatingActionButton(
+              onPressed: () {
+                var bloc = context.read<DreamCalendarBloc>();
+                // showDatePicker(context: context, firstDate: bloc.state.firstDate ?? DateTime.now(), lastDate: bloc.state.lastDate ?? DateTime.now()).then(
+                showDatePicker(
+                        context: context,
+                        firstDate: DateTime(2020, 1, 1),
+                        lastDate: DateTime(2069, 4, 20),
+                        initialEntryMode: DatePickerEntryMode.input)
+                    .then(
+                  (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    bloc.add(FetchDreamsOnDate(date: value));
+                  },
+                  onError: (err) {
+                    debugPrint(err);
+                  },
+                );
+              },
+              child: const Icon(Icons.date_range),
+            ),
+          ],
         );
 
       // case 3:

@@ -202,6 +202,8 @@ class _CalendarViewState extends State<CalendarView> {
                   ? GestureDetector(
                       onHorizontalDragStart: onDreamDragStart,
                       onHorizontalDragEnd: onDreamDragEnd,
+                      onVerticalDragStart: onDreamDragStart,
+                      onVerticalDragEnd: onDreamDragEnd,
                       child: Center(
                           child: Text(
                               "${bloc.state.dreams.length} ${bloc.state.dreams.length == 1 ? localizations.dream : localizations.dreams}")))
