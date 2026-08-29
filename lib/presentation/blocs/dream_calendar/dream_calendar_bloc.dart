@@ -2,6 +2,7 @@ import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/infrastructure/datasources/isar_datasource.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 
 part 'dream_calendar_event.dart';
 part 'dream_calendar_state.dart';
@@ -13,6 +14,7 @@ class DreamCalendarBloc extends Bloc<DreamCalendarEvent, DreamCalendarState> {
     on<FetchDates>(_onFetchDates);
     on<FetchDreamsOnDate>(_onFetchDreams);
     on<FetchBracket>(_onFetchBracket);
+    on<ToggleCalendarFav>(_onToggleFavDream);
   }
 
   Future<void> _onFetchDates(
@@ -42,5 +44,13 @@ class DreamCalendarBloc extends Bloc<DreamCalendarEvent, DreamCalendarState> {
         .lastDate()
         .then((value) => DateTime(value.year, value.month, value.day));
     emit(state.copyWith(firstDate: firstDate, lastDate: lastDate));
+  }
+
+  Future<void> _onToggleFavDream(
+      ToggleCalendarFav event, Emitter<DreamCalendarState> emit) async {
+    List<Dream> dreams = state.dreams
+        .map((d) => d.id == event.dreamId ? d.copyWith(isFav: !d.isFav) : d)
+        .toList();
+    emit(state.copyWith(dreams: dreams));
   }
 }

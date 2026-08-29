@@ -90,6 +90,19 @@ class CustomDreamListTile extends StatelessWidget {
             context
                 .read<DreamHomeBloc>()
                 .add(ToggleFavDream(dreamId: dream.id));
+
+            final DateTime calendarDate =
+                context.read<DreamCalendarBloc>().state.selectedDate;
+            final bool sameDayAsCalendarSelected =
+                (calendarDate.day == dream.date?.day &&
+                    calendarDate.month == dream.date?.month &&
+                    calendarDate.year == dream.date?.year);
+
+            if (sameDayAsCalendarSelected) {
+              context
+                  .read<DreamCalendarBloc>()
+                  .add(ToggleCalendarFav(dreamId: dream.id));
+            }
           },
         ),
       ]),

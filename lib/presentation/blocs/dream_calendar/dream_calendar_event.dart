@@ -17,3 +17,9 @@ class FetchBracket extends DreamCalendarEvent {
   // first and last date
   const FetchBracket();
 }
+
+class ToggleCalendarFav extends DreamCalendarEvent {
+  final Id dreamId;
+
+  const ToggleCalendarFav({required this.dreamId});
+}
