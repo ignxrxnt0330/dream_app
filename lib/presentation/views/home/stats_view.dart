@@ -164,7 +164,7 @@ class _StatsViewState extends State<StatsView> with TickerProviderStateMixin {
                           number: state.currentStreak.streak,
                           text: localizations.currentStreak,
                           tooltipText:
-                              "${DateFormat(localizations.dateFormat).format(state.currentStreak.streakStart)} - ${DateFormat(localizations.dmY).format(state.currentStreak.streakEnd)}",
+                              "${DateFormat(localizations.dmY).format(state.currentStreak.streakStart)} - ${DateFormat(localizations.dmY).format(state.currentStreak.streakEnd)}",
                         ),
                         StatCard(
                           number: state.longestStreak.streak,
