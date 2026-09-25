@@ -18,9 +18,9 @@ class CustomDreamListTile extends StatelessWidget {
     var names = dream.names;
     if (names.isEmpty) return const SizedBox(height: 0);
 
-    final int peopleCount = names.length ~/ 2;
-    final int personCount = names.length % 2;
     if (dream.hidden) {
+      final int peopleCount = names.length ~/ 2;
+      final int personCount = names.length % 2;
       return Wrap(spacing: 5, children: [
         ...List.generate(
           peopleCount,
@@ -40,7 +40,7 @@ class CustomDreamListTile extends StatelessWidget {
 
     for (int i = 0; i < names.length; i++) {
       totalLength += names[i].length;
-      if (totalLength <= 20) {
+      if (totalLength <= 18) {
         shownNamesLength = i + 1;
       } else {
         break;
