@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Icon(Icons.add),
             ));
       case 1:
-        return Column(
+        return Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,
