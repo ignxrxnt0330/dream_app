@@ -17,7 +17,7 @@ class Dream {
   double rating = 3; // 0-5
   int lucidness = 0; // 0-3
   int type = 0; // 0-2
-  int mood = 3; // 0-5
+  int mood = 2; // 0-4
   bool isFav;
   bool hidden;
   int descLength;
@@ -30,7 +30,7 @@ class Dream {
     this.date,
     this.names = const [],
     this.type = 0,
-    this.mood = 3,
+    this.mood = 2,
     this.isFav = false,
     this.rating = 0,
     this.lucidness = 0,

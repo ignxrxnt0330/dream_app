@@ -47,7 +47,7 @@ class _DreamMoodViewState extends State<DreamMoodView> {
                 size: 75, color: Theme.of(context).colorScheme.primary),
             3 => Icon(Icons.signal_cellular_alt_rounded,
                 size: 75, color: Theme.of(context).colorScheme.primary),
-            5 => Icon(Icons.signal_cellular_4_bar_outlined,
+            4 => Icon(Icons.signal_cellular_4_bar_outlined,
                 size: 75, color: Theme.of(context).colorScheme.primary),
             _ => SizedBox.shrink()
           },
