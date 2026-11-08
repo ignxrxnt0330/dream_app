@@ -2,12 +2,11 @@
 
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dream_app/domain/consts.dart';
 import 'package:dream_app/domain/datasource/local_storage_datasource.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/domain/entities/stats/streak.dart';
-import 'package:encrypter/encrypter/aes.dart';
+import 'package:dream_app/infrastructure/auth/encryption.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:isar/isar.dart';
@@ -184,11 +183,7 @@ class IsarDatasource extends LocalStorageDatasource {
         String filePath = "${dir.path}/dreams_$timeStamp.json";
 
         if (encryptKey != "") {
-          String? encryptedData = await Encrypter.encryptAES256CBC(data,
-              key: encryptKey.padRight(32));
-          if (encryptedData == null) return false;
-          data = encryptedData;
-          filePath = "${dir.path}/dreams_$timeStamp.enc";
+          data = await Encryption.encryptData(data, encryptKey.padRight(32));
         }
 
         final file = await File(filePath).create();
@@ -214,10 +209,7 @@ class IsarDatasource extends LocalStorageDatasource {
         String data = await file.readAsString();
 
         if (encryptKey != "") {
-          String? decryptedData = await Encrypter.decryptAES256CBC(data,
-              key: encryptKey.padRight(32));
-          if (decryptedData == null) return false;
-          data = decryptedData;
+          data = await Encryption.decryptData(data, encryptKey.padRight(32));
         }
 
         final List<dynamic> jsonDreams = jsonDecode(data);
@@ -617,12 +609,8 @@ class IsarDatasource extends LocalStorageDatasource {
   Future<String> getDreamsHash() async {
     final List<Dream> dreams = await getAllDreams();
     if (dreams.isEmpty) return "";
-    final String key = "asd                             ";
-    final String iv = "asd                             ";
     final String data =
         "[${dreams.map((dream) => dream.toJson()).join(",\n")}]";
-    final String hash =
-        await Encrypter.encryptAES256CBC(data, key: key, iv: iv) ?? "";
-    return hash;
+    return Encryption.hashData(data);
   }
 }

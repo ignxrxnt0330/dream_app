@@ -23,7 +23,6 @@ class _ImportExportDreamsDialogState extends State<ImportExportDreamsDialog> {
     final localizations = AppLocalizations.of(context)!;
 
     void setDefaultEncryptionKey() {
-      debugPrint("dsa setDefaultEncryptionKey");
       context
           .read<AppConfigBloc>()
           .add(SetDefaultEncryptionKey(encryptKeyController.value.text));
@@ -40,7 +39,6 @@ class _ImportExportDreamsDialogState extends State<ImportExportDreamsDialog> {
                 state.defaultEncryptionKey == encryptKeyController.value.text)
             .then((state) {
           if (!context.mounted) return;
-          debugPrint("dsa asdas");
 
           final AppConfigState state = context.read<AppConfigBloc>().state;
 

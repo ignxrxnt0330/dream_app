@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dream_app/l10n/app_localizations.dart';
 import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:dream_app/presentation/widgets/config/color_picker_dialog.dart';
@@ -142,10 +145,24 @@ class _ConfigViewState extends State<ConfigView> {
                       .read<AppConfigBloc>()
                       .stream
                       .firstWhere((state) => state.importDreamsPath != '')
-                      .then((state) {
+                      .then((state) async {
                     if (!context.mounted) return;
                     if (state.importDreamsPath != '') {
-                      if (state.importDreamsPath.endsWith('.enc')) {
+                      bool isEncrypted = state.importDreamsPath.toLowerCase().endsWith('.enc');
+
+                      if (!isEncrypted && state.importDreamsPath.toLowerCase().endsWith('.json')) {
+                        try {
+                          final String content = await File(state.importDreamsPath).readAsString();
+                          final decoded = jsonDecode(content);
+
+                          isEncrypted = decoded is Map<String, String> ||
+                              (decoded is Map &&
+                                  decoded.values.every((value) => value is String));
+                        } catch (_) {
+                          isEncrypted = false;
+                        }
+                      }
+                                            if (isEncrypted) {
                         String defaultEncryptionKey = context
                             .read<AppConfigBloc>()
                             .state
