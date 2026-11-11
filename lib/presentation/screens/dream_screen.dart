@@ -1,7 +1,5 @@
 import 'package:dream_app/l10n/app_localizations.dart';
-import 'package:dream_app/presentation/blocs/dream_calendar/dream_calendar_bloc.dart';
-import 'package:dream_app/presentation/blocs/dream_form/dream_form_bloc.dart';
-import 'package:dream_app/presentation/blocs/dream_home/dream_home_bloc.dart';
+import 'package:dream_app/presentation/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';

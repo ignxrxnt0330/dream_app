@@ -121,24 +121,32 @@ class _HomeScreenState extends State<HomeScreen> {
     ConfigView(),
   ];
 
-  final actions = [
-    (BuildContext context) {
-      context.read<DreamHomeBloc>().add(const RefreshDreams());
-    },
-    (BuildContext context) {
-      var calendarBloc = context.read<DreamCalendarBloc>();
-      calendarBloc.add(const FetchBracket());
-      calendarBloc.add(const FetchDates());
-      calendarBloc
-          .add(FetchDreamsOnDate(date: calendarBloc.state.selectedDate));
-    },
-    (BuildContext context) {
-      final int bracket = context.read<DreamStatsBloc>().state.bracket;
-      context.read<DreamStatsBloc>().add(FetchStats(bracket: bracket));
-    },
-    (BuildContext context) {
-      context.read<AppConfigBloc>().add(CheckDreamHash());
-    },
+  final List<CustomNavigationBarAction> actions = [
+    CustomNavigationBarAction(
+        action: (BuildContext context) {
+          context.read<DreamHomeBloc>().add(const RefreshDreams());
+        },
+        always: false),
+    CustomNavigationBarAction(
+        action: (BuildContext context) {
+          var calendarBloc = context.read<DreamCalendarBloc>();
+          calendarBloc.add(const FetchBracket());
+          calendarBloc.add(const FetchDates());
+          calendarBloc
+              .add(FetchDreamsOnDate(date: calendarBloc.state.selectedDate));
+        },
+        always: false),
+    CustomNavigationBarAction(
+        action: (BuildContext context) {
+          final int bracket = context.read<DreamStatsBloc>().state.bracket;
+          context.read<DreamStatsBloc>().add(FetchStats(bracket: bracket));
+        },
+        always: true),
+    CustomNavigationBarAction(
+        action: (BuildContext context) {
+          context.read<AppConfigBloc>().add(CheckDreamHash());
+        },
+        always: true),
   ];
 
   @override

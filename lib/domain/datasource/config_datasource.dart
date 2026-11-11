@@ -16,4 +16,6 @@ abstract class ConfigDatasource {
   Future<String> getLanguage();
   Future<void> updateExportedDreamsHash(String hash);
   Future<String> getExportedDreamsHash();
+  Future<bool> setUnsavedChanges(bool unsavedChanges);
+  Future<bool> getUnsavedChanges();
 }

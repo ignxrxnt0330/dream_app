@@ -3,16 +3,20 @@ import 'package:go_router/go_router.dart';
 
 class CustomBottomNavigation extends StatelessWidget {
   final int selectedIndex;
-  final List<Function> actions;
+  final List<CustomNavigationBarAction> actions;
   const CustomBottomNavigation(
       {super.key, required this.selectedIndex, required this.actions});
 
   void onItemTapped(BuildContext context, int index) {
-    if (selectedIndex == index) {
-      actions[index](context);
-      return;
+    final action = actions[index];
+
+    if (selectedIndex == index || action.always) {
+      action.action(context);
     }
-    context.go("/home/$index");
+
+    if (selectedIndex != index) {
+      context.go("/home/$index");
+    }
   }
 
   @override
@@ -48,4 +52,13 @@ class CustomBottomNavigation extends StatelessWidget {
       ],
     );
   }
+}
+
+class CustomNavigationBarAction {
+  final Function action;
+  final bool always;
+
+  CustomNavigationBarAction(
+      {required this.action,
+      required this.always}); // executes every time, or only when its already focused
 }

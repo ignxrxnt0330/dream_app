@@ -100,4 +100,18 @@ class SpConfig extends ConfigDatasource {
     prefs = await SharedPreferences.getInstance();
     prefs.setString('exportedDreamsHash', hash);
   }
+
+  @override
+  Future<bool> getUnsavedChanges() async {
+    prefs = await SharedPreferences.getInstance();
+    bool? unsavedChanges = prefs.getBool('unsavedChanges');
+    unsavedChanges ??= await setUnsavedChanges(false);
+    return unsavedChanges;
+  }
+
+  @override
+  Future<bool> setUnsavedChanges(bool unsavedChanges) async {
+    prefs = await SharedPreferences.getInstance();
+    return prefs.setBool('unsavedChanges', unsavedChanges);
+  }
 }

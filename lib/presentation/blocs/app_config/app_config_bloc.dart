@@ -31,6 +31,7 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     on<UpdateDreamsHash>(_updateDreamsHash);
     on<CheckDreamHash>(_checkDreamsHash);
     on<ClearSnackbarMessage>(_clearSnackbarMessage);
+    on<CheckUnsavedChanges>(_checkUnsavedChanges);
   }
 
   void _initConfig() async {
@@ -143,6 +144,12 @@ class AppConfigBloc extends Bloc<AppConfigEvent, AppConfigState> {
     final currentHash = event.currentHash ?? await datasource.getDreamsHash();
     final bool unsavedChages = exportedHash != currentHash;
 
+    emit(state.copyWith(unsavedChanges: unsavedChages));
+  }
+
+  void _checkUnsavedChanges(
+      CheckUnsavedChanges event, Emitter<AppConfigState> emit) async {
+    final bool unsavedChages = await config.getUnsavedChanges();
     emit(state.copyWith(unsavedChanges: unsavedChages));
   }
 
