@@ -7,6 +7,7 @@ import 'package:dream_app/domain/datasource/local_storage_datasource.dart';
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/domain/entities/stats/streak.dart';
 import 'package:dream_app/infrastructure/auth/encryption.dart';
+import 'package:dream_app/util/custom_string_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:isar/isar.dart';
@@ -81,6 +82,13 @@ class IsarDatasource extends LocalStorageDatasource {
       bool hidden = false,
       int type = 3}) async {
     final isar = await db;
+
+    final List<String> names = CustomStringUtils.getNames(query);
+
+    if (names.isNotEmpty) {
+      query = query.replaceAll(CustomStringUtils.nameRegexp, '');
+    }
+
     final dreams = await isar.dreams
         .buildQuery(
           filter: FilterGroup.and([
@@ -100,6 +108,16 @@ class IsarDatasource extends LocalStorageDatasource {
               FilterCondition.equalTo(property: 'hidden', value: true),
             if (type != 3)
               FilterCondition.equalTo(property: 'type', value: type),
+            if (names.isNotEmpty)
+              FilterGroup.and(
+                names.map((name) {
+                  return FilterCondition.equalTo(
+                    property: 'names',
+                    value: name.trim(),
+                    caseSensitive: false,
+                  );
+                }).toList(),
+              ),
           ]),
           sortBy: [
             SortProperty(property: order, sort: asc ? Sort.asc : Sort.desc)

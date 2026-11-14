@@ -77,14 +77,7 @@ class Dream {
   }
 
   void initNames() {
-    final regexp = RegExp(r'@([\wáéíóúÁÉÍÓÚñÑüÜ]+)', multiLine: true);
-
-    names = regexp
-        .allMatches(description)
-        .map((match) => match.group(1)?.normalize.toLowerCase())
-        .whereType<String>()
-        .toSet()
-        .toList();
+    names = CustomStringUtils.getNames(description);
   }
 
   void initHidden() async {
