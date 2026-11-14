@@ -104,7 +104,7 @@ class IsarDatasource extends LocalStorageDatasource {
           names.map((name) {
             return FilterCondition.equalTo(
               property: 'names',
-              value: name.trim(),
+              value: name.trim().toLowerCase(),
               caseSensitive: false,
             );
           }).toList(),
