@@ -81,19 +81,19 @@ class DreamStatsBloc extends Bloc<DreamStatsEvent, DreamStatsState> {
 
   Future<void> _fetchDreams(
       FetchStatsDreams event, Emitter<DreamStatsState> emit) async {
+    emit(state.copyWith(dreams: <String, int>{}));
+
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
     List<Dream> dreams = await IsarDatasource().getAllDreams(
         end: today, start: today.subtract(Duration(days: state.bracket)));
-    Map<String, int> map = {};
+    Map<String, int> map = <String, int>{};
 
     for (Dream dream in dreams) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(dream.date!);
       map[formattedDate] = (map[formattedDate] ?? 0) + 1;
     }
 
-    emit(state.copyWith(
-      dreams: map,
-    ));
+    emit(state.copyWith(dreams: map));
   }
 }

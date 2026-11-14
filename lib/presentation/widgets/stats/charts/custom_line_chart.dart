@@ -116,7 +116,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
 
     final all = widget.data.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    final double maxY = all.first.value.toDouble() + 1;
+    final double maxY = all.isEmpty ? 1 : all.first.value.toDouble() + 1;
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
 
@@ -195,7 +195,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
                 maxY: maxY,
                 baselineY: baselineY,
                 minX: 0,
-                maxX: widget.data.entries.length.toDouble(),
+                maxX: (widget.data.entries.length - 1).toDouble(),
                 baselineX: baselineX,
               ),
               duration: Duration.zero,

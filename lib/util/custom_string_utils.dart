@@ -28,4 +28,15 @@ extension CustomStringUtils on String {
 
   static double getEditDistance(String s1, String s2) =>
       _getEditDistanceRecursive(s1, s2, s1.length, s2.length);
+
+  static List<String> getNames(String input) {
+    final regexp = RegExp(r'@([\wáéíóúÁÉÍÓÚñÑüÜ]+)', multiLine: true);
+
+    return regexp
+        .allMatches(input)
+        .map((match) => match.group(1)?.normalize.toLowerCase())
+        .whereType<String>()
+        .toSet()
+        .toList();
+  }
 }
