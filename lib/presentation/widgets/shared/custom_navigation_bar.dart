@@ -10,7 +10,7 @@ class CustomBottomNavigation extends StatelessWidget {
   void onItemTapped(BuildContext context, int index) {
     final action = actions[index];
 
-    if (selectedIndex != index) {
+    if (selectedIndex != index && !action.ignoreRoute) {
       context.go("/home/$index");
     }
 
@@ -41,6 +41,11 @@ class CustomBottomNavigation extends StatelessWidget {
             label: "calendar"),
         BottomNavigationBarItem(
             icon: Icon(
+              Icons.search,
+            ),
+            label: "stats"),
+        BottomNavigationBarItem(
+            icon: Icon(
               Icons.auto_graph,
             ),
             label: "stats"),
@@ -57,8 +62,11 @@ class CustomBottomNavigation extends StatelessWidget {
 class CustomNavigationBarAction {
   final Function action;
   final bool always;
+  final bool ignoreRoute;
 
-  CustomNavigationBarAction(
-      {required this.action,
-      required this.always}); // executes every time, or only when its already focused
+  CustomNavigationBarAction({
+    required this.action,
+    this.always = true,
+    this.ignoreRoute = false,
+  }); // executes every time, or only when its already focused
 }

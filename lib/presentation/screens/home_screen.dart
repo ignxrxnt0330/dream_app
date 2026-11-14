@@ -117,37 +117,50 @@ class _HomeScreenState extends State<HomeScreen> {
   final routes = const <Widget>[
     HomeView(),
     CalendarView(),
+    HomeView(),
     StatsView(),
     ConfigView(),
   ];
 
-  final List<CustomNavigationBarAction> actions = [
-    CustomNavigationBarAction(
-        action: (BuildContext context) {
-          context.read<DreamHomeBloc>().add(const RefreshDreams());
-        },
-        always: false),
-    CustomNavigationBarAction(
-        action: (BuildContext context) {
-          var calendarBloc = context.read<DreamCalendarBloc>();
-          calendarBloc.add(const FetchBracket());
-          calendarBloc.add(const FetchDates());
-          calendarBloc
-              .add(FetchDreamsOnDate(date: calendarBloc.state.selectedDate));
-        },
-        always: true),
-    CustomNavigationBarAction(
-        action: (BuildContext context) {
-          final int bracket = context.read<DreamStatsBloc>().state.bracket;
-          context.read<DreamStatsBloc>().add(FetchStats(bracket: bracket));
-        },
-        always: true),
-    CustomNavigationBarAction(
-        action: (BuildContext context) {
-          context.read<AppConfigBloc>().add(CheckDreamHash());
-        },
-        always: false),
-  ];
+  void startSearching() {
+    _isSearching = true;
+    context.replace('/home/0');
+    setState(() {});
+  }
+
+  List<CustomNavigationBarAction> get actions => [
+        CustomNavigationBarAction(
+            action: (BuildContext context) {
+              context.read<DreamHomeBloc>().add(const RefreshDreams());
+            },
+            always: false),
+        CustomNavigationBarAction(
+          action: (BuildContext context) {
+            var calendarBloc = context.read<DreamCalendarBloc>();
+            calendarBloc.add(const FetchBracket());
+            calendarBloc.add(const FetchDates());
+            calendarBloc
+                .add(FetchDreamsOnDate(date: calendarBloc.state.selectedDate));
+          },
+        ),
+        CustomNavigationBarAction(
+          action: (BuildContext context) {
+            startSearching();
+          },
+          ignoreRoute: true
+        ),
+        CustomNavigationBarAction(
+          action: (BuildContext context) {
+            final int bracket = context.read<DreamStatsBloc>().state.bracket;
+            context.read<DreamStatsBloc>().add(FetchStats(bracket: bracket));
+          },
+        ),
+        CustomNavigationBarAction(
+            action: (BuildContext context) {
+              context.read<AppConfigBloc>().add(CheckDreamHash());
+            },
+            always: false),
+      ];
 
   @override
   void initState() {
@@ -266,14 +279,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                _isSearching = true;
-                if (widget.index != 0) context.replace('/home/0');
-                setState(() {});
-              },
-            ),
+            // IconButton(
+            //   icon: const Icon(Icons.search),
+            //   onPressed: () {
+            //     _isSearching = true;
+            //     if (widget.index != 0) context.replace('/home/0');
+            //     setState(() {});
+            //   },
+            // ),
           ],
         ),
         body: IndexedStack(
