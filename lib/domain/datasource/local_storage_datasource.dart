@@ -1,21 +1,25 @@
 import 'package:dream_app/domain/entities/dream/dream.dart';
 import 'package:dream_app/domain/entities/stats/streak.dart';
+import 'package:isar/isar.dart';
 
 abstract class LocalStorageDatasource {
   Future<int> saveDream(Dream dream);
   Future<void> deleteDream(int id);
   Future<void> deleteAllDreams();
+  Future<FilterGroup> loadDreamsQuery({
+    String query = "",
+    bool fav = false,
+    bool hidden = false,
+    int type = 3,
+  });
   Future<List<Dream?>> loadDreams(
-      {int limit = 10,
-      int offset = 0,
-      String order = "date",
-      String query = "",
-      bool asc = false,
-      bool fav = false,
-      bool hidden = false,
-      int type = 3});
-  Future<int> homeDreamCount(
-      {bool fav = false, bool hidden = false, int type = 3, String query});
+    FilterGroup filter, {
+    int limit = 10,
+    int offset = 0,
+    String order = "date",
+    bool asc = false,
+  });
+  Future<int> homeDreamCount(FilterGroup filter);
   Future<Dream?> getDream(int id);
   Future<void> toggleFavDream(int id);
   Future<List<Dream?>> loadFavoriteDreams({int limit = 10, int offset = 0});

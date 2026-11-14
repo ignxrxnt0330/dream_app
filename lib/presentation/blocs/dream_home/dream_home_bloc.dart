@@ -24,19 +24,15 @@ class DreamHomeBloc extends Bloc<DreamHomeEvent, DreamHomeState> {
   void _fetchMoreDreams(FetchDreams event, Emitter<DreamHomeState> emit) async {
     if (state.isLoading || state.endReached) return;
     emit(state.copyWith(isLoading: true));
-    final dreams = await datasource.loadDreams(
-        offset: state.offset,
-        order: state.order,
+    final FilterGroup filter = await datasource.loadDreamsQuery(
         query: state.query,
-        asc: state.asc,
         fav: state.fav,
         hidden: state.hidden,
         type: state.type);
-    final count = await datasource.homeDreamCount(
-        fav: state.fav,
-        hidden: state.hidden,
-        type: state.type,
-        query: state.query);
+
+    final dreams = await datasource.loadDreams(filter,
+        order: state.order, asc: state.asc, offset: state.offset);
+    final count = await datasource.homeDreamCount(filter);
     emit(state.copyWith(
         isLoading: false,
         endReached: dreams.length < 10,

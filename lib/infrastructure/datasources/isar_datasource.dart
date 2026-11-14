@@ -72,15 +72,12 @@ class IsarDatasource extends LocalStorageDatasource {
   }
 
   @override
-  Future<List<Dream>> loadDreams(
-      {int limit = 10,
-      int offset = 0,
-      String order = "date",
-      String query = "",
-      bool asc = false,
-      bool fav = false,
-      bool hidden = false,
-      int type = 3}) async {
+  Future<FilterGroup> loadDreamsQuery({
+    String query = "",
+    bool fav = false,
+    bool hidden = false,
+    int type = 3,
+  }) async {
     final isar = await db;
 
     final List<String> names = CustomStringUtils.getNames(query);
@@ -89,36 +86,45 @@ class IsarDatasource extends LocalStorageDatasource {
       query = query.replaceAll(CustomStringUtils.nameRegexp, '');
     }
 
+    return FilterGroup.and([
+      if (query.trim().isNotEmpty)
+        FilterGroup.or([
+          FilterCondition.contains(
+              property: 'title', value: query.trim(), caseSensitive: false),
+          FilterCondition.contains(
+              property: 'description',
+              value: query.trim(),
+              caseSensitive: false),
+        ]),
+      if (fav) FilterCondition.equalTo(property: 'isFav', value: true),
+      if (hidden) FilterCondition.equalTo(property: 'hidden', value: true),
+      if (type != 3) FilterCondition.equalTo(property: 'type', value: type),
+      if (names.isNotEmpty)
+        FilterGroup.and(
+          names.map((name) {
+            return FilterCondition.equalTo(
+              property: 'names',
+              value: name.trim(),
+              caseSensitive: false,
+            );
+          }).toList(),
+        ),
+    ]);
+  }
+
+  @override
+  Future<List<Dream>> loadDreams(
+    FilterGroup filter, {
+    int limit = 10,
+    int offset = 0,
+    String order = "date",
+    bool asc = false,
+  }) async {
+    final isar = await db;
+
     final dreams = await isar.dreams
         .buildQuery(
-          filter: FilterGroup.and([
-            if (query.trim().isNotEmpty)
-              FilterGroup.or([
-                FilterCondition.contains(
-                    property: 'title',
-                    value: query.trim(),
-                    caseSensitive: false),
-                FilterCondition.contains(
-                    property: 'description',
-                    value: query.trim(),
-                    caseSensitive: false),
-              ]),
-            if (fav) FilterCondition.equalTo(property: 'isFav', value: true),
-            if (hidden)
-              FilterCondition.equalTo(property: 'hidden', value: true),
-            if (type != 3)
-              FilterCondition.equalTo(property: 'type', value: type),
-            if (names.isNotEmpty)
-              FilterGroup.and(
-                names.map((name) {
-                  return FilterCondition.equalTo(
-                    property: 'names',
-                    value: name.trim(),
-                    caseSensitive: false,
-                  );
-                }).toList(),
-              ),
-          ]),
+          filter: filter,
           sortBy: [
             SortProperty(property: order, sort: asc ? Sort.asc : Sort.desc)
           ],
@@ -126,32 +132,15 @@ class IsarDatasource extends LocalStorageDatasource {
           limit: limit,
         )
         .findAll();
+
     return dreams.cast<Dream>();
   }
 
   @override
-  Future<int> homeDreamCount(
-      {bool fav = false,
-      bool hidden = false,
-      int type = 3,
-      String query = ''}) async {
+  Future<int> homeDreamCount(FilterGroup filter) async {
     final isar = await db;
-    final count = await isar.dreams
-        .buildQuery(
-          filter: FilterGroup.and([
-            if (query.isNotEmpty)
-              FilterGroup.or([
-                FilterCondition.contains(property: 'title', value: query),
-                FilterCondition.contains(property: 'description', value: query),
-              ]),
-            if (fav) FilterCondition.equalTo(property: 'isFav', value: true),
-            if (hidden)
-              FilterCondition.equalTo(property: 'hidden', value: true),
-            if (type != 3)
-              FilterCondition.equalTo(property: 'type', value: type),
-          ]),
-        )
-        .count();
+
+    final count = await isar.dreams.buildQuery(filter: filter).count();
     return count;
   }
 
