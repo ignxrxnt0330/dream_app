@@ -22,8 +22,9 @@ class FieldChanged extends DreamFormEvent {
 
 class FetchDream extends DreamFormEvent {
   final int dreamId;
+  final bool lastEdited;
 
-  const FetchDream(this.dreamId);
+  const FetchDream(this.dreamId, {this.lastEdited = false});
 }
 
 class DreamFetched extends DreamFormEvent {

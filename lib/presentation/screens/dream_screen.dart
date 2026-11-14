@@ -26,9 +26,7 @@ class _DreamScreenState extends State<DreamScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.dreamId != 0) {
-      context.read<DreamFormBloc>().add(FetchDream(widget.dreamId!));
-    }
+
     initialIndex = context.read<DreamFormBloc>().state.isLastEdited
         ? context.read<DreamFormBloc>().state.lastEdited.index
         : 0;
@@ -133,7 +131,7 @@ class _DreamScreenState extends State<DreamScreen> {
                         padding: EdgeInsetsGeometry.all(15),
                         cardsCount: slides.length,
                         cardBuilder: (context, index, a, b) => slides[index],
-                        initialIndex: state.lastEdited.index,
+                        initialIndex: initialIndex,
                         controller: swiperController,
                         scale: 1,
                         isLoop: false,

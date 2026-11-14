@@ -148,21 +148,27 @@ class _ConfigViewState extends State<ConfigView> {
                       .then((state) async {
                     if (!context.mounted) return;
                     if (state.importDreamsPath != '') {
-                      bool isEncrypted = state.importDreamsPath.toLowerCase().endsWith('.enc');
+                      bool isEncrypted =
+                          state.importDreamsPath.toLowerCase().endsWith('.enc');
 
-                      if (!isEncrypted && state.importDreamsPath.toLowerCase().endsWith('.json')) {
+                      if (!isEncrypted &&
+                          state.importDreamsPath
+                              .toLowerCase()
+                              .endsWith('.json')) {
                         try {
-                          final String content = await File(state.importDreamsPath).readAsString();
+                          final String content =
+                              await File(state.importDreamsPath).readAsString();
                           final decoded = jsonDecode(content);
 
                           isEncrypted = decoded is Map<String, String> ||
                               (decoded is Map &&
-                                  decoded.values.every((value) => value is String));
+                                  decoded.values
+                                      .every((value) => value is String));
                         } catch (_) {
                           isEncrypted = false;
                         }
                       }
-                                            if (isEncrypted) {
+                      if (isEncrypted) {
                         String defaultEncryptionKey = context
                             .read<AppConfigBloc>()
                             .state

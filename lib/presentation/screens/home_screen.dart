@@ -144,11 +144,10 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         CustomNavigationBarAction(
-          action: (BuildContext context) {
-            startSearching();
-          },
-          ignoreRoute: true
-        ),
+            action: (BuildContext context) {
+              startSearching();
+            },
+            ignoreRoute: true),
         CustomNavigationBarAction(
           action: (BuildContext context) {
             final int bracket = context.read<DreamStatsBloc>().state.bracket;

@@ -44,6 +44,14 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
 
   Future<void> _onFetchDream(
       FetchDream event, Emitter<DreamFormState> emit) async {
+    if (event.lastEdited) {
+      emit(state.copyWith(
+        dream: state.lastEdited.dream,
+        currentIndex: state.lastEdited.index,
+        isLastEdited: true,
+      ));
+      return;
+    }
     Dream? dream = await IsarDatasource().getDream(event.dreamId);
     if (dream == null) return;
     emit(state.copyWith(dream: dream, currentIndex: 0, isLastEdited: false));
@@ -65,11 +73,11 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
       date: DateTime.now(),
     );
     emit(DreamFormState(
-      dream: dream,
-      allNames: [],
-      isLastEdited: false,
-      lastEdited: LastEdited(dream: dream, index: 0),
-    ));
+        dream: dream,
+        allNames: [],
+        isLastEdited: false,
+        currentIndex: 0,
+        lastEdited: state.lastEdited));
   }
 
   void _onValidChanged(ValidChanged event, Emitter<DreamFormState> emit) {
@@ -84,9 +92,11 @@ class DreamFormBloc extends Bloc<DreamFormEvent, DreamFormState> {
 
   void _onResumeEditDream(ResumeEditDream event, Emitter<DreamFormState> emit) {
     emit(state.copyWith(
-        lastEdited: LastEdited(
-            dream: state.lastEdited.dream, index: state.lastEdited.index),
-        isLastEdited: true));
-    add(FetchDream(state.dream.id));
+      lastEdited: LastEdited(
+          dream: state.lastEdited.dream, index: state.lastEdited.index),
+      isLastEdited: true,
+      currentIndex: state.lastEdited.index,
+    ));
+    add(FetchDream(state.dream.id, lastEdited: true));
   }
 }
