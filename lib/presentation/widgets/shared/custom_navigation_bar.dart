@@ -10,12 +10,12 @@ class CustomBottomNavigation extends StatelessWidget {
   void onItemTapped(BuildContext context, int index) {
     final action = actions[index];
 
-    if (selectedIndex == index || action.always) {
-      action.action(context);
-    }
-
     if (selectedIndex != index) {
       context.go("/home/$index");
+    }
+
+    if (selectedIndex == index || action.always) {
+      action.action(context);
     }
   }
 

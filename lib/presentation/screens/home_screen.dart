@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
           calendarBloc
               .add(FetchDreamsOnDate(date: calendarBloc.state.selectedDate));
         },
-        always: false),
+        always: true),
     CustomNavigationBarAction(
         action: (BuildContext context) {
           final int bracket = context.read<DreamStatsBloc>().state.bracket;
@@ -146,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
         action: (BuildContext context) {
           context.read<AppConfigBloc>().add(CheckDreamHash());
         },
-        always: true),
+        always: false),
   ];
 
   @override
